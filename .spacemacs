@@ -32,11 +32,14 @@ values."
    dotspacemacs-configuration-layers
    '(
      csharp
-     c-c++
+     (c-c++ :variables
+            c-c++-enable-clang-support t
+            c-c++-default-mode-for-headers 'c-mode)
      sql
-     javascript
-     (markdown :variables markdown-live-preview-engine 'vmd)
      html
+     javascript
+     (markdown :variables
+               markdown-live-preview-engine 'vmd)
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -47,11 +50,11 @@ values."
      ;; better-defaults
      emacs-lisp
      ;; git
-     ;; markdown
      ;; org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
+     ;; auto-complete
+     (shell :variables
+             shell-default-height 30
+             shell-default-position 'bottom)
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
@@ -132,8 +135,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(spacemacs-light
+                         spacemacs-dark)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -265,7 +268,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers t 
+   dotspacemacs-line-numbers t
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -323,6 +326,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (personal-tab-width 4)
 	(setq omnisharp-server-executable-path "/usr/local/bin/omnisharp")
+  (setq exec-path-from-shell-check-startup-files nil)
   )
 
 (defun dotspacemacs/user-config ()
@@ -344,7 +348,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link markdown-mode+ gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode markdown-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
+    (avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link markdown-mode+ gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode markdown-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
