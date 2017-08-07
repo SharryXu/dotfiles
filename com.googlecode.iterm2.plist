@@ -81,11 +81,11 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>265 293 796 473 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>119 267 650 402 0 0 1440 877 </string>
+	<string>583 78 650 402 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>147 36 650 402 0 0 1440 877 </string>
+	<string>140 140 954 612 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>247 107 650 402 0 0 1440 877 </string>
+	<string>107 167 650 402 0 0 1440 877 </string>
 	<key>NeverWarnAboutShortLivedSessions_23570FF8-D33E-404A-910C-6F4DD0F80487</key>
 	<true/>
 	<key>NeverWarnAboutShortLivedSessions_23570FF8-D33E-404A-910C-6F4DD0F80487_selection</key>
@@ -1386,7 +1386,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>64E8D5B2-F470-4521-AB95-30241CDC815E</string>
 	<key>NoSyncLastTipTime</key>
-	<real>523248539.81967098</real>
+	<real>523681558.74614203</real>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -1425,6 +1425,10 @@
 		<string>0024</string>
 		<string>0025</string>
 		<string>0026</string>
+		<string>0027</string>
+		<string>0028</string>
+		<string>0029</string>
+		<string>0030</string>
 	</array>
 	<key>OnlyWhenMoreTabs</key>
 	<false/>
@@ -1482,7 +1486,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-07-31T05:17:51Z</date>
+	<date>2017-08-06T03:24:44Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowBookmarkName</key>
