@@ -33,6 +33,7 @@ values."
    '(
      csharp
      (c-c++ :variables
+            c-default-style "linux"
             c-c++-enable-clang-support t
             c-c++-default-mode-for-headers 'c-mode)
      sql
@@ -53,17 +54,32 @@ values."
      ;; org
      ;; auto-complete
      (shell :variables
-             shell-default-height 30
-             shell-default-position 'bottom)
+            shell-default-height 30
+            shell-default-position 'bottom)
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
+     ;; (colors :variables
+     ;;         colors-enable-nyan-cat-progress-bar t
+     ;;         colors-theme-identifiers-sat&light t)
+     syntax-checking
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages
+   '(
+     tree-mode
+     json-mode
+     all-the-icons
+     projectile
+     chinese-pyim
+     diredful
+     dired-icon
+     powerline
+     fancy-battery
+    )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -75,7 +91,9 @@ values."
    ;; `used-but-keep-unused' installs only the used packages but won't uninstall
    ;; them if they become unused. `all' installs *all* packages supported by
    ;; Spacemacs and never uninstall them. (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-only
+   )
+  )
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -112,7 +130,7 @@ values."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading nil
+   dotspacemacs-verbose-loading t
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
@@ -217,7 +235,7 @@ values."
    dotspacemacs-enable-paste-transient-state nil
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0.4
+   dotspacemacs-which-key-delay 0.1
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
@@ -285,7 +303,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -302,10 +320,35 @@ values."
    dotspacemacs-whitespace-cleanup nil
    ))
 
+(defun dotspacemacs/user-init ()
+  "Initialization function for user code.
+It is called immediately after `dotspacemacs/init', before layer configuration
+executes.
+ This function is mostly useful for variables that need to be set
+before packages are loaded. If you are unsure, you should try in setting them in
+`dotspacemacs/user-config' first."
+  (personal-tab-width 4)
+
+  ;; Set omnisharp
+	(setq omnisharp-server-executable-path "/usr/local/bin/omnisharp")
+
+  ;; Set file configuration
+  (setq exec-path-from-shell-check-startup-files nil)
+  (setq save-silently t)
+
+  ;; Set auto-save time
+  (setq auto-save-interval 100
+        auto-save-timeout 20)
+
+  ;; Set neotree
+  (setq neo-theme 'icons
+        neo-vc-integration 'face
+        neo-show-hidden-files t)
+  )
+
 (defun personal-tab-width (n)
   ;; java/c/c++
-  (setq c-default-style "linux"
-        c-basic-offset n)
+  (setq c-basic-offset n)
   ;; web development
   (setq coffee-tab-width n) ; coffeescript
   (setq javascript-indent-level n) ; javascript-mode
@@ -315,18 +358,6 @@ values."
   (setq web-mode-css-indent-offset n) ; web-mode, css in html file
   (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
   (setq css-indent-offset n) ; css-mode
-)
-
-(defun dotspacemacs/user-init ()
-  "Initialization function for user code.
-It is called immediately after `dotspacemacs/init', before layer configuration
-executes.
- This function is mostly useful for variables that need to be set
-before packages are loaded. If you are unsure, you should try in setting them in
-`dotspacemacs/user-config' first."
-  (personal-tab-width 4)
-	(setq omnisharp-server-executable-path "/usr/local/bin/omnisharp")
-  (setq exec-path-from-shell-check-startup-files nil)
   )
 
 (defun dotspacemacs/user-config ()
@@ -337,6 +368,9 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (global-linum-mode)
+  (global-hl-line-mode t)
+
+  (setq powerline-default-separator 'arrow)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -348,7 +382,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link markdown-mode+ gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode markdown-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
+    (tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link markdown-mode+ gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode markdown-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
