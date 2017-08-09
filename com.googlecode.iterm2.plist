@@ -20,6 +20,8 @@
 	<true/>
 	<key>HideTab</key>
 	<true/>
+	<key>HideTabNumber</key>
+	<false/>
 	<key>HotKeyBookmark</key>
 	<string>23570FF8-D33E-404A-910C-6F4DD0F80487</string>
 	<key>HotKeyTogglesWindow</key>
@@ -79,11 +81,11 @@
 	<key>NSWindow Frame Preferences</key>
 	<string>269 150 606 456 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>265 293 796 473 0 0 1440 877 </string>
+	<string>411 269 937 512 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>583 78 650 402 0 0 1440 877 </string>
+	<string>790 211 650 402 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>140 140 954 612 0 0 1440 877 </string>
+	<string>325 225 650 402 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
 	<string>107 167 650 402 0 0 1440 877 </string>
 	<key>NeverWarnAboutShortLivedSessions_23570FF8-D33E-404A-910C-6F4DD0F80487</key>
@@ -657,11 +659,13 @@
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>CourierNewPS-BoldMT 13</string>
+			<string>Consolas 14</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<true/>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
+			<key>Place Prompt at First Column</key>
+			<false/>
 			<key>Prompt Before Closing 2</key>
 			<integer>2</integer>
 			<key>Right Option Key Sends</key>
@@ -702,6 +706,8 @@
 			<false/>
 			<key>Shortcut</key>
 			<string></string>
+			<key>Show Mark Indicators</key>
+			<false/>
 			<key>Silence Bell</key>
 			<false/>
 			<key>Sync Title</key>
@@ -1386,7 +1392,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>64E8D5B2-F470-4521-AB95-30241CDC815E</string>
 	<key>NoSyncLastTipTime</key>
-	<real>523681558.74614203</real>
+	<real>523956566.36091202</real>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -1429,6 +1435,9 @@
 		<string>0028</string>
 		<string>0029</string>
 		<string>0030</string>
+		<string>0031</string>
+		<string>0032</string>
+		<string>0033</string>
 	</array>
 	<key>OnlyWhenMoreTabs</key>
 	<false/>
@@ -1486,7 +1495,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-08-06T03:24:44Z</date>
+	<date>2017-08-09T09:43:24Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowBookmarkName</key>
