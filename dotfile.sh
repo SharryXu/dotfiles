@@ -10,12 +10,6 @@ ohmyzsh='https://github.com/robbyrussell/oh-my-zsh'
 spacemacs='https://github.com/SharryXu/spacemacs'
 zshgitprompt='https://github.com/olivierverdier/zsh-git-prompt'
 
-#==============================
-# Make backup
-function backup() {
-    echo 'Backup'
-}
-
 function isProgramExisted() {
     if [ $# -eq 1 ]; then
         if command -v $1 > /dev/null 2>&1; then
@@ -57,8 +51,6 @@ function gitCloneOrUpdate() {
     fi
 }
 
-#==============================
-# Restore backup
 function install() {
     # install brew
     local result=$(isProgramExisted 'brew')
@@ -91,6 +83,18 @@ function install() {
     if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
         rm ~/.iterm2_shell_integration.zsh
     fi
+}
+
+function backup() {
+    # backup oh my zsh
+    cp ~/.zshrc ./Zsh/
+    cp ~/.oh-my-zsh/themes/sharry.zsh-theme ./Zsh/
+
+    # backup spacemacs
+    cp ~/.spacemacs ./Emacs/
+
+    # backup mongo database
+    cp ~/.mongorc.js ./MongoDB/
 }
 
 # main program
