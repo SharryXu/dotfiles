@@ -8,6 +8,7 @@ manual="Usage: dotfile [Options]\n\n
 
 ohmyzsh='https://github.com/robbyrussell/oh-my-zsh'
 spacemacs='https://github.com/SharryXu/spacemacs'
+zshgitprompt='https://github.com/olivierverdier/zsh-git-prompt'
 
 #==============================
 # Make backup
@@ -29,7 +30,7 @@ function isProgramExisted() {
 
 function installProgramUsingBrew() {
     if [ $# -eq 2 ]; then
-        result=$(isProgramExisted $2)
+        local result=$(isProgramExisted $2)
         if [ $result -eq 1 ]; then
             echo $1 "has already existed"
        elif [ $result -eq 0 ]; then
@@ -41,11 +42,12 @@ function installProgramUsingBrew() {
 }
 
 function gitCloneOrUpdate() {
-    currentFolder=$PWD
+    local currentFolder=$PWD
     if [ $# -eq 2 ]; then
         if [ -d $1 ]; then
             echo $1 "existed and now will pull the latest version."
             cd $1
+            # TODO: Try to redirect the git output to shell itself
             git pull
             cd $currentFolder
         else
@@ -59,7 +61,7 @@ function gitCloneOrUpdate() {
 # Restore backup
 function install() {
     # install brew
-    result=$(isProgramExisted 'brew')
+    local result=$(isProgramExisted 'brew')
     if [ $result -eq 0 ]; then
         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     else
@@ -72,12 +74,15 @@ function install() {
 
     # config zsh
     gitCloneOrUpdate $HOME/.oh-my-zsh $ohmyzsh
+    gitCloneOrUpdate $HOME/.zsh-git-prompt $zshgitprompt
     cp ./Zsh/.zshrc ~
     cp ./Zsh/sharry.zsh-theme ~/.oh-my-zsh/themes/
 
     # config spacemacs
     gitCloneOrUpdate $HOME/.emacs.d $spacemacs
     cp ./Emacs/.spacemacs ~
+
+    #TODO: Configure the all-the-icons
 
     # config mongo database
     cp ./MongoDB/.mongorc.js ~
