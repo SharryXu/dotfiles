@@ -79,6 +79,9 @@ export EDITOR='vim'
 alias gaa='git add .'
 alias gba='git branch -a'
 alias grv='git remote -v'
+alias gc='git commit'
+alias gcm='git commit -m '
+alias gp='git push'
 alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

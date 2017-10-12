@@ -74,6 +74,9 @@ function install() {
     gitCloneOrUpdate $HOME/.emacs.d $spacemacs
     cp ./Emacs/.spacemacs ~
 
+    # config clang-format tool
+    cp ./Other/.clang-format ~
+
     #TODO: Configure the all-the-icons
 
     # config mongo database
@@ -95,6 +98,9 @@ function backup() {
 
     # backup mongo database
     cp ~/.mongorc.js ./MongoDB/
+
+    # backup clang format
+    cp ~/.clang-format ./Other/
 }
 
 # main program
