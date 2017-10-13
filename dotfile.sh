@@ -75,6 +75,7 @@ function install() {
     cp ./Emacs/.spacemacs ~
 
     # config clang-format tool
+    installProgramUsingBrew 'clang-format' 'clang-format'
     cp ./Other/.clang-format ~
 
     #TODO: Configure the all-the-icons
