@@ -88,6 +88,10 @@ function install() {
 
     # configure the nodejs
     installProgramUsingBrew 'node' 'node'
+    installProgramUsingBrew 'npm' 'npm'
+
+    # configure hexo
+    npm install -g hexo-cli
 
     # config mongo database
     cp ./MongoDB/.mongorc.js ~
