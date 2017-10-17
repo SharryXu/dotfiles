@@ -52,23 +52,29 @@ function gitCloneOrUpdate() {
 }
 
 function install() {
-    # install brew
+    # install or update brew
     local result=$(isProgramExisted 'brew')
     if [ $result -eq 0 ]; then
         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     else
-        echo 'brew' "has already existed"
+        brew upgrade
+        brew update
     fi
 
     installProgramUsingBrew 'git' 'git'
     installProgramUsingBrew 'mongodb' 'mongo'
     installProgramUsingBrew 'mariadb' 'mysql'
+    installProgramUsingBrew 'tree' 'tree'
 
     # config zsh
     gitCloneOrUpdate $HOME/.oh-my-zsh $ohmyzsh
     gitCloneOrUpdate $HOME/.zsh-git-prompt $zshgitprompt
     cp ./Zsh/.zshrc ~
     cp ./Zsh/sharry.zsh-theme ~/.oh-my-zsh/themes/
+
+    # config tmux
+    installProgramingUsingBrew 'tmux' 'tmux'
+    cp ./Other/.tmux.conf ~
 
     # config spacemacs
     gitCloneOrUpdate $HOME/.emacs.d $spacemacs
@@ -80,8 +86,14 @@ function install() {
 
     #TODO: Configure the all-the-icons
 
+    # configure the nodejs
+    installProgramUsingBrew 'node' 'node'
+
     # config mongo database
     cp ./MongoDB/.mongorc.js ~
+
+    # config MySQL database
+    cp ./MySQL/.my.cnf ~
 
     # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
     if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
@@ -100,8 +112,14 @@ function backup() {
     # backup mongo database
     cp ~/.mongorc.js ./MongoDB/
 
+    # backup MySQL database
+    cp ~/.my.cnf ./MySQL/
+
     # backup clang format
     cp ~/.clang-format ./Other/
+
+    # backup tmux
+    cp ~/.tmux.conf ./Other/
 }
 
 # main program
