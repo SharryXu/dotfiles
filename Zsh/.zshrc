@@ -92,5 +92,7 @@ alias neovim='nvim'
 alias clo='clang -o a.out '
 # Mongo aliases
 alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
+# Emacs aliases
+alias emacs="/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
