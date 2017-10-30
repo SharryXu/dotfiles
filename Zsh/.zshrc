@@ -76,12 +76,21 @@ export EDITOR='vim'
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
+
+# Git aliases
 alias gaa='git add .'
 alias gba='git branch -a'
 alias grv='git remote -v'
 alias gc='git commit'
 alias gcm='git commit -m '
 alias gp='git push'
+# Vim aliases
+alias vi='nvim'
+alias vim='nvim'
+alias neovim='nvim'
+# Clang aliases
+alias clo='clang -o a.out '
+# Mongo aliases
 alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
