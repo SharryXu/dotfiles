@@ -35,7 +35,8 @@ values."
      (c-c++ :variables
             c-default-style "linux"
             c-c++-enable-clang-support t
-            c-c++-default-mode-for-headers 'c-mode)
+            c-c++-default-mode-for-headers 'c-mode
+            clang-format-style "file")
      sql
      html
      javascript
@@ -115,7 +116,7 @@ values."
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
-   dotspacemacs-elpa-https nil
+   dotspacemacs-elpa-https t
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    dotspacemacs-elpa-timeout 15
    ;; If non nil then spacemacs will check for updates at startup
@@ -336,9 +337,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   ;; Set elpa source
   (setq configuration-layer--elpa-archives
-        '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-          ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-          ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+        '(("melpa-cn" . "http://mirrors.163.com/elpa/melpa/")
+          ("org-cn"   . "http://mirrors.163.com/elpa/org/")
+          ("gnu-cn"   . "http://mirrors.163.com/elpa/gnu/")))
 
   ;; Set tab indent
   (personal-tab-width 4)
@@ -361,20 +362,21 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Set terminal
   (setq multi-term-program "/bin/zsh"
         system-uses-terminfo nil)
-  )
 
-(defun personal-tab-width (n)
-  ;; java/c/c++
-  (setq c-basic-offset n)
-  ;; web development
-  (setq coffee-tab-width n) ; coffeescript
-  (setq javascript-indent-level n) ; javascript-mode
-  (setq js-indent-level n) ; js-mode
-  (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
-  (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
-  (setq web-mode-css-indent-offset n) ; web-mode, css in html file
-  (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
-  (setq css-indent-offset n) ; css-mode
+  ;; Set clang-format support
+  (add-hook 'c-mode-hook
+            (lambda ()
+              (when (executable-find "clang-format")
+                ;;使用 clang-format 作为默认排版工具
+                (local-set-key (kbd "C-M-\\") 'clang-format)
+                ;;当插入分号时自动对当前行排版
+                (local-set-key (kbd ";")
+                               'semicolon-clang-format)
+                (local-set-key (kbd "}")
+                               'brace-clang-format)
+                )
+              )
+            )
   )
 
 (defun dotspacemacs/user-config ()
@@ -387,7 +389,7 @@ you should place your code here."
   (setq global-linum-mode t
         global-hl-line-mode t
         global-auto-revert-mode nil)
-  )
+ )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -406,3 +408,58 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (symon string-inflection test-simple loc-changes load-relative password-generator ivy-purpose window-purpose imenu-list impatient-mode htmlize evil-lion cmake-ide levenshtein realgud editorconfig yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link markdown-mode+ gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode markdown-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
+
+;; Custom functions
+(defun personal-tab-width (n)
+  ;; java/c/c++
+  (setq c-basic-offset n)
+  ;; web development
+  (setq coffee-tab-width n) ; coffeescript
+  (setq javascript-indent-level n) ; javascript-mode
+  (setq js-indent-level n) ; js-mode
+  (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
+  (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
+  (setq web-mode-css-indent-offset n) ; web-mode, css in html file
+  (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
+  (setq css-indent-offset n) ; css-mode
+  )
+
+(defun semicolon-clang-format (args)
+  "format by clang-format when enter ';'"
+  (interactive "*P")
+  (c-electric-semi&comma args)
+  (clang-format-region (line-beginning-position 0) (line-beginning-position 2))
+  )
+
+(defun brace-clang-format (args)
+  "format by clang-format when enter '}'"
+  (interactive "*P")
+  (c-electric-brace args)
+  (let ((end-position (point))
+        begin-position)
+    (save-excursion
+      (evil-jump-item)
+      (setf begin-position (point)))
+    (clang-format-region begin-position end-position))
+  )
+

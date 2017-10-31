@@ -135,6 +135,7 @@ function install() {
     gem install neovim
     pip2 install --user neovim
     pip3 install --user neovim
+    cp ./Vim/* ~/.SpaceVim.d/
 
     echo "Check clang format tool..."
     brewInstallIfNotExist 'clang-format' 'clang-format'
