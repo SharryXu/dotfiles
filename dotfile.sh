@@ -62,7 +62,7 @@ function gitCloneOrUpdate() {
             cd $currentFolder
         else
             echo "Downloading " $1 "..."
-            git clone $2 $1
+            git clone --depth=1 $2 $1
             echo $1 "has been successfully downloaded."
         fi
     else
@@ -130,8 +130,9 @@ function install() {
     $HOME/.fonts/install.sh
 
     echo "Check vim..."
-    brew install vim --with-lua --with-override-system-vi
+    brew install vim --with-override-system-vim
     brewInstallIfNotExist 'neovim' 'nvim'
+    # TODO: Check specific gem package is existed.
     gem install neovim
     pip2 install --user neovim
     pip3 install --user neovim
