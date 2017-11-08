@@ -6,6 +6,7 @@ spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
 zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt')
 nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 nvm=('Node Manager' 'https://github.com/creationix/nvm')
+ohmytmux=('Oh-My-Tmux' 'https://github.com/gpakosz/.tmux')
 
 useremail="852083454@qq.com"
 username="SharryXu"
@@ -155,7 +156,7 @@ function install() {
         if [ $result -eq 0 ]; then
             echo "Please install Ruby first."
         else
-            /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+            ruby ./Other/brew_install 
             echo "brew has been successfully installed."
         fi
     else
@@ -172,11 +173,11 @@ function install() {
 
     echo "Check mongo database..."
     brewInstallIfNotExist 'mongodb' 'mongo'
-    cp ./MongoDB/.mongorc.js ~
+    cp ./MongoDB/.mongorc.js $HOME
 
     echo "Check mysql database..."
     brewInstallIfNotExist 'mariadb' 'mysql'
-    cp ./MySQL/.my.cnf ~
+    cp ./MySQL/.my.cnf $HOME
 
     echo "Check tree tool..."
     brewInstallIfNotExist 'tree' 'tree'
@@ -184,21 +185,23 @@ function install() {
     echo "Check Oh-My-Zsh..."
     gitCloneOrUpdate $HOME/.oh-my-zsh ${ohmyzsh[*]}
     gitCloneOrUpdate $HOME/.zsh-git-prompt ${zshgitprompt[*]}
-    cp ./Zsh/.zshrc ~
-    cp ./Zsh/sharry.zsh-theme ~/.oh-my-zsh/themes/
+    cp ./Zsh/.zshrc $HOME
+    cp ./Zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
 
     echo "Check tmux tool..."
     brewInstallIfNotExist 'tmux' 'tmux'
-    cp ./Other/.tmux.conf ~
+    gitCloneOrUpdate $HOME/.tmux ${ohmytmux[*]}
+    ln -s -f $HOME/.tmux/.tmux.conf $HOME
+    cp ./Other/.tmux.conf.local $HOME
 
     # config emacs (substitute the default emacs installed by Mac OS)
     echo "Check emacs..."
     brew install emacs --with-cocoa
     gitCloneOrUpdate $HOME/.emacs.d ${spacemacs[*]}
-    cp ./Emacs/.spacemacs ~
+    cp ./Emacs/.spacemacs $HOME
     # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
     if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
-        rm ~/.iterm2_shell_integration.zsh
+        rm $HOME/.iterm2_shell_integration.zsh
     fi
 
     # config fonts
@@ -211,11 +214,11 @@ function install() {
     rubyPackageInstall 'neovim'
     pythonPackageInstall 'neovim' '2'
     pythonPackageInstall 'neovim' '3'
-    cp ./Vim/* ~/.SpaceVim.d/
+    cp ./Vim/* $HOME/.SpaceVim.d/
 
     echo "Check ClangFormat tool..."
     brewInstallIfNotExist 'clang-format' 'clang-format'
-    cp ./Other/.clang-format ~
+    cp ./Other/.clang-format $HOME
 
     echo "Check htop tool..."
     brewInstallIfNotExist 'htop' 'htop'
@@ -238,24 +241,27 @@ function install() {
 
 function backup() {
     echo "Backup Oh-My-Zsh..."
-    cp ~/.zshrc ./Zsh/
-    cp ~/.oh-my-zsh/themes/sharry.zsh-theme ./Zsh/
+    cp $HOME/.zshrc ./Zsh/
+    cp $HOME/.oh-my-zsh/themes/sharry.zsh-theme ./Zsh/
 
     echo "Backup emacs..."
-    cp ~/.spacemacs ./Emacs/
+    cp $HOME/.spacemacs ./Emacs/
 
     echo "Backup mongo database..."
-    cp ~/.mongorc.js ./MongoDB/
+    cp $HOME/.mongorc.js ./MongoDB/
     #TODO: backup mongo.conf file.
 
     echo "Backup mysql database..."
-    cp ~/.my.cnf ./MySQL/
+    cp $HOME/.my.cnf ./MySQL/
 
     echo "Backup clang format information..."
-    cp ~/.clang-format ./Other/
+    cp $HOME/.clang-format ./Other/
 
     echo "Backup tmux tool's configuration..."
-    cp ~/.tmux.conf ./Other/
+    cp $HOME/.tmux.conf.local ./Other/
+
+    echo "Backup Vim..."
+    cp $HOME/.SpaceVim.d/* ./Vim
 
     echo "Done."
 }
