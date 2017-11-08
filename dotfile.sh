@@ -1,19 +1,32 @@
 #!/bin/bash
 # This program is used to backup or restore dot files.
 
-manual="Usage: dotfile [Options]\n\n
-        [Options]:\n
-        -i  Install dot files to this machine.\n
-        -b  Backup dot files."
+ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh')
+spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
+zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt')
+nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
+nvm=('Node Manager' 'https://github.com/creationix/nvm')
 
-ohmyzsh='https://github.com/robbyrussell/oh-my-zsh'
-spacemacs='https://github.com/SharryXu/spacemacs'
-zshgitprompt='https://github.com/olivierverdier/zsh-git-prompt'
-nerdfonts='https://github.com/ryanoasis/nerd-fonts'
+useremail="852083454@qq.com"
+username="SharryXu"
 
 function isProgramExisted() {
     if [ $# -eq 1 ]; then
         if command -v $1 > /dev/null 2>&1; then
+            echo 1;
+        else
+            echo 0;
+        fi
+    else
+        echo -1;
+    fi
+}
+
+function isServerAlive () {
+    if [ $# -eq 1 ]; then
+        local tryCounts = 3
+        local result=`ping $1 -c $tryCounts | grep "^\w\{2\} bytes from .*ttl=[0-9]" -c`
+        if [ $result -eq $tryCounts ]; then
             echo 1;
         else
             echo 0;
@@ -28,12 +41,14 @@ function npmInstallIfNotExist() {
         local result=$(isProgramExisted $2)
         if [ $result -eq 1 ]; then
             echo $1 "has already existed"
-       elif [ $result -eq 0 ]; then
-            npm install -g $1
+        elif [ $result -eq 0 ]; then
+            npm install -g $1@latest
             echo $1 "has successfully been installed."
         else
             echo "Please indicate the program name to install" $1
         fi
+    else
+        echo "Please check parameters."
     fi
 }
 
@@ -42,32 +57,94 @@ function brewInstallIfNotExist() {
         local result=$(isProgramExisted $2)
         if [ $result -eq 1 ]; then
             echo $1 "has already existed"
-       elif [ $result -eq 0 ]; then
+        elif [ $result -eq 0 ]; then
             brew install $1
             echo $1 "has successfully been installed."
         else
             echo "Please indicate the program name to install" $1
         fi
+    else
+        echo "Please check parameters."
     fi
 }
 
 function gitCloneOrUpdate() {
     local currentFolder=$PWD
-    if [ $# -eq 2 ]; then
+    # Please notice if the parameter is an array, then the number should count the array's length.
+    if [ $# -ge 3 ]; then
+        local repoInfo=$2
         if [ -d $1 ]; then
-            echo $1 "existed and now will pull the latest version."
+            echo ${repoInfo[0]} "existed and now will pull the latest version."
             cd $1
             # TODO: Try to redirect the git output to shell itself
+            # And if the repo is very large, just need to ge the first level.
             git pull
             cd $currentFolder
         else
             echo "Downloading " $1 "..."
-            git clone --depth=1 $2 $1
-            echo $1 "has been successfully downloaded."
+            git clone --depth=1 ${repoInfo[1]} $1
+            echo ${repoInfo[0]} "has been successfully downloaded."
         fi
     else
         echo "Please check parameters."
     fi
+}
+
+function rubyPackageInstall() {
+    if [ $# -eq 1 ]; then
+        local isExisted=0
+        read -ra installedPackages <<< `gem list --local --no-version | sed -n '4,$p'`
+        for ((i = 0; i < ${#installedPackages[@]}; i += 2)); do
+            if [[ "${installedPackages[$i]}" == *"$1" ]]; then
+                isExisted=1
+                break
+            fi
+        done
+
+        if [ $isExisted -eq 1 ]; then
+            echo $1 "has already existed."
+        else
+            gem install $1
+        fi
+    else
+        echo "Please check parameters."
+    fi
+}
+
+function pythonPackageInstall() {
+    if [ $# -eq 2 ]; then
+        local isExisted=0
+        read -ra installedPackages <<< `pip$2 list --format=columns | sed -n '3,$p'`
+        for ((i = 0; i < ${#installedPackages[@]}; i += 2)); do
+            if [[ "${installedPackages[$i]}" == *"$1" ]]; then
+                isExisted=1
+                break
+            fi
+        done
+
+        if [ $isExisted -eq 1 ]; then
+            echo $1 "has already existed."
+        else
+            pip$2 install --user $1
+        fi
+    else
+        echo "Please check parameters."
+    fi
+}
+
+function setupMacOS() {
+    echo "Show full file path on the tile in Finder..."
+    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true;
+    echo "Restart Finder..."
+    killall Finder
+}
+
+function setupGit() {
+    echo "Setup Git tool..."
+    git config --global --add user.name $username
+    git config --global --add user.email $useremail
+    git config --global --add rerere.enabled 1
+
 }
 
 function install() {
@@ -105,20 +182,19 @@ function install() {
     brewInstallIfNotExist 'tree' 'tree'
 
     echo "Check Oh-My-Zsh..."
-    gitCloneOrUpdate $HOME/.oh-my-zsh $ohmyzsh
-    gitCloneOrUpdate $HOME/.zsh-git-prompt $zshgitprompt
+    gitCloneOrUpdate $HOME/.oh-my-zsh ${ohmyzsh[*]}
+    gitCloneOrUpdate $HOME/.zsh-git-prompt ${zshgitprompt[*]}
     cp ./Zsh/.zshrc ~
     cp ./Zsh/sharry.zsh-theme ~/.oh-my-zsh/themes/
 
     echo "Check tmux tool..."
-    installProgramingUsingBrew 'tmux' 'tmux'
+    brewInstallIfNotExist 'tmux' 'tmux'
     cp ./Other/.tmux.conf ~
 
     # config emacs (substitute the default emacs installed by Mac OS)
     echo "Check emacs..."
     brew install emacs --with-cocoa
-    brew linkapps emacs
-    gitCloneOrUpdate $HOME/.emacs.d $spacemacs
+    gitCloneOrUpdate $HOME/.emacs.d ${spacemacs[*]}
     cp ./Emacs/.spacemacs ~
     # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
     if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
@@ -126,28 +202,36 @@ function install() {
     fi
 
     # config fonts
-    gitCloneOrUpdate $HOME/.fonts $nerdfonts
-    $HOME/.fonts/install.sh
+    gitCloneOrUpdate $HOME/.fonts ${nerdfonts[*]}
+    $HOME/.fonts/install.sh 1> /dev/null
 
-    echo "Check vim..."
+    echo "Check Vim..."
     brew install vim --with-override-system-vim
     brewInstallIfNotExist 'neovim' 'nvim'
-    # TODO: Check specific gem package is existed.
-    gem install neovim
-    pip2 install --user neovim
-    pip3 install --user neovim
+    rubyPackageInstall 'neovim'
+    pythonPackageInstall 'neovim' '2'
+    pythonPackageInstall 'neovim' '3'
     cp ./Vim/* ~/.SpaceVim.d/
 
-    echo "Check clang format tool..."
+    echo "Check ClangFormat tool..."
     brewInstallIfNotExist 'clang-format' 'clang-format'
     cp ./Other/.clang-format ~
 
-    echo "Check node js..."
+    echo "Check htop tool..."
+    brewInstallIfNotExist 'htop' 'htop'
+
+    echo "Check NodeJS..."
     brewInstallIfNotExist 'node' 'node'
     brewInstallIfNotExist 'npm' 'npm'
 
+    echo "Check Node Manager..."
+    gitCloneOrUpdate $HOME/.nvm $nvm
+    source $HOME/.nvm/nvm.sh
+
     echo "Check hexo..."
     npmInstallIfNotExist 'hexo-cli' 'hexo'
+    # TODO: Need to use 'npm list -g' to determine if packages are existed or not. 
+    npm install -g hexo-deployer-git
 
     echo "Done."
 }
@@ -176,6 +260,11 @@ function backup() {
     echo "Done."
 }
 
+manual="Usage: dotfile [Options]\n\n
+[Options]:\n
+-i  Install dot files to this machine.\n
+-b  Backup dot files."
+
 # main program
 if [ $# -lt 1 -o $# -gt 1 ]
 then
@@ -186,4 +275,7 @@ then
 elif [ "$1" = "-i" ]
 then
     install
+else
+    echo "Wrong parameters. Please check following instructions."
+    echo -e $manual
 fi
