@@ -4,6 +4,19 @@
 <dict>
 	<key>customSites</key>
 	<dict>
+		<key>01236661-7489-4E12-982B-6E86830135E8</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>zh</string>
+			<key>text</key>
+			<string>Search 知乎 for '{query}'</string>
+			<key>url</key>
+			<string>https://www.zhihu.com/search?type=content&amp;q={query}</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
 		<key>3D818DF9-C30B-47B6-91D2-912E6C72EB4D</key>
 		<dict>
 			<key>enabled</key>
