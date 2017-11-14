@@ -54,15 +54,21 @@ function npmInstallIfNotExist() {
 }
 
 function brewInstallIfNotExist() {
-    if [ $# -eq 2 ]; then
-        local result=$(isProgramExisted $2)
+    # By default, we think tool name ($1) is the command name ($2)
+    if [ $# -gt 0 ]; then
+        if [ $# -eq 2 ]; then
+            result=$(isProgramExisted $2)
+        else
+            result=$(isProgramExisted $1)
+        fi
+
         if [ $result -eq 1 ]; then
-            echo $1 "has already existed"
+            echo $1 "has already existed."
         elif [ $result -eq 0 ]; then
             brew install $1
             echo $1 "has successfully been installed."
         else
-            echo "Please indicate the program name to install" $1
+            echo "Please indicate the command name to install" $1
         fi
     else
         echo "Please check parameters."
@@ -103,9 +109,10 @@ function rubyPackageInstall() {
         done
 
         if [ $isExisted -eq 1 ]; then
-            echo $1 "has already existed."
+            echo "Ruby package name " $1 " has already existed."
         else
             gem install $1
+            echo "Ruby package name " $1 " has been successfully installed."
         fi
     else
         echo "Please check parameters."
@@ -124,9 +131,10 @@ function pythonPackageInstall() {
         done
 
         if [ $isExisted -eq 1 ]; then
-            echo $1 "has already existed."
+            echo "Python package name " $1 "has already existed."
         else
             pip$2 install --user $1
+            echo "Python package name " $1 "has been successfully installed."
         fi
     else
         echo "Please check parameters."
@@ -156,20 +164,21 @@ function install() {
         if [ $result -eq 0 ]; then
             echo "Please install Ruby first."
         else
-            ruby ./Other/brew_install 
+            ruby ./Brew/brew_install 
             echo "brew has been successfully installed."
         fi
     else
-        brew upgrade
         brew update
         echo "brew has been successfully updated."
+        echo "Update all brew packages..."
+        brew upgrade
     fi
 
     echo "Check git..."
-    brewInstallIfNotExist 'git' 'git'
+    brewInstallIfNotExist 'git'
 
     echo "Check python3..."
-    brewInstallIfNotExist 'python3' 'python3'
+    brewInstallIfNotExist 'python3'
 
     echo "Check mongo database..."
     brewInstallIfNotExist 'mongodb' 'mongo'
@@ -180,7 +189,7 @@ function install() {
     cp ./MySQL/.my.cnf $HOME
 
     echo "Check tree tool..."
-    brewInstallIfNotExist 'tree' 'tree'
+    brewInstallIfNotExist 'tree'
 
     echo "Check Oh-My-Zsh..."
     gitCloneOrUpdate $HOME/.oh-my-zsh ${ohmyzsh[*]}
@@ -189,7 +198,8 @@ function install() {
     cp ./Zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
 
     echo "Check tmux tool..."
-    brewInstallIfNotExist 'tmux' 'tmux'
+    brewInstallIfNotExist 'tmux'
+    brewInstallIfNotExist 'reattach-to-user-namespace'
     gitCloneOrUpdate $HOME/.tmux ${ohmytmux[*]}
     ln -s -f $HOME/.tmux/.tmux.conf $HOME
     cp ./Other/.tmux.conf.local $HOME
@@ -217,15 +227,15 @@ function install() {
     cp ./Vim/* $HOME/.SpaceVim.d/
 
     echo "Check ClangFormat tool..."
-    brewInstallIfNotExist 'clang-format' 'clang-format'
+    brewInstallIfNotExist 'clang-format'
     cp ./Other/.clang-format $HOME
 
     echo "Check htop tool..."
-    brewInstallIfNotExist 'htop' 'htop'
+    brewInstallIfNotExist 'htop'
 
     echo "Check NodeJS..."
-    brewInstallIfNotExist 'node' 'node'
-    brewInstallIfNotExist 'npm' 'npm'
+    brewInstallIfNotExist 'node'
+    brewInstallIfNotExist 'npm'
 
     echo "Check Node Manager..."
     gitCloneOrUpdate $HOME/.nvm $nvm
