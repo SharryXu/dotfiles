@@ -9,8 +9,7 @@ function getTerminalWidthChar() {
 }
 
 # Setup prompt string
-PROMPT='$FG[237]$(getTerminalWidthChar)%{$reset_color%}
-$fg_bold[blue]%~\
+PROMPT='$fg_bold[blue]%~\
 $(git_super_status) \
 
 $fg[001]%(!.#.>)%{$reset_color%} '
