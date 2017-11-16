@@ -1,5 +1,6 @@
 #!/bin/bash
 # This program is used to backup or restore dot files.
+# TODO: Try to seperate all backup methods.
 
 ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh')
 spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
@@ -97,6 +98,7 @@ function gitCloneOrUpdate() {
     fi
 }
 
+# TODO: Save package list to file and read it when you need
 function rubyPackageInstall() {
     if [ $# -eq 1 ]; then
         local isExisted=0
@@ -172,6 +174,7 @@ function install() {
         echo "brew has been successfully updated."
         echo "Update all brew packages..."
         brew upgrade
+        echo "All brew packages have been updated."
     fi
 
     echo "Check git..."
