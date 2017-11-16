@@ -7,7 +7,7 @@ export ZSH=/Users/sxu204/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="sharry"
+ZSH_THEME="spaceship"
 
 # Uncomment the following line to use case-sensitive completion.
 CASE_SENSITIVE="false"
@@ -51,10 +51,14 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+  brew
+  git
+  tmux
+  tmuxinator
+)
 
 source $ZSH/oh-my-zsh.sh
-source $HOME/.zsh-git-prompt/zshrc.sh
 
 # User configuration
 
@@ -77,13 +81,6 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
-# Git aliases
-alias gaa='git add .'
-alias gba='git branch -a'
-alias grv='git remote -v'
-alias gc='git commit'
-alias gcm='git commit -m '
-alias gp='git push'
 # Vim aliases
 alias vi='nvim'
 alias vim='nvim'
@@ -103,3 +100,13 @@ export NVM_DIR="$HOME/.nvm"
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export HOMEBREW_NO_AUTO_UPDATE=true
+
+# Config tmux
+ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOQUIT=true
+
+# Enable Spaceship theme
+source $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
+
+echo "Reloaded Oh-My-Zsh settings."
+

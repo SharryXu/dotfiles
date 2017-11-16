@@ -7,7 +7,9 @@ spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
 zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt')
 nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 nvm=('Node Manager' 'https://github.com/creationix/nvm')
-ohmytmux=('Oh-My-Tmux' 'https://github.com/gpakosz/.tmux')
+ohmytmux=('Oh-My-Tmux' 'https://github.com/SharryXu/.tmux')
+
+spaceshiptheme='https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/spaceship.zsh'
 
 useremail="852083454@qq.com"
 username="SharryXu"
@@ -150,6 +152,7 @@ function setupMacOS() {
     killall Finder
 }
 
+# TODO: Write those things to a separate file.
 function setupGit() {
     echo "Setup Git tool..."
     git config --global --add user.name $username
@@ -196,9 +199,13 @@ function install() {
 
     echo "Check Oh-My-Zsh..."
     gitCloneOrUpdate $HOME/.oh-my-zsh ${ohmyzsh[*]}
-    gitCloneOrUpdate $HOME/.zsh-git-prompt ${zshgitprompt[*]}
     cp ./Zsh/.zshrc $HOME
-    cp ./Zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
+
+    echo "Check Oh-My-Zsh theme (SpaceShip) ..."
+    wget $spaceshiptheme -O $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
+
+    echo "Enable Zsh settings..."
+    /bin/zsh $HOME/.zshrc
 
     echo "Check tmux tool..."
     brewInstallIfNotExist 'tmux'
@@ -255,7 +262,6 @@ function install() {
 function backup() {
     echo "Backup Oh-My-Zsh..."
     cp $HOME/.zshrc ./Zsh/
-    cp $HOME/.oh-my-zsh/themes/sharry.zsh-theme ./Zsh/
 
     echo "Backup emacs..."
     cp $HOME/.spacemacs ./Emacs/

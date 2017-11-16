@@ -261,10 +261,9 @@ set -g mode-keys vi
 unbind C-a
 unbind C-b
 set -g prefix C-x
-bind C-a send-prefix
 
 #set -g status-position top
 set-option -s escape-time 0
 
 # bind a reload key
-bind r source-file ~/.tmux.conf \; display "Successfully reloaded configuration!"
+#bind r source-file ~/.tmux.conf \; display "Successfully reloaded configuration!"
