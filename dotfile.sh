@@ -1,6 +1,7 @@
 #!/bin/bash
 # This program is used to backup or restore dot files.
-# TODO: Try to seperate all backup methods.
+# TODO: 1.Try to seperate all backup methods.
+#       2.Highlight error and warning message in the term.
 
 ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh')
 spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
