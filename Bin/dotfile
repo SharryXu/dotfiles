@@ -155,7 +155,19 @@ function setupMacOS() {
     echo "Setup Mac OS..."
     echo "Show full file path on the tile in Finder..."
     defaults write com.apple.finder _FXShowPosixPathInTitle -bool true && killall Finder
-    defaults write com.apple.Dock autohide-delay -float 0 && killall Dock
+    # Adjust the delay time for Dock displaying
+    defaults write com.apple.Dock autohide-delay -float 0
+    # Adjust the LaunchPad layout
+    defaults write com.apple.dock springboard-columns -int 8
+    defaults write com.apple.dock springboard-rows -int 7
+    # Adjust the transpalent value for LaunchPad
+    defaults write com.apple.dock springboard-blur-radius -int 100
+    defaults write com.apple.dock ResetLaunchPad -bool true
+    # Adjust the default location for screenshots
+    # defaults write com.apple.screencapture location ~/Desktop/screenshots; killall SystemUIServer
+    # Adjust the default screenshot type
+    # defaults write com.apple.screencapture type jpg && killall SystemUIServe 
+    killall Dock
 }
 
 # TODO: Write those things to a separate file.
