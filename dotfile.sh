@@ -249,9 +249,8 @@ function install() {
     source $HOME/.nvm/nvm.sh
 
     echo "Check hexo..."
-    npmInstallIfNotExist 'hexo-cli' 'hexo'
     # TODO: Need to use 'npm list -g' to determine if packages are existed or not. 
-    npm install -g hexo-deployer-git
+    npmInstallIfNotExist 'hexo-cli' 'hexo'
 
     echo "Enable Zsh settings..."
     /bin/zsh $HOME/.zshrc
