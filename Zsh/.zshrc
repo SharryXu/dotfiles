@@ -3,7 +3,7 @@
 export PATH=$HOME/.bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/sxu204/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -68,7 +68,6 @@ export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
-export SHELL='/bin/zsh'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -90,7 +89,7 @@ alias clo='clang -o a.out '
 # Mongo aliases
 alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
 # Emacs without GUI
-alias emacs="/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw"
+alias emacs='/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw'
 
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
