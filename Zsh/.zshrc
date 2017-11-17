@@ -1,4 +1,5 @@
 # If you come from bash you might have to change your $PATH.
+# Attention: Please place /usr/local/bin before the default path value.
 export PATH=$HOME/.bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
@@ -7,7 +8,7 @@ export ZSH=/Users/sxu204/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="spaceship"
+ZSH_THEME="amuse"
 
 # Uncomment the following line to use case-sensitive completion.
 CASE_SENSITIVE="false"
@@ -67,6 +68,7 @@ export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
+export SHELL='/bin/zsh'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -87,10 +89,6 @@ alias neovim='nvim'
 alias clo='clang -o a.out '
 # Mongo aliases
 alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
-# Re-link Emacs
-alias emacs="/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw"
-# Re-link Ruby
-alias ruby="/usr/local/Cellar/ruby/2.4.2_1/bin/ruby/ruby"
 
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
@@ -101,7 +99,7 @@ ZSH_TMUX_AUTOSTART=true
 ZSH_TMUX_AUTOQUIT=true
 
 # Enable Spaceship theme
-source $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
+# source $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
 
 source $ZSH/oh-my-zsh.sh
 

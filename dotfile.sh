@@ -11,8 +11,6 @@ nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 nvm=('Node Manager' 'https://github.com/creationix/nvm')
 ohmytmux=('Oh-My-Tmux' 'https://github.com/SharryXu/.tmux')
 
-spaceshiptheme='https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/spaceship.zsh'
-
 useremail="852083454@qq.com"
 username="SharryXu"
 
@@ -174,6 +172,7 @@ function installCustomTools() {
         mkdir "$HOME/.bin"
     fi 
 
+    # TODO: Assign chmod +x
     cp ./dotfile.sh $HOME/.bin
     cp ./Bin/* $HOME/.bin
 }
@@ -227,9 +226,6 @@ function install() {
     echo "Check Oh-My-Zsh..."
     gitCloneOrUpdate $HOME/.oh-my-zsh ${ohmyzsh[*]}
     cp ./Zsh/.zshrc $HOME
-
-    echo "Check Oh-My-Zsh theme (SpaceShip) ..."
-    wget $spaceshiptheme -O $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
 
     echo "Check tmux tool..."
     brewInstallIfNotExist 'tmux'
