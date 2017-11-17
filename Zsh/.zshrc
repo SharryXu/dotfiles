@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/.bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/sxu204/.oh-my-zsh
@@ -87,8 +87,10 @@ alias neovim='nvim'
 alias clo='clang -o a.out '
 # Mongo aliases
 alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
-# Emacs aliases
+# Re-link Emacs
 alias emacs="/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw"
+# Re-link Ruby
+alias ruby="/usr/local/Cellar/ruby/2.4.2_1/bin/ruby/ruby"
 
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles

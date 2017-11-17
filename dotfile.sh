@@ -2,6 +2,7 @@
 # This program is used to backup or restore dot files.
 # TODO: 1.Try to seperate all backup methods.
 #       2.Highlight error and warning message in the term.
+#       3.Replace all things like './'
 
 ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh')
 spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
@@ -121,7 +122,8 @@ function rubyPackageInstall() {
         if [ $isExisted -eq 1 ]; then
             echo "Ruby package name " $1 " has already existed."
         else
-            gem install $1
+            # Need root permission to write /Library/Ruby/Gems/2.0.0
+            sudo gem install $1
             echo "Ruby package name " $1 " has been successfully installed."
         fi
     else
@@ -152,10 +154,10 @@ function pythonPackageInstall() {
 }
 
 function setupMacOS() {
+    echo "Setup Mac OS..."
     echo "Show full file path on the tile in Finder..."
-    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true;
-    echo "Restart Finder..."
-    killall Finder
+    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true && killall Finder
+    defaults write com.apple.Dock autohide-delay -float 0 && killall Dock
 }
 
 # TODO: Write those things to a separate file.
@@ -164,7 +166,23 @@ function setupGit() {
     git config --global --add user.name $username
     git config --global --add user.email $useremail
     git config --global --add rerere.enabled 1
+}
 
+function installCustomTools() {
+    echo "Create custom tools..."
+    if [ ! -d "$HOME/.bin" ]; then
+        mkdir "$HOME/.bin"
+    fi 
+
+    cp ./dotfile.sh $HOME/.bin
+    cp ./Bin/* $HOME/.bin
+}
+
+function backupCustomTools() {
+    echo "Backup custom tools..."
+    if [ -d $HOME/.bin ]; then
+        cp $HOME/.bin/* ./Bin/
+    fi
 }
 
 function install() {
@@ -185,6 +203,9 @@ function install() {
         brew upgrade
         echo "All brew packages have been updated."
     fi
+
+    echo "Check Ruby..."
+    brewInstallIfNotExist 'ruby'
 
     echo "Check git..."
     brewInstallIfNotExist 'git'
@@ -213,13 +234,14 @@ function install() {
     echo "Check tmux tool..."
     brewInstallIfNotExist 'tmux'
     brewInstallIfNotExist 'reattach-to-user-namespace'
+    rubyPackageInstall 'tmuxinator'
     gitCloneOrUpdate $HOME/.tmux ${ohmytmux[*]}
     ln -s -f $HOME/.tmux/.tmux.conf $HOME
     cp ./Other/.tmux.conf.local $HOME
 
     # config emacs (substitute the default emacs installed by Mac OS)
     echo "Check emacs..."
-    brew install emacs --with-cocoa
+    brewInstallIfNotExist 'emacs'
     gitCloneOrUpdate $HOME/.emacs.d ${spacemacs[*]}
     cp ./Emacs/.spacemacs $HOME
     # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
@@ -232,7 +254,7 @@ function install() {
     $HOME/.fonts/install.sh 1> /dev/null
 
     echo "Check Vim..."
-    brew install vim --with-override-system-vim
+    brewInstallIfNotExist 'vim --with-override-system-vim' 'vim'
     brewInstallIfNotExist 'neovim' 'nvim'
     rubyPackageInstall 'neovim'
     pythonPackageInstall 'neovim' '2'
@@ -262,6 +284,10 @@ function install() {
     npmInstallIfNotExist 'drakov'
     npmInstallIfNotExist 'aglio'
 
+    installCustomTools
+
+    setupMacOS
+
     echo "Enable Zsh settings..."
     /bin/zsh $HOME/.zshrc
 
@@ -290,6 +316,8 @@ function backup() {
 
     echo "Backup Vim..."
     cp $HOME/.SpaceVim.d/* ./Vim
+
+    backupCustomTools
 
     echo "Done."
 }
