@@ -174,7 +174,6 @@ function installCustomTools() {
         rm -rf $HOME/.bin/*
     fi 
 
-    # TODO: Assign chmod +x
     cp ./Bin/* $HOME/.bin
 }
 
