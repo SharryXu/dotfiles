@@ -58,8 +58,6 @@ plugins=(
   tmuxinator
 )
 
-source $ZSH/oh-my-zsh.sh
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -92,11 +90,6 @@ alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
 # Emacs aliases
 alias emacs="/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw"
 
-# Config node version manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export HOMEBREW_NO_AUTO_UPDATE=true
@@ -108,5 +101,11 @@ ZSH_TMUX_AUTOQUIT=true
 # Enable Spaceship theme
 source $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
 
-echo "Reloaded Oh-My-Zsh settings."
+source $ZSH/oh-my-zsh.sh
 
+# Config node version manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+echo "Reloaded Oh-My-Zsh settings."

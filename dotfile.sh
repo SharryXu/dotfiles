@@ -204,9 +204,6 @@ function install() {
     echo "Check Oh-My-Zsh theme (SpaceShip) ..."
     wget $spaceshiptheme -O $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
 
-    echo "Enable Zsh settings..."
-    /bin/zsh $HOME/.zshrc
-
     echo "Check tmux tool..."
     brewInstallIfNotExist 'tmux'
     brewInstallIfNotExist 'reattach-to-user-namespace'
@@ -255,6 +252,9 @@ function install() {
     npmInstallIfNotExist 'hexo-cli' 'hexo'
     # TODO: Need to use 'npm list -g' to determine if packages are existed or not. 
     npm install -g hexo-deployer-git
+
+    echo "Enable Zsh settings..."
+    /bin/zsh $HOME/.zshrc
 
     echo "Done."
 }
