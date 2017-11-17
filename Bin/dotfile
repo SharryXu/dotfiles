@@ -174,13 +174,13 @@ function installCustomTools() {
         rm -rf $HOME/.bin/*
     fi 
 
-    cp ./Bin/* $HOME/.bin
+    cp $SourcePath/Bin/* $HOME/.bin
 }
 
 function backupCustomTools() {
     echo "Backup custom tools..."
     if [ -d $HOME/.bin ]; then
-        cp $HOME/.bin/* ./Bin/
+        cp $HOME/.bin/* $SourcePath/Bin/
     fi
 }
 
@@ -192,7 +192,7 @@ function install() {
         if [ $result -eq 0 ]; then
             echo "Please install Ruby first."
         else
-            ruby ./Brew/brew_install 
+            ruby $SourcePath/Brew/brew_install 
             echo "brew has been successfully installed."
         fi
     else
@@ -214,18 +214,18 @@ function install() {
 
     echo "Check mongo database..."
     brewInstallIfNotExist 'mongodb' 'mongo'
-    cp ./MongoDB/.mongorc.js $HOME
+    cp $SourcePath/MongoDB/.mongorc.js $HOME
 
     echo "Check mysql database..."
     brewInstallIfNotExist 'mariadb' 'mysql'
-    cp ./MySQL/.my.cnf $HOME
+    cp $SourcePath/MySQL/.my.cnf $HOME
 
     echo "Check tree tool..."
     brewInstallIfNotExist 'tree'
 
     echo "Check Oh-My-Zsh..."
     gitCloneOrUpdate $HOME/.oh-my-zsh ${ohmyzsh[*]}
-    cp ./Zsh/.zshrc $HOME
+    cp $SourcePath/Zsh/.zshrc $HOME
 
     echo "Check tmux tool..."
     brewInstallIfNotExist 'tmux'
@@ -233,13 +233,13 @@ function install() {
     rubyPackageInstall 'tmuxinator'
     gitCloneOrUpdate $HOME/.tmux ${ohmytmux[*]}
     ln -s -f $HOME/.tmux/.tmux.conf $HOME
-    cp ./Other/.tmux.conf.local $HOME
+    cp $SourcePath/Other/.tmux.conf.local $HOME
 
     # config emacs (substitute the default emacs installed by Mac OS)
     echo "Check emacs..."
     brewInstallIfNotExist 'emacs'
     gitCloneOrUpdate $HOME/.emacs.d ${spacemacs[*]}
-    cp ./Emacs/.spacemacs $HOME
+    cp $SourcePath/Emacs/.spacemacs $HOME
     # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
     if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
         rm $HOME/.iterm2_shell_integration.zsh
@@ -255,11 +255,11 @@ function install() {
     rubyPackageInstall 'neovim'
     pythonPackageInstall 'neovim' '2'
     pythonPackageInstall 'neovim' '3'
-    cp ./Vim/* $HOME/.SpaceVim.d/
+    cp $SourcePath/Vim/* $HOME/.SpaceVim.d/
 
     echo "Check ClangFormat tool..."
     brewInstallIfNotExist 'clang-format'
-    cp ./Other/.clang-format $HOME
+    cp $SourcePath/Other/.clang-format $HOME
 
     echo "Check htop tool..."
     brewInstallIfNotExist 'htop'
@@ -292,26 +292,26 @@ function install() {
 
 function backup() {
     echo "Backup Oh-My-Zsh..."
-    cp $HOME/.zshrc ./Zsh/
+    cp $HOME/.zshrc $SourcePath/Zsh/
 
     echo "Backup emacs..."
-    cp $HOME/.spacemacs ./Emacs/
+    cp $HOME/.spacemacs $SourcePath/Emacs/
 
     echo "Backup mongo database..."
-    cp $HOME/.mongorc.js ./MongoDB/
+    cp $HOME/.mongorc.js $SourcePath/MongoDB/
     #TODO: backup mongo.conf file.
 
     echo "Backup mysql database..."
-    cp $HOME/.my.cnf ./MySQL/
+    cp $HOME/.my.cnf $SourcePath/MySQL/
 
     echo "Backup clang format information..."
-    cp $HOME/.clang-format ./Other/
+    cp $HOME/.clang-format $SourcePath/Other/
 
     echo "Backup tmux tool's configuration..."
-    cp $HOME/.tmux.conf.local ./Other/
+    cp $HOME/.tmux.conf.local $SourcePath/Other/
 
     echo "Backup Vim..."
-    cp $HOME/.SpaceVim.d/* ./Vim
+    cp $HOME/.SpaceVim.d/* $SourcePath/Vim
 
     backupCustomTools
 
@@ -324,16 +324,21 @@ manual="Usage: dotfile [Options]\n\n
 -b  Backup dot files."
 
 # main program
-if [ $# -lt 1 -o $# -gt 1 ]
-then
+if [ ! $# -eq 2 ]; then
     echo -e $manual
-elif [ "$1" = "-b" ]
-then
-    backup
-elif [ "$1" = "-i" ]
-then
-    install
+    exit 1
 else
-    echo "Wrong parameters. Please check following instructions."
-    echo -e $manual
+    # TODO: Read source path from file
+    SourcePath=$2
+    if [ "$1" = "-b" ]; then
+        backup
+        exit $? 
+    elif [ "$1" = "-i" ]; then
+        install
+        exit $? 
+    else
+        echo "Wrong parameters. Please check following instructions."
+        echo -e $manual
+        exit 1
+    fi
 fi
