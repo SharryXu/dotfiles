@@ -318,7 +318,7 @@ function backup() {
     echo "Done."
 }
 
-manual="Usage: dotfile [Options]\n\n
+manual="Usage: dotfile [Options] <Absolute-Source-Path>\n\n
 [Options]:\n
 -i  Install dot files to this machine.\n
 -b  Backup dot files."
