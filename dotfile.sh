@@ -42,15 +42,20 @@ function isServerAlive () {
 }
 
 function npmInstallIfNotExist() {
-    if [ $# -eq 2 ]; then
-        local result=$(isProgramExisted $2)
+    if [ $# -gt 0 ]; then
+        if [ $# -eq 2 ]; then
+            result=$(isProgramExisted $2)
+        else
+            result=$(isProgramExisted $1)
+        fi
+
         if [ $result -eq 1 ]; then
             echo $1 "has already existed"
         elif [ $result -eq 0 ]; then
             npm install -g $1@latest
             echo $1 "has successfully been installed."
         else
-            echo "Please indicate the program name to install" $1
+            echo "Please indicate the program name to install"
         fi
     else
         echo "Please check parameters."
@@ -72,7 +77,7 @@ function brewInstallIfNotExist() {
             brew install $1
             echo $1 "has successfully been installed."
         else
-            echo "Please indicate the command name to install" $1
+            echo "Please indicate the command name to install"
         fi
     else
         echo "Please check parameters."
@@ -252,6 +257,10 @@ function install() {
     echo "Check hexo..."
     # TODO: Need to use 'npm list -g' to determine if packages are existed or not. 
     npmInstallIfNotExist 'hexo-cli' 'hexo'
+
+    echo "Check API BluePrint..."
+    npmInstallIfNotExist 'drakov'
+    npmInstallIfNotExist 'aglio'
 
     echo "Enable Zsh settings..."
     /bin/zsh $HOME/.zshrc
