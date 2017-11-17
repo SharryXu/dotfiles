@@ -169,11 +169,12 @@ function setupGit() {
 function installCustomTools() {
     echo "Create custom tools..."
     if [ ! -d "$HOME/.bin" ]; then
-        mkdir "$HOME/.bin"
+        mkdir $HOME/.bin
+    else
+        rm -rf $HOME/.bin/*
     fi 
 
     # TODO: Assign chmod +x
-    cp ./dotfile.sh $HOME/.bin
     cp ./Bin/* $HOME/.bin
 }
 
