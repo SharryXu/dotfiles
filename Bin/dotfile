@@ -329,6 +329,10 @@ function backup() {
     echo "Backup Vim..."
     cp $HOME/.SpaceVim.d/* $SourcePath/Vim
 
+    echo "Backup System Config..."
+    cp $HOME/.config/fontconfig/ $SourcePath/Config/fontconfig/
+    cp $HOME/.config/tmuxinator/ $SourcePath/Config/tmuxinator/
+
     backupCustomTools
 
     echo "Done."
