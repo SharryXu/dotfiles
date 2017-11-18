@@ -2,12 +2,13 @@
 # This program is used to backup or restore dot files.
 # TODO: 1.Try to seperate all backup methods.
 #       2.Highlight error and warning message in the term.
-#       3.Replace all things like './'
+#       3.Replace all things like './' (Done)
+#       4.Add error handle mechanism.
 
 ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh')
 spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
 zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt')
-powerlinefonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
+powerlinefonts=('Powerline-fonts' 'https://github.com/powerline/fonts')
 nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 nvm=('Node Manager' 'https://github.com/creationix/nvm')
 ohmytmux=('Oh-My-Tmux' 'https://github.com/SharryXu/.tmux')
@@ -18,12 +19,13 @@ username="SharryXu"
 function isProgramExisted() {
     if [ $# -eq 1 ]; then
         if command -v $1 > /dev/null 2>&1; then
-            echo 1;
+            true
         else
-            echo 0;
+            false
         fi
     else
-        echo -1;
+        echo "Please check parameters."
+        exit 1
     fi
 }
 
@@ -32,12 +34,27 @@ function isServerAlive () {
         local tryCounts = 3
         local result=`ping $1 -c $tryCounts | grep "^\w\{2\} bytes from .*ttl=[0-9]" -c`
         if [ $result -eq $tryCounts ]; then
-            echo 1;
+            return 1;
         else
-            echo 0;
+            return 0;
         fi
     else
-        echo -1;
+        echo "Please check parameters."
+        exit 1
+    fi
+}
+
+function isFolderEmpty () {
+    if [ $# -eq 1 ]; then
+        local result=`find $1 -name '*' -maxdepth 1`
+        if [ '$result' == '$1' ]; then
+            true
+        else
+            false
+        fi
+    else
+        echo "Please check parameters."
+        exit 1
     fi
 }
 
@@ -49,7 +66,7 @@ function npmInstallIfNotExist() {
             result=$(isProgramExisted $1)
         fi
 
-        if [ $result -eq 1 ]; then
+        if $result ; then
             echo $1 "has already existed"
         elif [ $result -eq 0 ]; then
             npm install -g $1@latest
@@ -59,6 +76,7 @@ function npmInstallIfNotExist() {
         fi
     else
         echo "Please check parameters."
+        exit 1
     fi
 }
 
@@ -71,7 +89,7 @@ function brewInstallIfNotExist() {
             result=$(isProgramExisted $1)
         fi
 
-        if [ $result -eq 1 ]; then
+        if $result ; then
             echo $1 "has already existed."
         elif [ $result -eq 0 ]; then
             brew install $1
@@ -81,6 +99,7 @@ function brewInstallIfNotExist() {
         fi
     else
         echo "Please check parameters."
+        exit 1
     fi
 }
 
@@ -90,20 +109,24 @@ function gitCloneOrUpdate() {
     if [ $# -ge 3 ]; then
         local repoInfo=$2
         if [ -d $1 ]; then
-            echo ${repoInfo[0]} "existed and now will pull the latest version."
-            cd $1
-            # TODO: Try to redirect the git output to shell itself
-            # And if the repo is very large, just need to ge the first level.
-            git pull
-            cd $currentFolder
+            if isFolderEmpty $1 ; then
+                echo ${repoInfo[0]} "existed but it's empty."
+                sudo git clone ${repoInfo[1]} $1
+            else
+                echo ${repoInfo[0]} "existed and now will pull the latest version."
+                cd $1
+                git pull
+                cd $currentFolder
+            fi
         else
-            echo "Downloading " $1 "..."
+            echo ${repoInfo[0]} "is not existed and now downloading..."
             # TODO: Add new parameter to support --depth
-            git clone ${repoInfo[1]} $1
+            sudo git clone ${repoInfo[1]} $1
             echo ${repoInfo[0]} "has been successfully downloaded."
         fi
     else
         echo "Please check parameters."
+        exit 1
     fi
 }
 
@@ -128,6 +151,7 @@ function rubyPackageInstall() {
         fi
     else
         echo "Please check parameters."
+        exit 1
     fi
 }
 
@@ -150,6 +174,7 @@ function pythonPackageInstall() {
         fi
     else
         echo "Please check parameters."
+        exit 1
     fi
 }
 
@@ -201,20 +226,21 @@ function backupCustomTools() {
 function install() {
     echo "Check brew..."
     local result=$(isProgramExisted 'brew')
-    if [ $result -eq 0 ]; then
-        result=$(isProgramExisted 'ruby')
-        if [ $result -eq 0 ]; then
-            echo "Please install Ruby first."
-        else
-            ruby $SourcePath/Brew/brew_install 
-            echo "brew has been successfully installed."
-        fi
-    else
+    if $result ; then
         brew update
         echo "brew has been successfully updated."
         echo "Update all brew packages..."
         brew upgrade
         echo "All brew packages have been updated."
+    else
+        result=$(isProgramExisted 'ruby')
+        if $result ; then
+            echo "Please install Ruby first."
+            exit 1
+        else
+            ruby $SourcePath/Brew/brew_install 
+            echo "brew has been successfully installed."
+        fi
     fi
 
     echo "Check Ruby..."
@@ -260,10 +286,11 @@ function install() {
     fi
 
     # config fonts
-    echo "Check fonts..."
-    gitCloneOrUpdate $HOME/.fonts ${nerdfonts[*]}
+    echo "Check Nerd fonts..."
+    gitCloneOrUpdate $HOME/.fonts-nerd ${nerdfonts[*]}
     $HOME/.fonts-nerd/install.sh 1> /dev/null
-    gitCloneOrUpdate $HOME/.fonts ${powerlinefonts[*]}
+    echo "Check Powerline fonts..."
+    gitCloneOrUpdate $HOME/.fonts-powerline ${powerlinefonts[*]}
     $HOME/.fonts-powerline/install.sh 1> /dev/null
 
     echo "Check Vim..."
