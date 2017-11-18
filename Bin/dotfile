@@ -98,7 +98,8 @@ function gitCloneOrUpdate() {
             cd $currentFolder
         else
             echo "Downloading " $1 "..."
-            git clone --depth=1 ${repoInfo[1]} $1
+            # TODO: Add new parameter to support --depth
+            git clone ${repoInfo[1]} $1
             echo ${repoInfo[0]} "has been successfully downloaded."
         fi
     else
