@@ -7,6 +7,7 @@
 ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh')
 spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
 zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt')
+powerlinefonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 nvm=('Node Manager' 'https://github.com/creationix/nvm')
 ohmytmux=('Oh-My-Tmux' 'https://github.com/SharryXu/.tmux')
@@ -158,11 +159,11 @@ function setupMacOS() {
     # Adjust the delay time for Dock displaying
     defaults write com.apple.Dock autohide-delay -float 0
     # Adjust the LaunchPad layout
-    defaults write com.apple.dock springboard-columns -int 8
-    defaults write com.apple.dock springboard-rows -int 7
+    # defaults write com.apple.dock springboard-columns -int 8
+    # defaults write com.apple.dock springboard-rows -int 7
     # Adjust the transpalent value for LaunchPad
-    defaults write com.apple.dock springboard-blur-radius -int 100
-    defaults write com.apple.dock ResetLaunchPad -bool true
+    # defaults write com.apple.dock springboard-blur-radius -int 100
+    # defaults write com.apple.dock ResetLaunchPad -bool true
     # Adjust the default location for screenshots
     # defaults write com.apple.screencapture location ~/Desktop/screenshots; killall SystemUIServer
     # Adjust the default screenshot type
@@ -258,8 +259,11 @@ function install() {
     fi
 
     # config fonts
+    echo "Check fonts..."
     gitCloneOrUpdate $HOME/.fonts ${nerdfonts[*]}
-    $HOME/.fonts/install.sh 1> /dev/null
+    $HOME/.fonts-nerd/install.sh 1> /dev/null
+    gitCloneOrUpdate $HOME/.fonts ${powerlinefonts[*]}
+    $HOME/.fonts-powerline/install.sh 1> /dev/null
 
     echo "Check Vim..."
     brewInstallIfNotExist 'vim --with-override-system-vim' 'vim'
