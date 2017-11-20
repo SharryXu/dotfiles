@@ -213,13 +213,13 @@ function installCustomTools() {
         rm -rf $HOME/.bin/*
     fi 
 
-    cp $SourcePath/Bin/* $HOME/.bin
+    cp -r $SourcePath/Bin/* $HOME/.bin
 }
 
 function backupCustomTools() {
     echo "Backup custom tools..."
     if [ -d $HOME/.bin ]; then
-        cp $HOME/.bin/* $SourcePath/Bin/
+        cp -r $HOME/.bin/* $SourcePath/Bin/
     fi
 }
 
@@ -336,30 +336,30 @@ function install() {
 
 function backup() {
     echo "Backup Oh-My-Zsh..."
-    cp $HOME/.zshrc $SourcePath/Zsh/
+    cp -r $HOME/.zshrc $SourcePath/Zsh/
 
     echo "Backup emacs..."
-    cp $HOME/.spacemacs $SourcePath/Emacs/
+    cp -r $HOME/.spacemacs $SourcePath/Emacs/
 
     echo "Backup mongo database..."
     cp $HOME/.mongorc.js $SourcePath/MongoDB/
     #TODO: backup mongo.conf file.
 
     echo "Backup mysql database..."
-    cp $HOME/.my.cnf $SourcePath/MySQL/
+    cp -r $HOME/.my.cnf $SourcePath/MySQL/
 
     echo "Backup clang format information..."
-    cp $HOME/.clang-format $SourcePath/Other/
+    cp -r $HOME/.clang-format $SourcePath/Other/
 
     echo "Backup tmux tool's configuration..."
-    cp $HOME/.tmux.conf.local $SourcePath/Other/
+    cp -r $HOME/.tmux.conf.local $SourcePath/Other/
 
     echo "Backup Vim..."
-    cp $HOME/.SpaceVim.d/* $SourcePath/Vim
+    cp -r $HOME/.SpaceVim.d/* $SourcePath/Vim
 
     echo "Backup System Config..."
-    cp $HOME/.config/fontconfig/ $SourcePath/Config/fontconfig/
-    cp $HOME/.config/tmuxinator/ $SourcePath/Config/tmuxinator/
+    cp -r $HOME/.config/fontconfig/ $SourcePath/Config/fontconfig/
+    cp -r $HOME/.config/tmuxinator/ $SourcePath/Config/tmuxinator/
 
     backupCustomTools
 

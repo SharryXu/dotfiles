@@ -265,5 +265,8 @@ set -g prefix C-x
 #set -g status-position top
 set-option -s escape-time 0
 
+# Fixes Iterm2 integration
+setw -g aggressive-resize off
+
 # bind a reload key
 #bind r source-file ~/.tmux.conf \; display "Successfully reloaded configuration!"
