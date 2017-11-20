@@ -376,8 +376,13 @@ if [ ! $# -eq 2 ]; then
     echo -e $manual
     exit 1
 else
-    # TODO: Read source path from file
+    # TODO: Default, use absolute path or you can use $PWD to let user provide relative path.
     SourcePath=$2
+    if [[ ${SourcePath:0:1} != '/' && ${SourcePath:0:1} != '~' && (! -d $SourcePath) ]]; then
+        echo -e $manual
+        exit 1
+    fi
+
     if [ "$1" = "-b" ]; then
         backup
         exit $? 
@@ -385,7 +390,6 @@ else
         install
         exit $? 
     else
-        echo "Wrong parameters. Please check following instructions."
         echo -e $manual
         exit 1
     fi
