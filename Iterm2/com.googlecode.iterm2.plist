@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AdjustWindowForFontSizeChange</key>
+	<true/>
+	<key>AllowClipboardAccess</key>
+	<true/>
 	<key>AppleAntiAliasingThreshold</key>
 	<integer>1</integer>
 	<key>AppleScrollAnimationEnabled</key>
@@ -12,6 +16,8 @@
 	<string>manual</string>
 	<key>AutoHideTmuxClientSession</key>
 	<true/>
+	<key>CheckTestRelease</key>
+	<false/>
 	<key>Default Bookmark Guid</key>
 	<string>23570FF8-D33E-404A-910C-6F4DD0F80487</string>
 	<key>DeleteProfile_SilenceUntil</key>
@@ -19,6 +25,8 @@
 	<key>DeleteProfile_selection</key>
 	<integer>0</integer>
 	<key>DisableFullscreenTransparency</key>
+	<false/>
+	<key>EnableRendezvous</key>
 	<false/>
 	<key>HideScrollbar</key>
 	<true/>
@@ -99,9 +107,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>-120 1057 606 469 -213 900 1920 1057 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>302 300 918 512 0 0 1440 877 </string>
+	<string>302 300 796 473 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 0 1440 724 0 0 1440 877 </string>
+	<string>0 0 1440 604 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>672 68 842 679 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -133,6 +141,8 @@
 			<string></string>
 			<key>AWDS Window Option</key>
 			<string>No</string>
+			<key>Allow Title Reporting</key>
+			<false/>
 			<key>Allow Title Setting</key>
 			<true/>
 			<key>Ambiguous Double Width</key>
@@ -326,7 +336,7 @@
 			<key>Close Sessions On End</key>
 			<true/>
 			<key>Columns</key>
-			<integer>160</integer>
+			<integer>180</integer>
 			<key>Command</key>
 			<string></string>
 			<key>Cursor Boost</key>
@@ -368,7 +378,7 @@
 			<key>Description</key>
 			<string>Default</string>
 			<key>Disable Window Resizing</key>
-			<false/>
+			<true/>
 			<key>Flashing Bell</key>
 			<false/>
 			<key>Foreground Color</key>
@@ -795,7 +805,7 @@
 			<key>Thin Strokes</key>
 			<integer>4</integer>
 			<key>Transparency</key>
-			<real>0.11349788713092843</real>
+			<real>0.14833291251163908</real>
 			<key>Unicode Normalization</key>
 			<integer>0</integer>
 			<key>Unlimited Scrollback</key>
@@ -918,10 +928,12 @@
 	<false/>
 	<key>OpenArrangementAtStartup</key>
 	<false/>
+	<key>OpenBookmark</key>
+	<false/>
 	<key>OpenNoWindowsAtStartup</key>
 	<true/>
 	<key>OpenTmuxWindowsIn</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>PointerActions</key>
 	<dict>
 		<key>Button,1,1,,</key>
@@ -977,12 +989,14 @@
 	<false/>
 	<key>ShowBookmarkName</key>
 	<true/>
+	<key>SmartPlacement</key>
+	<true/>
 	<key>TabStyle</key>
 	<integer>0</integer>
 	<key>TabViewType</key>
 	<integer>0</integer>
 	<key>TmuxDashboardLimit</key>
-	<integer>10</integer>
+	<integer>3</integer>
 	<key>ToolbeltTools</key>
 	<array>
 		<string>Profiles</string>
@@ -991,6 +1005,8 @@
 	<dict/>
 	<key>UseBorder</key>
 	<false/>
+	<key>UseLionStyleFullscreen</key>
+	<true/>
 	<key>findIgnoreCase_iTerm</key>
 	<true/>
 	<key>findRegex_iTerm</key>
