@@ -85,7 +85,7 @@ values."
      diredful
      dired-icon
      powerline
-     ;; multi-term
+     multi-term
      osx-clipboard
      evil-terminal-cursor-changer
      apib-mode
@@ -391,6 +391,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; evil-operator-state-cursor
   (setq evil-insert-state-cursor '((bar . 5) "yellow")
         evil-normal-state-cursor '(box "yellow"))
+
+  (setq osx-clipboard-mode t)
  )
 
 (defun dotspacemacs/user-config ()
@@ -402,8 +404,7 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (setq global-linum-mode t
         global-hl-line-mode t
-        global-auto-revert-mode nil
-        osx-clipboard-mode t)
+        global-auto-revert-mode nil)
 
   (unless (display-graphic-p)
     (require 'evil-terminal-cursor-changer)

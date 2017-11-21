@@ -43,4 +43,5 @@ let g:loaded_python_provider = 1
 let g:loaded_python3_provider = 1
 let g:spacevim_enable_guicolors = 1
 let g:spacevim_colorscheme = 'molokai'
-let g:spacevim_guifont = 'DejaVu\ Sans\ Mono\ for\ Powerline\ 11'
+
+set clipboard=unnamed
