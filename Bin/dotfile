@@ -299,6 +299,10 @@ function install() {
     rubyPackageInstall 'neovim'
     pythonPackageInstall 'neovim' '2'
     pythonPackageInstall 'neovim' '3'
+    # Configure SpaceVim
+    if [ ! -d $HOME/.SpaceVim ]; then
+        curl -sLf https://spacevim.org/install.sh | bash
+    fi
     cp $SourcePath/Vim/* $HOME/.SpaceVim.d/
 
     echo "Check ClangFormat tool..."
@@ -378,7 +382,7 @@ if [ ! $# -eq 2 ]; then
 else
     # TODO: Default, use absolute path or you can use $PWD to let user provide relative path.
     SourcePath=$2
-    if [[ ${SourcePath:0:1} != '/' && ${SourcePath:0:1} != '~' && (! -d $SourcePath) ]]; then
+    if [[ (${SourcePath:0:1} != '/' && ${SourcePath:0:1} != '~') || (! -d $SourcePath) ]]; then
         echo -e $manual
         exit 1
     fi
