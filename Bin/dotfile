@@ -381,7 +381,7 @@ if [ ! $# -eq 2 ]; then
     exit 1
 else
     # TODO: Default, use absolute path or you can use $PWD to let user provide relative path.
-    SourcePath=$2
+    SourcePath=`echo $2 | sed 's/\/$//g'`
     if [[ (${SourcePath:0:1} != '/' && ${SourcePath:0:1} != '~') || (! -d $SourcePath) ]]; then
         echo -e $manual
         exit 1
@@ -398,3 +398,5 @@ else
         exit 1
     fi
 fi
+
+exit $?
