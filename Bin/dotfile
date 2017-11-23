@@ -365,7 +365,7 @@ function backup() {
     echo "Done."
 }
 
-manual="Usage: dotfile [Options] <Absolute-Source-Path>\n\n
+manual="Usage: dotfile [Options] <source path>\n\n
 [Options]:\n
 -i  Install dot files to this machine.\n
 -b  Backup dot files."
@@ -375,19 +375,25 @@ if [ ! $# -eq 2 ]; then
     echo -e $manual
     exit 1
 else
-    # TODO: Default, use absolute path or you can use $PWD to let user provide relative path.
-    SourcePath=`echo $2 | sed 's/\/$//g'`
-    if [[ (${SourcePath:0:1} != '/' && ${SourcePath:0:1} != '~') || (! -d $SourcePath) ]]; then
+    SourcePath=`echo $2 | sed 's/.+\/$//g'`
+    if [[ ${SourcePath:0:1} != '/' && ${SourcePath:0:1} != '~' ]]; then
+        # Check as relative path
+        SourcePath=`echo $SourcePath | sed 's/^\///g'`
+        SourcePath=$PWD/$SourcePath;
+    fi
+
+    if [ ! -d $SourcePath ] || isFolderEmpty $SourcePath ; then
+        echo $SourcePath "is not existed or empty."
         echo -e $manual
         exit 1
     fi
 
     if [ "$1" = "-b" ]; then
         backup
-        exit $? 
+        exit $?
     elif [ "$1" = "-i" ]; then
         install
-        exit $? 
+        exit $?
     else
         echo -e $manual
         exit 1
