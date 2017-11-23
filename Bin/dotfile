@@ -13,9 +13,6 @@ nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 nvm=('Node Manager' 'https://github.com/creationix/nvm')
 ohmytmux=('Oh-My-Tmux' 'https://github.com/SharryXu/.tmux')
 
-useremail="852083454@qq.com"
-username="SharryXu"
-
 function isProgramExisted() {
     if [ $# -eq 1 ]; then
         if command -v $1 > /dev/null 2>&1; then
@@ -197,14 +194,6 @@ function setupMacOS() {
     killall Dock
 }
 
-# TODO: Write those things to a separate file.
-function setupGit() {
-    echo "Setup Git tool..."
-    git config --global --add user.name $username
-    git config --global --add user.email $useremail
-    git config --global --add rerere.enabled 1
-}
-
 function installCustomTools() {
     echo "Create custom tools..."
     if [ ! -d "$HOME/.bin" ]; then
@@ -248,6 +237,8 @@ function install() {
 
     echo "Check git..."
     brewInstallIfNotExist 'git'
+    cp $SourcePath/Git/.gitconfig $HOME/
+    cp $SourcePath/Git/.gitignore_global $HOME/
 
     echo "Check python3..."
     brewInstallIfNotExist 'python3'
@@ -364,6 +355,10 @@ function backup() {
     echo "Backup System Config..."
     cp -r $HOME/.config/fontconfig/ $SourcePath/Config/fontconfig/
     cp -r $HOME/.config/tmuxinator/ $SourcePath/Config/tmuxinator/
+
+    echo "Backup Git Configuration..."
+    cp $HOME/.gitconfig $SourcePath/Git/
+    cp $HOME/.gitignore_global $SourcePath/Git/
 
     backupCustomTools
 

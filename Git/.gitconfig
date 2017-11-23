@@ -1,0 +1,20 @@
+[core]
+	excludesfile = /Users/sxu204/.gitignore_global
+[difftool "sourcetree"]
+	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+	trustExitCode = true
+[user]
+	name = SharryXu
+	email = 852083454@qq.com
+[commit]
+	template = /Users/sxu204/.stCommitMsg
+[rerere]
+	enabled = 1
+[sendemail]
+	smtpserver = smtp.qq.com
+	smtpserverport = 587
+	smtpencryption = tls
+	smtpuser = 852083454@qq.com
