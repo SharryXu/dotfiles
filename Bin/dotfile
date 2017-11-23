@@ -1,9 +1,16 @@
 #!/bin/bash
 # This program is used to backup or restore dot files.
 # TODO: 1.Try to seperate all backup methods.
-#       2.Highlight error and warning message in the term.
-#       3.Replace all things like './' (Done)
-#       4.Add error handle mechanism.
+#       2.Replace all things like './' (Done)
+#       3.Add error handle mechanism.
+
+d_Black='\033[0;30m'
+d_Red='\033[0;31m'
+d_Green='\033[0;32m'
+d_Yellow='\033[1;33m'
+d_Blue='\033[0;34m'
+d_White='\033[1;37m'
+d_NC='\033[0m'
 
 ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh')
 spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
@@ -13,6 +20,30 @@ nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 nvm=('Node Manager' 'https://github.com/creationix/nvm')
 ohmytmux=('Oh-My-Tmux' 'https://github.com/SharryXu/.tmux')
 
+function printResult() {
+    if [ $# -eq 2 ]; then
+        if [ $1 -eq 0 ]; then
+            echo -e "${d_Green}$2${d_NC}"
+        elif [ $1 -eq 1 ]; then
+            echo -e "${d_Red}$2${d_NC}"
+        else
+            echo -e "${d_Yellow}$2${d_NC}"
+        fi
+    else
+        echo -e "${d_Red}Please check parameters.${d_NC}"
+        exit 1
+    fi
+}
+
+function printTitle() {
+    if [ $# -eq 1 ]; then
+        echo -e "${d_Blue}$1${d_NC}"
+    else
+        printResult 1 "Please check parameters."
+        exit 1
+    fi
+}
+
 function isProgramExisted() {
     if [ $# -eq 1 ]; then
         if command -v $1 > /dev/null 2>&1; then
@@ -21,7 +52,7 @@ function isProgramExisted() {
             false
         fi
     else
-        echo "Please check parameters."
+        printResult 1 "Please check parameters."
         exit 1
     fi
 }
@@ -36,7 +67,7 @@ function isServerAlive () {
             return 0;
         fi
     else
-        echo "Please check parameters."
+        printResult 1 "Please check parameters."
         exit 1
     fi
 }
@@ -50,7 +81,7 @@ function isFolderEmpty () {
             false
         fi
     else
-        echo "Please check parameters."
+        printResult 1 "Please check parameters."
         exit 1
     fi
 }
@@ -64,15 +95,16 @@ function npmInstallIfNotExist() {
         fi
 
         if $result ; then
-            echo $1 "has already existed"
+            printResult 2 "$1 has already existed"
         elif [ $result -eq 0 ]; then
+            # Always install latest version
             npm install -g $1@latest
-            echo $1 "has successfully been installed."
+            printResult 0 "$1 has successfully been installed."
         else
-            echo "Please indicate the program name to install"
+            printResult 2 "Please indicate the program name to install"
         fi
     else
-        echo "Please check parameters."
+        printResult 1 "Please check parameters."
         exit 1
     fi
 }
@@ -87,15 +119,15 @@ function brewInstallIfNotExist() {
         fi
 
         if $result ; then
-            echo $1 "has already existed."
+            printResult 2 "$1 has already existed."
         elif [ $result -eq 0 ]; then
             brew install $1
-            echo $1 "has successfully been installed."
+            printResult 0 "$1 has successfully been installed."
         else
-            echo "Please indicate the command name to install"
+            printResult 2 "Please indicate the command name to install"
         fi
     else
-        echo "Please check parameters."
+        printResult 1 "Please check parameters."
         exit 1
     fi
 }
@@ -107,22 +139,22 @@ function gitCloneOrUpdate() {
         local repoInfo=$2
         if [ -d $1 ]; then
             if isFolderEmpty $1 ; then
-                echo ${repoInfo[0]} "existed but it's empty."
-                sudo git clone ${repoInfo[1]} $1
+                printResult 2 "${repoInfo[0]} existed but it's empty."
+                git clone ${repoInfo[1]} $1
             else
-                echo ${repoInfo[0]} "existed and now will pull the latest version."
+                printResult 0 "${repoInfo[0]} existed and now will pull the latest version."
                 cd $1
                 git pull
                 cd $currentFolder
             fi
         else
-            echo ${repoInfo[0]} "is not existed and now downloading..."
+            printResult 2 "${repoInfo[0]} is not existed and now downloading..."
             # TODO: Add new parameter to support --depth
             sudo git clone ${repoInfo[1]} $1
-            echo ${repoInfo[0]} "has been successfully downloaded."
+            printResult 0 "${repoInfo[0]} has been successfully downloaded."
         fi
     else
-        echo "Please check parameters."
+        printResult 1 "Please check parameters."
         exit 1
     fi
 }
@@ -144,10 +176,10 @@ function rubyPackageInstall() {
         else
             # Need root permission to write /Library/Ruby/Gems/2.0.0
             sudo gem install $1
-            echo "Ruby package name " $1 " has been successfully installed."
+            printResult 0 "Ruby package name $1 has been successfully installed."
         fi
     else
-        echo "Please check parameters."
+        printResult 1 "Please check parameters."
         exit 1
     fi
 }
@@ -164,20 +196,20 @@ function pythonPackageInstall() {
         done
 
         if [ $isExisted -eq 1 ]; then
-            echo "Python package name " $1 "has already existed."
+            printResult 2 "Python package name $1 has already existed."
         else
             pip$2 install --user $1
-            echo "Python package name " $1 "has been successfully installed."
+            printResult 0 "Python package name $1 has been successfully installed."
         fi
     else
-        echo "Please check parameters."
+        printResult 1 "Please check parameters."
         exit 1
     fi
 }
 
 function setupMacOS() {
-    echo "Setup Mac OS..."
-    echo "Show full file path on the tile in Finder..."
+    printTitle "Setup Mac OS..."
+    printTitle "Show full file path on the tile in Finder..."
     defaults write com.apple.finder _FXShowPosixPathInTitle -bool true && killall Finder
     # Adjust the delay time for Dock displaying
     defaults write com.apple.Dock autohide-delay -float 0
@@ -195,70 +227,70 @@ function setupMacOS() {
 }
 
 function installCustomTools() {
-    echo "Create custom tools..."
+    printTitle "Create custom tools..."
     if [ ! -d "$HOME/.bin" ]; then
         mkdir $HOME/.bin
     else
         rm -rf $HOME/.bin/*
-    fi 
+    fi
 
     cp -r $SourcePath/Bin/* $HOME/.bin
 }
 
 function backupCustomTools() {
-    echo "Backup custom tools..."
+    printTitle "Backup custom tools..."
     if [ -d $HOME/.bin ]; then
         cp -r $HOME/.bin/* $SourcePath/Bin/
     fi
 }
 
 function install() {
-    echo "Check brew..."
+    printTitle "Check brew..."
     local result=$(isProgramExisted 'brew')
     if $result ; then
         brew update
-        echo "brew has been successfully updated."
-        echo "Update all brew packages..."
+        printResult 0 "brew has been successfully updated."
+        printTitle "Update all brew packages..."
         brew upgrade
-        echo "All brew packages have been updated."
+        printResult 0 "All brew packages have been updated."
     else
         result=$(isProgramExisted 'ruby')
         if $result ; then
-            echo "Please install Ruby first."
+            printResult 1 "Please install Ruby first."
             exit 1
         else
             ruby $SourcePath/Brew/brew_install 
-            echo "brew has been successfully installed."
+            printResult 0 "brew has been successfully installed."
         fi
     fi
 
-    echo "Check Ruby..."
+    printTitle "Check Ruby..."
     brewInstallIfNotExist 'ruby'
 
-    echo "Check git..."
+    printTitle "Check git..."
     brewInstallIfNotExist 'git'
     cp $SourcePath/Git/.gitconfig $HOME/
     cp $SourcePath/Git/.gitignore_global $HOME/
 
-    echo "Check python3..."
+    printTitle "Check python3..."
     brewInstallIfNotExist 'python3'
 
-    echo "Check mongo database..."
+    printTitle "Check mongo database..."
     brewInstallIfNotExist 'mongodb' 'mongo'
     cp $SourcePath/MongoDB/.mongorc.js $HOME
 
-    echo "Check mysql database..."
+    printTitle "Check mysql database..."
     brewInstallIfNotExist 'mariadb' 'mysql'
     cp $SourcePath/MySQL/.my.cnf $HOME
 
-    echo "Check tree tool..."
+    printTitle "Check tree tool..."
     brewInstallIfNotExist 'tree'
 
-    echo "Check Oh-My-Zsh..."
+    printTitle "Check Oh-My-Zsh..."
     gitCloneOrUpdate $HOME/.oh-my-zsh ${ohmyzsh[*]}
     cp $SourcePath/Zsh/.zshrc $HOME
 
-    echo "Check tmux tool..."
+    printTitle "Check tmux tool..."
     brewInstallIfNotExist 'tmux'
     brewInstallIfNotExist 'reattach-to-user-namespace'
     rubyPackageInstall 'tmuxinator'
@@ -267,7 +299,7 @@ function install() {
     cp $SourcePath/Other/.tmux.conf.local $HOME
 
     # config emacs (substitute the default emacs installed by Mac OS)
-    echo "Check emacs..."
+    printTitle "Check emacs..."
     brewInstallIfNotExist 'emacs'
     gitCloneOrUpdate $HOME/.emacs.d ${spacemacs[*]}
     cp $SourcePath/Emacs/.spacemacs $HOME
@@ -277,14 +309,14 @@ function install() {
     fi
 
     # config fonts
-    echo "Check Nerd fonts..."
+    printTitle "Check Nerd fonts..."
     gitCloneOrUpdate $HOME/.fonts-nerd ${nerdfonts[*]}
     $HOME/.fonts-nerd/install.sh 1> /dev/null
-    echo "Check Powerline fonts..."
+    printTitle "Check Powerline fonts..."
     gitCloneOrUpdate $HOME/.fonts-powerline ${powerlinefonts[*]}
     $HOME/.fonts-powerline/install.sh 1> /dev/null
 
-    echo "Check Vim..."
+    printTitle "Check Vim..."
     brewInstallIfNotExist 'vim --with-override-system-vim' 'vim'
     brewInstallIfNotExist 'neovim' 'nvim'
     rubyPackageInstall 'neovim'
@@ -296,26 +328,26 @@ function install() {
     fi
     cp $SourcePath/Vim/* $HOME/.SpaceVim.d/
 
-    echo "Check ClangFormat tool..."
+    printTitle "Check ClangFormat tool..."
     brewInstallIfNotExist 'clang-format'
     cp $SourcePath/Other/.clang-format $HOME
 
-    echo "Check htop tool..."
+    printTitle "Check htop tool..."
     brewInstallIfNotExist 'htop'
 
-    echo "Check NodeJS..."
+    printTitle "Check NodeJS..."
     brewInstallIfNotExist 'node'
     brewInstallIfNotExist 'npm'
 
-    echo "Check Node Manager..."
+    printTitle "Check Node Manager..."
     gitCloneOrUpdate $HOME/.nvm $nvm
     source $HOME/.nvm/nvm.sh
 
-    echo "Check hexo..."
+    printTitle "Check hexo..."
     # TODO: Need to use 'npm list -g' to determine if packages are existed or not. 
     npmInstallIfNotExist 'hexo-cli' 'hexo'
 
-    echo "Check API BluePrint..."
+    printTitle "Check API BluePrint..."
     npmInstallIfNotExist 'drakov'
     npmInstallIfNotExist 'aglio'
 
@@ -323,46 +355,44 @@ function install() {
 
     setupMacOS
 
-    echo "Enable Zsh settings..."
+    printTitle "Enable Zsh settings..."
     /bin/zsh $HOME/.zshrc
 
-    echo "Done."
+    printTitle "Done."
 }
 
 function backup() {
-    echo "Backup Oh-My-Zsh..."
+    printTitle "Backup Oh-My-Zsh..."
     cp -r $HOME/.zshrc $SourcePath/Zsh/
 
-    echo "Backup emacs..."
+    printTitle "Backup emacs..."
     cp -r $HOME/.spacemacs $SourcePath/Emacs/
 
-    echo "Backup mongo database..."
+    printTitle "Backup mongo database..."
     cp $HOME/.mongorc.js $SourcePath/MongoDB/
     #TODO: backup mongo.conf file.
 
-    echo "Backup mysql database..."
+    printTitle "Backup mysql database..."
     cp -r $HOME/.my.cnf $SourcePath/MySQL/
 
-    echo "Backup clang format information..."
+    printTitle "Backup clang format information..."
     cp -r $HOME/.clang-format $SourcePath/Other/
 
-    echo "Backup tmux tool's configuration..."
+    printTitle "Backup tmux tool's configuration..."
     cp -r $HOME/.tmux.conf.local $SourcePath/Other/
 
-    echo "Backup Vim..."
+    printTitle "Backup Vim..."
     cp -r $HOME/.SpaceVim.d/* $SourcePath/Vim
 
-    echo "Backup System Config..."
+    printTitle "Backup System Config..."
     cp -r $HOME/.config/fontconfig/ $SourcePath/Config/fontconfig/
     cp -r $HOME/.config/tmuxinator/ $SourcePath/Config/tmuxinator/
 
-    echo "Backup Git Configuration..."
+    printTitle "Backup Git Configuration..."
     cp $HOME/.gitconfig $SourcePath/Git/
     cp $HOME/.gitignore_global $SourcePath/Git/
 
-    backupCustomTools
-
-    echo "Done."
+    printTitle "Done."
 }
 
 manual="Usage: dotfile [Options] <source path>\n\n
@@ -383,7 +413,7 @@ else
     fi
 
     if [ ! -d $SourcePath ] || isFolderEmpty $SourcePath ; then
-        echo $SourcePath "is not existed or empty."
+        printResult 1 "$SourcePath is not existed or empty."
         echo -e $manual
         exit 1
     fi
