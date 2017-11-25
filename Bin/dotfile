@@ -164,7 +164,7 @@ function rubyPackageInstall() {
         local isExisted=0
         read -ra installedPackages <<< `gem list --local --no-version | sed -n '4,$p'`
         for ((i = 0; i < ${#installedPackages[@]}; i += 2)); do
-            if [[ "${installedPackages[$i]}" == *"$1" ]]; then
+            if [[ ${installedPackages[$i]} == *$1* ]]; then
                 isExisted=1
                 break
             fi
@@ -349,6 +349,9 @@ function install() {
     printTitle "Check API BluePrint..."
     npmInstallIfNotExist 'drakov'
     npmInstallIfNotExist 'aglio'
+
+    printTitle "Check travis..."
+    rubyPackageInstall 'travis --no-rdoc --no-ri' 'travis'
 
     installCustomTools
 
