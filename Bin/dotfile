@@ -160,7 +160,7 @@ function gitCloneOrUpdate() {
 
 # TODO: Save package list to file and read it when you need
 function rubyPackageInstall() {
-    if [ $# -eq 1 ]; then
+    if [ $# -lt 1 ]; then
         local isExisted=0
         read -ra installedPackages <<< `gem list --local --no-version | sed -n '4,$p'`
         for ((i = 0; i < ${#installedPackages[@]}; i += 2)); do
@@ -321,6 +321,7 @@ function install() {
     rubyPackageInstall 'neovim'
     pythonPackageInstall 'neovim' '2'
     pythonPackageInstall 'neovim' '3'
+    npmInstallIfNotExist 'neovim'
     # Configure SpaceVim
     if [ ! -d $HOME/.SpaceVim ]; then
         curl -sLf https://spacevim.org/install.sh | bash
@@ -351,7 +352,7 @@ function install() {
     npmInstallIfNotExist 'aglio'
 
     printTitle "Check travis..."
-    rubyPackageInstall 'travis --no-rdoc --no-ri' 'travis'
+    rubyPackageInstall 'travis' 'travis'
 
     installCustomTools
 
@@ -400,7 +401,8 @@ function backup() {
 manual="Usage: dotfile [Options] <source path>\n\n
 [Options]:\n
 -i  Install dot files to this machine.\n
--b  Backup dot files."
+-b  Backup dot files.\n
+-a  Integrate backup and install."
 
 # main program
 if [ ! $# -eq 2 ]; then
@@ -426,6 +428,9 @@ else
     elif [ "$1" = "-i" ]; then
         install
         exit $?
+    elif [ "$1" = "-a" ]; then
+        backup
+        install
     else
         echo -e $manual
         exit 1
