@@ -2,6 +2,8 @@
 # This program is used to backup or restore dot files.
 # TODO: 1.Try to seperate all backup methods.
 #       2.Add error handle mechanism.
+#       3.Add file compare feature.
+#       4.Flexible parameters like dotfile / -i -b ,etc.
 
 d_Black='\033[0;30m'
 d_Red='\033[0;31m'
