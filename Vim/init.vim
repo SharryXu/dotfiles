@@ -44,4 +44,5 @@ let g:loaded_python3_provider = 1
 let g:spacevim_enable_guicolors = 1
 let g:spacevim_colorscheme = 'molokai'
 
+set tabstop=4
 set clipboard=unnamed
