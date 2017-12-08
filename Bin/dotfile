@@ -4,6 +4,7 @@
 #       2.Add error handle mechanism.
 #       3.Add file compare feature.
 #       4.Flexible parameters like dotfile / -i -b ,etc.
+#       5.Add branch prameter.
 
 d_Black='\033[0;30m'
 d_Red='\033[0;31m'
@@ -162,7 +163,7 @@ function gitCloneOrUpdate() {
 
 # TODO: Save package list to file and read it when you need
 function rubyPackageInstall() {
-    if [ $# -lt 1 ]; then
+    if [ $# -eq 1 ]; then
         local isExisted=0
         read -ra installedPackages <<< `gem list --local --no-version | sed -n '4,$p'`
         for ((i = 0; i < ${#installedPackages[@]}; i += 2)); do
@@ -354,7 +355,7 @@ function install() {
     npmInstallIfNotExist 'aglio'
 
     printTitle "Check travis..."
-    rubyPackageInstall 'travis' 'travis'
+    rubyPackageInstall 'travis'
 
     installCustomTools
 
