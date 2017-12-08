@@ -42,7 +42,8 @@ let g:clang2_placeholder_prev = ''
 let g:loaded_python_provider = 1
 let g:loaded_python3_provider = 1
 let g:spacevim_enable_guicolors = 1
-let g:spacevim_colorscheme = 'molokai'
+let g:spacevim_colorscheme = 'gruvbox'
+let g:spacevim_automatic_update = 1
 
 set tabstop=4
 set clipboard=unnamed

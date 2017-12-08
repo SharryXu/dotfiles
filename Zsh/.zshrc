@@ -80,23 +80,21 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
-# Vim aliases
-alias vi='nvim'
-alias vim='nvim'
-alias neovim='nvim'
 # Clang aliases
 alias clo='clang -o a.out '
 # Mongo aliases
 alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
 # Emacs without GUI
 alias emacs='/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw'
+# Vim aliases
+alias vim='nvim'
 
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export HOMEBREW_NO_AUTO_UPDATE=true
 
 # Config tmux
-ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOSTART=false
 ZSH_TMUX_AUTOQUIT=true
 
 # Enable Spaceship theme
