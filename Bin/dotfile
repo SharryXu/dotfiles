@@ -309,6 +309,7 @@ function install() {
     if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
         rm $HOME/.iterm2_shell_integration.zsh
     fi
+    pythonPackageInstall 'wakatime' '3'
 
     # config fonts
     printTitle "Check Nerd fonts..."
@@ -357,6 +358,9 @@ function install() {
     printTitle "Check travis..."
     rubyPackageInstall 'travis'
 
+    printTitle "Check WakaTime tool..."
+    cp $SourcePath/Other/.wakatime.cfg $HOME
+
     installCustomTools
 
     setupMacOS
@@ -397,6 +401,12 @@ function backup() {
     printTitle "Backup Git Configuration..."
     cp $HOME/.gitconfig $SourcePath/Git/
     cp $HOME/.gitignore_global $SourcePath/Git/
+
+    printTitle "Backup custom tools..."
+    backupCustomTools
+
+    printTitle "Backup WakaTime Config..."
+    cp $HOME/.wakatime.cfg $SourcePath/Other/
 
     printTitle "Done."
 }
