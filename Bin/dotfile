@@ -488,7 +488,7 @@ function push_git_repository() {
             git push
 
             if [ $? -eq 0 ]; then
-                print 1 "$repositoryname has been successfully pushed."
+                print 1 "Repository name $repositoryname has been successfully pushed."
             else
                 print 3 "Something wrong happened when pushing the repository."
             fi
