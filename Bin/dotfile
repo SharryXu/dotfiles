@@ -466,6 +466,7 @@ function backup_custom_commands() {
 # Push git repository. (Default: master branch)
 # Globals:
 #   git
+#   basename
 #   print
 # Arguments:
 #   Local Repository Name
@@ -473,7 +474,10 @@ function backup_custom_commands() {
 #   None
 #############################################
 function push_git_repository() {
+    print 0 "Push to remote git repository..."
+
     local currentFolder=$PWD
+    local repositoryname=$(basename $1)
 
     if [ $# -ge 1 ]; then
         if [ -d $1 ] && ! is_folder_empty $1 ; then
@@ -483,7 +487,11 @@ function push_git_repository() {
             git commit -m "Sync latest settings."
             git push
 
-            print 1 "${repoInfo[0]} has been successfully cloned."
+            if [ $? -eq 0 ]; then
+                print 1 "$repositoryname has been successfully pushed."
+            else
+                print 3 "Something wrong happened when pushing the repository."
+            fi
 
             cd $currentFolder
         fi
