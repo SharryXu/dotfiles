@@ -462,6 +462,37 @@ function backup_custom_commands() {
     copy_folder $HOME/.bin $SourcePath/Bin
 }
 
+#############################################
+# Push git repository. (Default: master branch)
+# Globals:
+#   git
+#   print
+# Arguments:
+#   Local Repository Name
+# Returns:
+#   None
+#############################################
+function push_git_repository() {
+    local currentFolder=$PWD
+
+    if [ $# -ge 1 ]; then
+        if [ -d $1 ] && ! is_folder_empty $1 ; then
+            cd $1
+
+            git add .
+            git commit -m "Sync latest settings."
+            git push
+
+            print 1 "${repoInfo[0]} has been successfully cloned."
+
+            cd $currentFolder
+        fi
+    else
+        print 3 "Please check parameters."
+        exit 1
+    fi
+}
+
 #######################################
 # Install tools and settings.
 # Globals:
@@ -674,6 +705,10 @@ else
 
     if [[ $1 = "-b" ]]; then
         backup
+
+        # TODO: Add parameter to trigger this.
+        #       Also, if nothing changes, we need to ignore this.
+        push_git_repository $SourcePath
         exit $?
     elif [[ $1 = "-i" ]]; then
         install
