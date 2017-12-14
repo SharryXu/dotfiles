@@ -6,7 +6,6 @@
 #       2.Flexible parameters like dotfile / -i -b ,etc.
 #       3.Check Application folder for some specific apps like iTerm2.
 #       4.Check the input parameters and related command like basename.
-#       5.Add background color support.
 
 ###################################
 # Declare some constant variables.
@@ -459,6 +458,7 @@ function install_custom_commands() {
 #   None
 #######################################
 function backup_custom_commands() {
+    # TODO: Only copy executable files.
     copy_folder $HOME/.bin $SourcePath/Bin
 }
 
@@ -500,6 +500,9 @@ function install() {
 
     print 0 "Check python3..."
     install_homebrew_package 'python3'
+
+    print 0 "Check python2..."
+    install_homebrew_package 'python2'
 
     print 0 "Check mongo database..."
     install_homebrew_package 'mongodb' 'mongo'
