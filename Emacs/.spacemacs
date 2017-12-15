@@ -36,7 +36,9 @@ values."
             c-default-style "linux"
             c-c++-enable-clang-support t
             c-c++-default-mode-for-headers 'c-mode
-            clang-format-style "file")
+            clang-format-style "file"
+            indent-tabs-mode nil
+            c-basic-offset 4)
      sql
      html
      javascript
@@ -59,7 +61,12 @@ values."
      ;; auto-complete
      (shell :variables
             shell-apply-ansi-color 't
-            shell-default-position 'bottom)
+            shell-default-term-shell "/bin/zsh"
+            shell-default-position 'bottom
+            shell-default-height 50
+            indent-tabs-mode nil
+            sh-basic-offset 2
+            sh-indentation 2)
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
@@ -345,9 +352,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
           ("org-cn"   . "http://mirrors.163.com/elpa/org/")
           ("gnu-cn"   . "http://mirrors.163.com/elpa/gnu/")))
 
-  ;; Set tab indent
-  (personal-tab-width 4)
-
   ;; Set omnisharp
   (setq omnisharp-server-executable-path "/usr/local/bin/omnisharp")
 
@@ -390,9 +394,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; evil-operator-state-cursor
   (setq evil-insert-state-cursor '((bar . 5) "yellow")
         evil-normal-state-cursor '(box "yellow"))
-
-  (setq initial-frame-alist '((top . 30) (left . 700) (width . 212) (height . 81)))
-  (setq-default shell-file-name "/bin/zsh")
  )
 
 (defun dotspacemacs/user-config ()
@@ -451,30 +452,15 @@ This function is called at the very end of Spacemacs initialization."
  )
 )
 
-;; Custom functions
-(defun personal-tab-width (n)
-  ;; java/c/c++
-  (setq c-basic-offset n)
-  ;; web development
-  (setq coffee-tab-width n) ; coffeescript
-  (setq javascript-indent-level n) ; javascript-mode
-  (setq js-indent-level n) ; js-mode
-  (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
-  (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
-  (setq web-mode-css-indent-offset n) ; web-mode, css in html file
-  (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
-  (setq css-indent-offset n) ; css-mode
-  )
-
 (defun semicolon-clang-format (args)
-  "format by clang-format when enter ';'"
+  (message "format by clang-format when enter ';'")
   (interactive "*P")
   (c-electric-semi&comma args)
   (clang-format-region (line-beginning-position 0) (line-beginning-position 2))
   )
 
 (defun brace-clang-format (args)
-  "format by clang-format when enter '}'"
+  (message "format by clang-format when enter '}'")
   (interactive "*P")
   (c-electric-brace args)
   (let ((end-position (point))

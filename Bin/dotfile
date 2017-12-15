@@ -12,6 +12,7 @@
 ###################################
 declare -r true=1
 declare -r false=0
+declare -r defaultCommitMessage="Sync latest settings."
 
 ###############################
 # Declare all used colors.
@@ -481,10 +482,16 @@ function push_git_repository() {
 
     if [ $# -ge 1 ]; then
         if [ -d $1 ] && ! is_folder_empty $1 ; then
+	    print 0 "Please provide appropriate message:"
+            read $commitMessage
+            if [[ -z $commitMessage ]]; then
+              commitMessage=$defaultCommitMessage
+            fi
+
             cd $1
 
             git add .
-            git commit -m "Sync latest settings."
+            git commit -m $commitMessage
             git push
 
             if [ $? -eq 0 ]; then
