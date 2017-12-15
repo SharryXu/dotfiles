@@ -14,7 +14,7 @@
 declare -r true=0
 declare -r false=1
 declare -r max_retry_count=3
-declare -r default_git_commit_message="Sync latest settings."
+declare -r default_git_commit_message='Sync latest settings.'
 declare -r error_message_check_parameters="Please check parameters."
 
 ###############################
@@ -85,16 +85,21 @@ function print() {
 #########################################
 function choice-yes-no() {
   if [ $# -eq 1 ]; then
-    print 0 "$1"
     local retry_count=0
-    while true && [[ retry_count -lt max_retry_count ]]; do
-      let retry_count=retry_count+1
-      read -p "Please answer yes(y) or no(n):" yn
+    while [[ retry_count -lt max_retry_count ]]; do
+      if [[ retry_count -eq 0 ]]; then
+         read -p "$1" yn
+      else
+         read -p "Please answer yes(y) or no(n):" yn
+      fi
+
       case $yn in
         [Yy]* ) return $true;;
         [Nn]* ) return $false;;
         * ) print 2 "Please try again.";;
       esac
+
+      let retry_count=retry_count+1
     done
 
     return $false
@@ -523,7 +528,7 @@ function push_git_repository() {
       cd $1
 
       git add .
-      git commit -m $commitMessage
+      git commit -m "$commitMessage"
       git push
 
       if [ $? -eq 0 ]; then
