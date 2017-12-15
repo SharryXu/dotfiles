@@ -6,13 +6,16 @@
 #       2.Flexible parameters like dotfile / -i -b ,etc.
 #       3.Check Application folder for some specific apps like iTerm2.
 #       4.Check the input parameters and related command like basename.
+#       5.Use python to rewrite this.
 
 ###################################
 # Declare some constant variables.
 ###################################
-declare -r true=1
-declare -r false=0
-declare -r defaultCommitMessage="Sync latest settings."
+declare -r true=0
+declare -r false=1
+declare -r max_retry_count=3
+declare -r default_git_commit_message="Sync latest settings."
+declare -r error_message_check_parameters="Please check parameters."
 
 ###############################
 # Declare all used colors.
@@ -65,7 +68,38 @@ function print() {
       echo -e "${d_Red}Status code should only among 0, 1, 2 and 3.${d_NC}" >&1 >&2
     fi
   else
-    echo -e "${d_Red}Please check parameters.${d_NC}" >&1 >&2
+    echo -e "${d_Red}$error_message_check_parameters${d_NC}" >&1 >&2
+    exit 1
+  fi
+}
+
+#########################################
+# Let user to answer yes-or-no question
+# results to stderr
+# Globals:
+#   Print
+# Arguments:
+#   Prompt message
+# Returns:
+#   customer result
+#########################################
+function choice-yes-no() {
+  if [ $# -eq 1 ]; then
+    print 0 "$1"
+    local retry_count=0
+    while true && [[ retry_count -lt max_retry_count ]]; do
+      let retry_count=retry_count+1
+      read -p "Please answer yes(y) or no(n):" yn
+      case $yn in
+        [Yy]* ) return $true;;
+        [Nn]* ) return $false;;
+        * ) print 2 "Please try again.";;
+      esac
+    done
+
+    return $false
+  else
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -88,7 +122,7 @@ function is_command_exist() {
       return $false
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error-message
     exit 1
   fi
 }
@@ -114,7 +148,7 @@ function is_server_alive () {
       return $false;
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -155,7 +189,7 @@ function copy_file () {
       cp $1 $2
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -186,7 +220,7 @@ function copy_folder () {
       copy_file $filePath $2
     done
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -205,12 +239,12 @@ function is_folder_empty () {
   if [ $# -eq 1 ]; then
     local result=$(find $1 -name '*' -maxdepth 1)
     if [[ $result == $1 ]]; then
-      return $false
-    else
       return $true
+    else
+      return $false
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -243,7 +277,7 @@ function install_node_package() {
       print 2 "$1 has already existed"
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -276,7 +310,7 @@ function install_homebrew_package() {
       print 2 "$1 has already existed."
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -331,7 +365,7 @@ function check_git_repository() {
       print 1 "${repoInfo[0]} has been successfully downloaded."
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -366,7 +400,7 @@ function install_ruby_package() {
       print 2 "Ruby package name $1 has already existed."
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -400,7 +434,7 @@ function install_python_package() {
       print 2 "Python package name $1 has already existed."
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -475,8 +509,6 @@ function backup_custom_commands() {
 #   None
 #############################################
 function push_git_repository() {
-  print 0 "Push to remote git repository..."
-
   local currentFolder=$PWD
   local repositoryname=$(basename $1)
 
@@ -485,7 +517,7 @@ function push_git_repository() {
 	    print 0 "Please provide appropriate message:"
       read $commitMessage
       if [[ -z $commitMessage ]]; then
-        commitMessage=$defaultCommitMessage
+        commitMessage=$default_git_commit_message
       fi
 
       cd $1
@@ -503,7 +535,7 @@ function push_git_repository() {
       cd $currentFolder
     fi
   else
-    print 3 "Please check parameters."
+    print 3 $error_message_check_parameters
     exit 1
   fi
 }
@@ -723,7 +755,11 @@ else
 
     # TODO: Add parameter to trigger this.
     #       Also, if nothing changes, we need to ignore this.
-    push_git_repository $SourcePath
+    if choice-yes-no "Do you want push to the remote?"; then
+      print 0 "Push to remote git repository..."
+      push_git_repository $SourcePath
+    fi
+
     exit $?
   elif [[ $1 = "-i" ]]; then
     install
