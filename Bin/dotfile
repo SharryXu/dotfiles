@@ -520,7 +520,7 @@ function push_git_repository() {
   if [ $# -ge 1 ]; then
     if [ -d $1 ] && ! is_folder_empty $1 ; then
 	    print 0 "Please provide appropriate message:"
-      read $commitMessage
+      read commitMessage
       if [[ -z $commitMessage ]]; then
         commitMessage=$default_git_commit_message
       fi
