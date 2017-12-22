@@ -459,9 +459,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>-120 1057 606 469 -213 900 1920 1057 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>2046 667 796 473 0 0 3008 1692 </string>
+	<string>1256 456 796 473 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>1428 632 1394 792 0 0 3008 1692 </string>
+	<string>1082 49 1426 777 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>672 68 842 679 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -707,6 +707,8 @@
 				<key>Red Component</key>
 				<real>1</real>
 			</dict>
+			<key>Application Keypad Allowed</key>
+			<true/>
 			<key>BM Growl</key>
 			<true/>
 			<key>Background Color</key>
@@ -1198,7 +1200,7 @@
 			<key>Open Toolbelt</key>
 			<false/>
 			<key>Option Key Sends</key>
-			<integer>0</integer>
+			<integer>2</integer>
 			<key>Place Prompt at First Column</key>
 			<false/>
 			<key>Prevent Opening in a Tab</key>
@@ -1208,7 +1210,7 @@
 			<key>Reduce Flicker</key>
 			<false/>
 			<key>Right Option Key Sends</key>
-			<integer>0</integer>
+			<integer>2</integer>
 			<key>Rows</key>
 			<integer>50</integer>
 			<key>Screen</key>
@@ -1451,7 +1453,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-12-06T08:45:18Z</date>
+	<date>2017-12-22T08:45:02Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowBookmarkName</key>
