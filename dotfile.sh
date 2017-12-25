@@ -601,6 +601,7 @@ function install() {
   print 0 "Check Oh-My-Zsh..."
   check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
   copy_file $SourcePath/Zsh/.zshrc $HOME
+  # install_homebrew_package 'zsh-completions'
 
   print 0 "Check tmux tool..."
   install_homebrew_package 'tmux'
@@ -764,6 +765,12 @@ else
       print 0 "Push to remote git repository..."
       push_git_repository $SourcePath
     fi
+
+    # Redirect to the Source folder
+    cd $SourcePath
+
+    # Show difference
+    git diff --word-diff
 
     exit $?
   elif [[ $1 = "-i" ]]; then
