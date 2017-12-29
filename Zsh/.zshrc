@@ -94,6 +94,13 @@ if [[ $system_name == 'mac' ]]; then
 	alias tmux='tmux -2'
 fi
 
+if [[ $system_name == 'ubuntu' ]]; then
+	alias mongod='mongod'
+	alias emacs='emacs'
+	alias vim='nvim'
+	alias tmux='tmux -2'
+fi
+
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export HOMEBREW_NO_AUTO_UPDATE=true
