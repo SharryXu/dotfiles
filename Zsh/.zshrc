@@ -90,6 +90,8 @@ if [[ $system_name == 'mac' ]]; then
 	alias emacs='/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw'
 	# Vim aliases
 	alias vim='nvim'
+	# Tmux
+	alias tmux='tmux -2'
 fi
 
 # Config homebrew
