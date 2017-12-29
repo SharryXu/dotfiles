@@ -248,6 +248,7 @@ tmux_conf_copy_to_os_clipboard=true
 # increase history size
 #set -g history-limit 10000
 
+unbind C-b
 # start with mouse mode enabled
 #set -g mouse on
 
@@ -257,7 +258,7 @@ tmux_conf_copy_to_os_clipboard=true
 set -g mode-keys vi
 
 #set -g status-position top
-set-option -s escape-time 0
+set-option -s escape-time 3
 
 # Fixes Iterm2 integration
 setw -g aggressive-resize off

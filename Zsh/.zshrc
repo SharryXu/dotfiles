@@ -80,14 +80,17 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
-# Clang aliases
-alias clo='clang -o a.out '
-# Mongo aliases
-alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
-# Emacs without GUI
-alias emacs='/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw'
-# Vim aliases
-alias vim='nvim'
+system_name=$(uname -n)
+if [[ $system_name == 'mac' ]]; then
+	# Clang aliases
+	alias clo='clang -o a.out '
+	# Mongo aliases
+	alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
+	# Emacs without GUI
+	alias emacs='/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw'
+	# Vim aliases
+	alias vim='nvim'
+fi
 
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles

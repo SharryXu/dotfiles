@@ -7,6 +7,8 @@
 #       3.Check Application folder for some specific apps like iTerm2.
 #       4.Check the input parameters and related command like basename.
 #       5.Use python to rewrite this.
+#       6.Add support to linux.
+#       7.Modulate the program.
 
 ###################################
 # Declare some constant variables.
