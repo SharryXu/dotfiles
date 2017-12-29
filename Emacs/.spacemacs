@@ -414,6 +414,8 @@ you should place your code here."
   ;; global-auto-revert-mode nil
   (osx-clipboard-mode)
   (global-wakatime-mode)
+  ;; Maybe slow
+  (global-company-mode)
 
   (unless (display-graphic-p)
     (require 'evil-terminal-cursor-changer)

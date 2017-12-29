@@ -651,6 +651,9 @@ function install() {
   print 0 "Check htop tool..."
   install_homebrew_package 'htop'
 
+  print 0 "Check chez-scheme..."
+  install_homebrew_package 'chezscheme' 'chez'
+
   print 0 "Check NodeJS..."
   install_homebrew_package 'node'
   install_homebrew_package 'npm'
