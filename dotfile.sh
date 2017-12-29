@@ -7,8 +7,6 @@
 #       3.Check Application folder for some specific apps like iTerm2.
 #       4.Check the input parameters and related command like basename.
 #       5.Use python to rewrite this.
-#       6.Add support to linux.
-#       7.Modulate the program.
 
 ###################################
 # Declare some constant variables.
@@ -39,7 +37,7 @@ declare -r zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git
 declare -r powerlinefonts=('Powerline-fonts' 'https://github.com/powerline/fonts')
 declare -r nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 declare -r nvm=('Node Manager' 'https://github.com/creationix/nvm')
-declare -r ohmytmux=('Oh-My-Tmux' 'https://github.com/SharryXu/.tmux')
+declare -r ohmytmux=('Oh-My-Tmux' 'https://github.com/gpakosz/.tmux')
 
 #######################################
 # Print common results to stdout and error
@@ -194,6 +192,7 @@ function copy_file () {
       fi
     else
       cp $1 $2
+      print 1 "File name $filename has been created."
     fi
   else
     print 3 $error_message_check_parameters
@@ -761,18 +760,18 @@ else
   if [[ $1 = "-b" ]]; then
     backup
 
+    # Redirect to the Source folder
+    cd $SourcePath
+
+    # Show difference
+    git diff --word-diff
+
     # TODO: Add parameter to trigger this.
     #       Also, if nothing changes, we need to ignore this.
     if choice-yes-no "Do you want push to the remote?"; then
       print 0 "Push to remote git repository..."
       push_git_repository $SourcePath
     fi
-
-    # Redirect to the Source folder
-    cd $SourcePath
-
-    # Show difference
-    git diff --word-diff
 
     exit $?
   elif [[ $1 = "-i" ]]; then
