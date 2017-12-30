@@ -107,7 +107,7 @@ export HOMEBREW_NO_AUTO_UPDATE=true
 
 # Config tmux
 ZSH_TMUX_AUTOSTART=false
-ZSH_TMUX_AUTOQUIT=true
+ZSH_TMUX_AUTOQUIT=false
 
 # Enable Spaceship theme
 # source $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
