@@ -546,15 +546,16 @@ function push_git_repository() {
   fi
 }
 
-#######################################
-# Install tools and settings.
+##################################
+# Install homebrew
 # Globals:
 # Arguments:
-#   None
+#   is_command_exist
+#   print
 # Returns:
 #   None
-#######################################
-function install() {
+##################################
+function install_main_package_manager() {
   print 0 "Check brew..."
   local result=$(is_command_exist 'brew')
   if $result ; then
@@ -573,6 +574,18 @@ function install() {
       print 1 "brew has been successfully installed."
     fi
   fi
+}
+
+#######################################
+# Install tools and settings.
+# Globals:
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function install() {
+  install_main_package_manager
 
   print 0 "Check Ruby..."
   install_homebrew_package 'ruby'
@@ -602,6 +615,7 @@ function install() {
   print 0 "Check Oh-My-Zsh..."
   check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
   copy_file $SourcePath/Zsh/.zshrc $HOME
+  copy_file $SourcePath/Zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
   # install_homebrew_package 'zsh-completions'
 
   print 0 "Check tmux tool..."
@@ -697,8 +711,9 @@ function install() {
 #   None
 #######################################
 function backup() {
-  print 0 "Backup Oh-My-Zsh..."
+  print 0 "Backup Zshrc and theme file..."
   copy_file $HOME/.zshrc $SourcePath/Zsh/
+  copy_file $HOME/.oh-my-zsh/themes/sharry.zsh-theme $SourcePath/Zsh/
 
   print 0 "Backup emacs..."
   copy_file $HOME/.spacemacs $SourcePath/Emacs/
