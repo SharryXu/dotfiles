@@ -1,6 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 # Attention: Please place /usr/local/bin before the default path value.
-export PATH=$HOME/.bin:/usr/local/bin:$PATH
+export PYTHONPATH=$HOME/.emacs.d/.cache/anaconda-mode/0.1.9
+export PATH=$HOME/.bin:/usr/local/bin:$PYTHONPATH:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -21,7 +22,7 @@ CASE_SENSITIVE="false"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=2
+export UPDATE_ZSH_DAYS=1
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -54,6 +55,7 @@ COMPLETION_WAITING_DOTS="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   brew
+  osx
   git
   tmux
   tmuxinator
@@ -67,7 +69,7 @@ plugins=(
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -103,14 +105,11 @@ fi
 
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
-export HOMEBREW_NO_AUTO_UPDATE=true
+export HOMEBREW_NO_AUTO_UPDATE=false
 
 # Config tmux
 ZSH_TMUX_AUTOSTART=false
 ZSH_TMUX_AUTOQUIT=false
-
-# Enable Spaceship theme
-# source $HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme
 
 source $ZSH/oh-my-zsh.sh
 
@@ -120,4 +119,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # added by travis gem
-[ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh
+# [ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh

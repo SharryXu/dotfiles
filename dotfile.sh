@@ -345,6 +345,7 @@ function check_git_repository() {
       if is_folder_empty $1 ; then
         print 2 "${repoInfo[0]} existed but it's empty."
         git clone ${repoInfo[1]} $1
+        print 1 "${repoInfo[0]} has been successfully cloned."
       else
         print 0 "${repoInfo[0]} existed and now will pull the latest version."
         cd $1
@@ -357,7 +358,7 @@ function check_git_repository() {
         git pull
         cd $currentFolder
 
-        print 1 "${repoInfo[0]} has been successfully cloned."
+        print 1 "${repoInfo[0]} has been successfully updated."
       fi
     else
       print 2 "${repoInfo[0]} is not existed and now downloading..."
@@ -368,7 +369,7 @@ function check_git_repository() {
         sudo git clone ${repoInfo[1]} $1
       fi
 
-      print 1 "${repoInfo[0]} has been successfully downloaded."
+      print 1 "${repoInfo[0]} has been successfully cloned."
     fi
   else
     print 3 $error_message_check_parameters
