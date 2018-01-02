@@ -953,13 +953,13 @@ else
     cd $SourcePath
 
     # Show difference
-    git diff --word-diff
+    git icdiff
 
-    # TODO: Add parameter to trigger this.
-    #       Also, if nothing changes, we need to ignore this.
-    if choice_yes_no "Do you want push to the remote?"; then
-      print 0 "Push to remote git repository..."
-      push_git_repository $SourcePath
+    if [[ $(git diff) != '' ]]; then
+      if choice_yes_no "Do you want push to the remote?"; then
+        print 0 "Push to remote git repository..."
+        push_git_repository $SourcePath
+      fi
     fi
 
     exit $?
