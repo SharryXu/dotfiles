@@ -751,6 +751,44 @@ function install_fonts() {
   $HOME/.fonts-powerline/install.sh 1> /dev/null
 }
 
+###################################
+# Configure Git
+# Globals:
+# Arguments:
+#   install_homebrew_package
+#   install_python_package
+#   print
+#   copy_file
+# Returns:
+#   None
+###################################
+function configure_git() {
+  print 0 "Check git..."
+  install_homebrew_package 'git'
+  install_homebrew_package 'tig'
+  copy_file $SourcePath/git/.gitconfig $HOME/
+  copy_file $SourcePath/git/.gitignore_global $HOME/
+  install_python_package 'gitsome' '3'
+}
+
+###################################
+# Configure Python
+# Globals:
+# Arguments:
+#   install_homebrew_package
+#   print
+# Returns:
+#   None
+###################################
+function configure_python() {
+  print 0 "Check python3..."
+  install_homebrew_package 'python3'
+  print 0 "Check python2..."
+  install_homebrew_package 'python2'
+  install_homebrew_package 'pip3'
+  install_homebrew_package 'pip2'
+}
+
 #######################################
 # Install tools and settings.
 # Globals:
@@ -767,17 +805,9 @@ function install() {
   print 0 "Check Ruby..."
   install_homebrew_package 'ruby'
 
-  print 0 "Check git..."
-  install_homebrew_package 'git'
-  install_homebrew_package 'tig'
-  copy_file $SourcePath/git/.gitconfig $HOME/
-  copy_file $SourcePath/git/.gitignore_global $HOME/
+  configure_python
 
-  print 0 "Check python3..."
-  install_homebrew_package 'python3'
-
-  print 0 "Check python2..."
-  install_homebrew_package 'python2'
+  configure_git
 
   print 0 "Check mongo database..."
   install_homebrew_package 'mongodb' 'mongo'
@@ -787,6 +817,9 @@ function install() {
   install_homebrew_package 'mariadb' 'mysql'
   install_homebrew_package 'mycli'
   copy_file $SourcePath/mysql/.my.cnf $HOME
+
+  print 0 "Check Microsoft SQL Server tool..."
+  install_python_package 'mssql-cli' '3'
 
   print 0 "Check tree tool..."
   install_homebrew_package 'tree'
