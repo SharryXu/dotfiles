@@ -542,7 +542,7 @@ function install_custom_commands() {
     mkdir $HOME/.bin
   fi
 
-  copy_folder $SourcePath/Bin $HOME/.bin
+  copy_folder $SourcePath/bin $HOME/.bin
 }
 
 #######################################
@@ -556,7 +556,7 @@ function install_custom_commands() {
 #######################################
 function backup_custom_commands() {
   # TODO: Only copy executable files.
-  copy_folder $HOME/.bin $SourcePath/Bin
+  copy_folder $HOME/.bin $SourcePath/bin
 }
 
 #############################################
@@ -626,7 +626,7 @@ function install_homebrew() {
       print 3 "Please install Ruby first."
       exit 1
     else
-      ruby $SourcePath/Brew/brew_install
+      ruby $SourcePath/brew/brew_install
       print 1 "brew has been successfully installed."
     fi
   fi
@@ -651,8 +651,8 @@ function configure_zsh() {
     chsh -s $default_shell
   fi
   check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
-  copy_file $SourcePath/Zsh/.zshrc $HOME
-  copy_file $SourcePath/Zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
+  copy_file $SourcePath/zsh/.zshrc $HOME
+  copy_file $SourcePath/zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
   # install_homebrew_package 'zsh-completions'
 }
 
@@ -675,7 +675,7 @@ function configure_tmux() {
   install_ruby_package 'tmuxinator'
   check_git_repository $HOME/.tmux ${ohmytmux[*]}
   ln -s -f $HOME/.tmux/.tmux.conf $HOME
-  copy_file $SourcePath/Other/.tmux.conf.local $HOME
+  copy_file $SourcePath/other/.tmux.conf.local $HOME
 }
 
 ###################################
@@ -696,7 +696,7 @@ function configure_emacs() {
   install_homebrew_package 'ag'
   install_homebrew_package 'emacs-plus' 'emacs'
   check_git_repository $HOME/.emacs.d ${spacemacs[*]}
-  copy_file $SourcePath/Emacs/.spacemacs $HOME
+  copy_file $SourcePath/emacs/.spacemacs $HOME
   # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
   if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
     rm $HOME/.iterm2_shell_integration.zsh
@@ -725,10 +725,10 @@ function configure_vim() {
   install_python_package 'neovim' '3'
   install_node_package 'neovim'
   # Configure SpaceVim
-  if [ ! -d $HOME/.SpaceVim ]; then
+  if [ ! -d $HOME/.Spacevim ]; then
     curl -sLf https://spacevim.org/install.sh | bash
   fi
-  copy_file $SourcePath/Vim/* $HOME/.SpaceVim.d/
+  copy_file $SourcePath/vim/* $HOME/.Spacevim.d/
 }
 
 ###################################
@@ -769,8 +769,8 @@ function install() {
   print 0 "Check git..."
   install_homebrew_package 'git'
   install_homebrew_package 'tig'
-  copy_file $SourcePath/Git/.gitconfig $HOME/
-  copy_file $SourcePath/Git/.gitignore_global $HOME/
+  copy_file $SourcePath/git/.gitconfig $HOME/
+  copy_file $SourcePath/git/.gitignore_global $HOME/
 
   print 0 "Check python3..."
   install_homebrew_package 'python3'
@@ -780,12 +780,12 @@ function install() {
 
   print 0 "Check mongo database..."
   install_homebrew_package 'mongodb' 'mongo'
-  copy_file $SourcePath/MongoDB/.mongorc.js $HOME
+  copy_file $SourcePath/mongoDB/.mongorc.js $HOME
 
-  print 0 "Check mysql database..."
+  print 0 "Check MySQL database..."
   install_homebrew_package 'mariadb' 'mysql'
   install_homebrew_package 'mycli'
-  copy_file $SourcePath/MySQL/.my.cnf $HOME
+  copy_file $SourcePath/mysql/.my.cnf $HOME
 
   print 0 "Check tree tool..."
   install_homebrew_package 'tree'
@@ -826,7 +826,7 @@ function install() {
 
   print 0 "Check ClangFormat tool..."
   install_homebrew_package 'clang-format'
-  copy_file $SourcePath/Other/.clang-format $HOME
+  copy_file $SourcePath/other/.clang-format $HOME
 
   print 0 "Check system monitor tool..."
   install_homebrew_package 'htop'
@@ -855,10 +855,14 @@ function install() {
   install_ruby_package 'travis'
 
   print 0 "Check WakaTime tool..."
-  copy_file $SourcePath/Other/.wakatime.cfg $HOME
+  copy_file $SourcePath/other/.wakatime.cfg $HOME
 
   print 0 "Create custom tools..."
   install_custom_commands
+
+  print 0 "Install System Config..."
+  copy_folder $SourcePath/config/fontconfig $HOME/.config/fontconfig
+  copy_folder $SourcePath/config/tmuxinator $HOME/.config/tmuxinator
 
   print 0 "Setup Mac OS..."
   setup_macos_settings
@@ -879,41 +883,41 @@ function install() {
 #######################################
 function backup() {
   print 0 "Backup Zshrc and theme file..."
-  copy_file $HOME/.zshrc $SourcePath/Zsh/
-  copy_file $HOME/.oh-my-zsh/themes/sharry.zsh-theme $SourcePath/Zsh/
+  copy_file $HOME/.zshrc $SourcePath/zsh/
+  copy_file $HOME/.oh-my-zsh/themes/sharry.zsh-theme $SourcePath/zsh/
 
   print 0 "Backup emacs..."
-  copy_file $HOME/.spacemacs $SourcePath/Emacs/
+  copy_file $HOME/.spacemacs $SourcePath/emacs/
 
   print 0 "Backup mongo database..."
-  copy_file $HOME/.mongorc.js $SourcePath/MongoDB/
+  copy_file $HOME/.mongorc.js $SourcePath/mongoDB/
   # TODO: backup mongo.conf file.
 
   print 0 "Backup mysql database..."
-  copy_file $HOME/.my.cnf $SourcePath/MySQL/
+  copy_file $HOME/.my.cnf $SourcePath/mysql/
 
   print 0 "Backup clang format information..."
-  copy_file $HOME/.clang-format $SourcePath/Other/
+  copy_file $HOME/.clang-format $SourcePath/other/
 
   print 0 "Backup tmux tool's configuration..."
-  copy_file $HOME/.tmux.conf.local $SourcePath/Other/
+  copy_file $HOME/.tmux.conf.local $SourcePath/other/
 
   print 0 "Backup Vim..."
-  copy_folder $HOME/.SpaceVim.d $SourcePath/Vim
+  copy_folder $HOME/.Spacevim.d $SourcePath/vim
 
   print 0 "Backup System Config..."
-  copy_folder $HOME/.config/fontconfig $SourcePath/Config/fontconfig
-  copy_folder $HOME/.config/tmuxinator $SourcePath/Config/tmuxinator
+  copy_folder $HOME/.config/fontconfig $SourcePath/config/fontconfig
+  copy_folder $HOME/.config/tmuxinator $SourcePath/config/tmuxinator
 
   print 0 "Backup Git Configuration..."
-  copy_file $HOME/.gitconfig $SourcePath/Git/
-  copy_file $HOME/.gitignore_global $SourcePath/Git/
+  copy_file $HOME/.gitconfig $SourcePath/git/
+  copy_file $HOME/.gitignore_global $SourcePath/git/
 
   print 0 "Backup custom tools..."
   backup_custom_commands
 
   print 0 "Backup WakaTime Config..."
-  copy_file $HOME/.wakatime.cfg $SourcePath/Other/
+  copy_file $HOME/.wakatime.cfg $SourcePath/other/
 
   print 1 "Done."
 }
