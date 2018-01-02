@@ -16,6 +16,7 @@ declare -r false=1
 declare -r max_retry_count=3
 declare -r default_git_commit_message='Sync latest settings.'
 declare -r error_message_check_parameters="Please check parameters."
+declare -r default_shell=/bin/zsh
 
 ###############################
 # Declare all used colors.
@@ -55,14 +56,19 @@ declare -r ohmytmux=('Oh-My-Tmux' 'https://github.com/gpakosz/.tmux')
 #   None
 #######################################
 function print() {
-  if [ $# -eq 2 ]; then
-    if [ $1 -eq 0 ]; then
+  if [[ $# == 2 ]]
+  then
+    if [[ $1 == 0 ]]
+    then
       echo -e "${d_Blue}$2${d_NC}" >&1
-	  elif [ $1 -eq 1 ]; then
+	  elif [[ $1 == 1 ]]
+    then
       echo -e "${d_Green}$2${d_NC}" >&1
-    elif [ $1 -eq 2 ]; then
+    elif [[ $1 == 2 ]]
+    then
       echo -e "${d_Yellow}$2${d_NC}" >&1 >&2
-    elif [ $1 -eq 3 ]; then
+    elif [[ $1 == 3 ]]
+    then
       echo -e "${d_Red}$2${d_NC}" >&1
     else
       echo -e "${d_Red}Status code should only among 0, 1, 2 and 3.${d_NC}" >&1 >&2
@@ -83,14 +89,14 @@ function print() {
 # Returns:
 #   customer result
 #########################################
-function choice-yes-no() {
+function choice_yes_no() {
   if [ $# -eq 1 ]; then
     local retry_count=0
     while [[ retry_count -lt max_retry_count ]]; do
       if [[ retry_count -eq 0 ]]; then
-         read -p "$1" yn
+        read -p "$1" yn
       else
-         read -p "Please answer yes(y) or no(n):" yn
+        read -p "Please answer yes(y) or no(n):" yn
       fi
 
       case $yn in
@@ -107,6 +113,51 @@ function choice-yes-no() {
     print 3 $error_message_check_parameters
     exit 1
   fi
+}
+
+#############################
+# Install all homebrew tap
+# Globals:
+# Arguments:
+# Returns:
+#   None
+#############################
+function configure_homebrew_tap() {
+  ###########################
+  # homebrew tap list
+  ###########################
+  local target_homebrew_tap_list=(
+    'caskroom/cask'
+    'caskroom/fonts'
+    'd12frosted/emacs-plus'
+    'homebrew/core'
+    'homebrew/php'
+    'homebrew/services'
+    'omnisharp/omnisharp-roslyn'
+  )
+
+  OLD_IFS=$IFS
+  IFS=' '
+  local exist_homebrew_tap_list=$(brew tap)
+  IFS=$OLD_IFS
+
+  local need_install=1
+  for ((i = 0; i < ${#target_homebrew_tap_list[@]}; i++)); do
+    target_tap=${target_homebrew_tap_list[i]}
+    print 0 "Check homebrew tap $target_tap..."
+    for exist_tap in $exist_homebrew_tap_list; do
+      if [[ $exist_tap == $target_tap ]]; then
+        need_install=0
+      fi
+    done
+
+    if [[ $need_install == 1 ]]; then
+      brew tap $target_tap
+      print 1 "$target_tap has been successfully added."
+    else
+      print 2 "$target_tap has already existed."
+    fi
+  done
 }
 
 #######################################
@@ -301,6 +352,7 @@ function install_node_package() {
 #   None
 #######################################
 function install_homebrew_package() {
+  # TODO: Using $(brew list) to check.
   # By default, we think tool name ($1) is the command name ($2)
   if [ $# -gt 0 ]; then
     if [ $# -eq 2 ]; then
@@ -424,6 +476,9 @@ function install_ruby_package() {
 #   None
 #######################################
 function install_python_package() {
+  # Ignore case sensitive
+  shopt -s nocasematch
+
   if [ $# -eq 2 ]; then
     local isExisted=$false
     read -ra installedPackages <<< $(pip$2 list --format=columns | sed -n '3,$p')
@@ -556,7 +611,7 @@ function push_git_repository() {
 # Returns:
 #   None
 ##################################
-function install_main_package_manager() {
+function install_homebrew() {
   print 0 "Check brew..."
   local result=$(is_command_exist 'brew')
   if $result ; then
@@ -577,6 +632,124 @@ function install_main_package_manager() {
   fi
 }
 
+###################################
+# Configure zsh and oh-my-zsh
+# Globals:
+# Arguments:
+#   install_homebrew_package
+#   chsh
+#   print
+#   copy_file
+#   check_git_repository
+# Returns:
+#   None
+###################################
+function configure_zsh() {
+  print 0 "check oh-My-Zsh..."
+  install_homebrew_package 'zsh'
+  if [[ $SHELL == $default_shell ]]; then
+    chsh -s $default_shell
+  fi
+  check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
+  copy_file $SourcePath/Zsh/.zshrc $HOME
+  copy_file $SourcePath/Zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
+  # install_homebrew_package 'zsh-completions'
+}
+
+###################################
+# Configure tmux
+# Globals:
+# Arguments:
+#   install_homebrew_package
+#   install_ruby_package
+#   print
+#   copy_file
+#   check_git_repository
+# Returns:
+#   None
+###################################
+function configure_tmux() {
+  print 0 "Check tmux tool..."
+  install_homebrew_package 'tmux'
+  install_homebrew_package 'reattach-to-user-namespace'
+  install_ruby_package 'tmuxinator'
+  check_git_repository $HOME/.tmux ${ohmytmux[*]}
+  ln -s -f $HOME/.tmux/.tmux.conf $HOME
+  copy_file $SourcePath/Other/.tmux.conf.local $HOME
+}
+
+###################################
+# Configure emacs
+# Globals:
+# Arguments:
+#   install_homebrew_package
+#   install_python_package
+#   print
+#   copy_file
+#   check_git_repository
+# Returns:
+#   None
+###################################
+function configure_emacs() {
+  # config emacs (substitute the default emacs installed by Mac OS)
+  print 0 "Check emacs..."
+  install_homebrew_package 'ag'
+  install_homebrew_package 'emacs-plus' 'emacs'
+  check_git_repository $HOME/.emacs.d ${spacemacs[*]}
+  copy_file $SourcePath/Emacs/.spacemacs $HOME
+  # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
+  if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
+    rm $HOME/.iterm2_shell_integration.zsh
+  fi
+  install_python_package 'wakatime' '3'
+}
+
+###################################
+# Configure vim
+# Globals:
+# Arguments:
+#   install_homebrew_package
+#   install_python_package
+#   print
+#   copy_file
+#   check_git_repository
+# Returns:
+#   None
+###################################
+function configure_vim() {
+  print 0 "Check Vim..."
+  install_homebrew_package 'vim --with-override-system-vim' 'vim'
+  install_homebrew_package 'neovim' 'nvim'
+  install_ruby_package 'neovim'
+  install_python_package 'neovim' '2'
+  install_python_package 'neovim' '3'
+  install_node_package 'neovim'
+  # Configure SpaceVim
+  if [ ! -d $HOME/.SpaceVim ]; then
+    curl -sLf https://spacevim.org/install.sh | bash
+  fi
+  copy_file $SourcePath/Vim/* $HOME/.SpaceVim.d/
+}
+
+###################################
+# Install fonts
+# Globals:
+# Arguments:
+#   print
+#   check_git_repository
+# Returns:
+#   None
+###################################
+function install_fonts() {
+  print 0 "Check Nerd fonts..."
+  check_git_repository $HOME/.fonts-nerd ${nerdfonts[*]}
+  $HOME/.fonts-nerd/install.sh 1> /dev/null
+
+  print 0 "Check Powerline fonts..."
+  check_git_repository $HOME/.fonts-powerline ${powerlinefonts[*]}
+  $HOME/.fonts-powerline/install.sh 1> /dev/null
+}
+
 #######################################
 # Install tools and settings.
 # Globals:
@@ -586,13 +759,16 @@ function install_main_package_manager() {
 #   None
 #######################################
 function install() {
-  install_main_package_manager
+  install_homebrew
+
+  configure_homebrew_tap
 
   print 0 "Check Ruby..."
   install_homebrew_package 'ruby'
 
   print 0 "Check git..."
   install_homebrew_package 'git'
+  install_homebrew_package 'tig'
   copy_file $SourcePath/Git/.gitconfig $HOME/
   copy_file $SourcePath/Git/.gitignore_global $HOME/
 
@@ -608,63 +784,53 @@ function install() {
 
   print 0 "Check mysql database..."
   install_homebrew_package 'mariadb' 'mysql'
+  install_homebrew_package 'mycli'
   copy_file $SourcePath/MySQL/.my.cnf $HOME
 
   print 0 "Check tree tool..."
   install_homebrew_package 'tree'
 
-  print 0 "Check Oh-My-Zsh..."
-  check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
-  copy_file $SourcePath/Zsh/.zshrc $HOME
-  copy_file $SourcePath/Zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
-  # install_homebrew_package 'zsh-completions'
+  print 0 "Check shellcheck tool..."
+  install_homebrew_package 'shellcheck'
 
-  print 0 "Check tmux tool..."
-  install_homebrew_package 'tmux'
-  install_homebrew_package 'reattach-to-user-namespace'
-  install_ruby_package 'tmuxinator'
-  check_git_repository $HOME/.tmux ${ohmytmux[*]}
-  ln -s -f $HOME/.tmux/.tmux.conf $HOME
-  copy_file $SourcePath/Other/.tmux.conf.local $HOME
+  print 0 "Check download accelerate tool..."
+  install_homebrew_package 'axel'
 
-  # config emacs (substitute the default emacs installed by Mac OS)
-  print 0 "Check emacs..."
-  install_homebrew_package 'emacs'
-  check_git_repository $HOME/.emacs.d ${spacemacs[*]}
-  copy_file $SourcePath/Emacs/.spacemacs $HOME
-  # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
-  if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
-    rm $HOME/.iterm2_shell_integration.zsh
-  fi
-  install_python_package 'wakatime' '3'
+  print 0 "Check cppman tool..."
+  install_python_package 'cppman' '3'
 
-  print 0 "Check Nerd fonts..."
-  check_git_repository $HOME/.fonts-nerd ${nerdfonts[*]}
-  $HOME/.fonts-nerd/install.sh 1> /dev/null
+  print 0 "Check icdiff tool..."
+  install_homebrew_package 'icdiff'
 
-  print 0 "Check Powerline fonts..."
-  check_git_repository $HOME/.fonts-powerline ${powerlinefonts[*]}
-  $HOME/.fonts-powerline/install.sh 1> /dev/null
+  print 0 "Check python format tool..."
+  install_python_package 'yapf' '3'
 
-  print 0 "Check Vim..."
-  install_homebrew_package 'vim --with-override-system-vim' 'vim'
-  install_homebrew_package 'neovim' 'nvim'
-  install_ruby_package 'neovim'
-  install_python_package 'neovim' '2'
-  install_python_package 'neovim' '3'
-  install_node_package 'neovim'
-  # Configure SpaceVim
-  if [ ! -d $HOME/.SpaceVim ]; then
-    curl -sLf https://spacevim.org/install.sh | bash
-  fi
-  copy_file $SourcePath/Vim/* $HOME/.SpaceVim.d/
+  print 0 "Check disk usage tool..."
+  install_homebrew_package 'ncdu'
+
+  print 0 "Check static code analysis tool..."
+  install_homebrew_package 'cloc'
+
+  print 0 "Check live-stream video download tool..."
+  install_python_package 'you-get' '3'
+
+  configure_zsh
+
+  configure_tmux
+
+  configure_emacs
+
+  configure_vim
+
+  install_fonts
 
   print 0 "Check ClangFormat tool..."
   install_homebrew_package 'clang-format'
   copy_file $SourcePath/Other/.clang-format $HOME
 
-  print 0 "Check htop tool..."
+  print 0 "Check system monitor tool..."
   install_homebrew_package 'htop'
+  install_python_package 'glances' '3'
 
   print 0 "Check chez-scheme..."
   install_homebrew_package 'chezscheme' 'chez'
@@ -787,7 +953,7 @@ else
 
     # TODO: Add parameter to trigger this.
     #       Also, if nothing changes, we need to ignore this.
-    if choice-yes-no "Do you want push to the remote?"; then
+    if choice_yes_no "Do you want push to the remote?"; then
       print 0 "Push to remote git repository..."
       push_git_repository $SourcePath
     fi

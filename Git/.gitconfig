@@ -1,14 +1,14 @@
 [core]
 	excludesfile = /Users/sxu204/.gitignore_global
-[difftool "sourcetree"]
-	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
-	trustExitCode = true
+[diff]
+	tool = icdiff
+[difftool]
+	prompt = false
+[difftool "icdiff"]
+	cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
 [user]
 	name = SharryXu
-	email = sharry.r.xu@gmail.com
+	email = 852083454@qq.com
 [commit]
 	template = /Users/sxu204/.stCommitMsg
 [rerere]
@@ -18,3 +18,11 @@
 	smtpserverport = 587
 	smtpencryption = tls
 	smtpuser = 852083454@qq.com
+[icdiff]
+	options = --highlight --line-numbers
+[mergetool "sourcetree"]
+	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+	trustExitCode = true
+[difftool "sourcetree"]
+	cmd = icdiff --line-numbers $LOCAL $REMOTE
+	path = 

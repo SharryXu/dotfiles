@@ -1,7 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 # Attention: Please place /usr/local/bin before the default path value.
+export EMACSPATH=/usr/local/Cellar/emacs-plus/25.3/bin
 export PYTHONPATH=$HOME/.emacs.d/.cache/anaconda-mode/0.1.9
-export PATH=$HOME/.bin:/usr/local/bin:$PYTHONPATH:$PATH
+export PATH=$HOME/.bin:/usr/local/bin:$EMACSPATH:$PYTHONPATH:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -89,7 +90,7 @@ if [[ $system_name == 'mac' ]]; then
 	# Mongo aliases
 	alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
 	# Emacs without GUI
-	alias emacs='/usr/local/Cellar/emacs/25.3/Emacs.app/Contents/MacOS/Emacs -nw'
+	alias emacs-term='emacs -nw'
 	# Vim aliases
 	alias vim='nvim'
 	# Tmux
