@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Rewrite all git commits' author info.
+
+declare -r manul='Usage: rewrite-git-author <author-name> <author-email>'
+
+if [[ $# -eq 2 ]]; then
+  local git_command='CORRECT_NAME=$1
+                     CORRECT_EMAIL=$2
+
+                     export GIT_COMMITTER_NAME="$CORRECT_NAME"
+                     export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"
+
+                     export GIT_AUTHOR_NAME="$CORRECT_NAME"
+                     export GIT_AUTHOR_EMAIL="$CORRECT_EMAIL"'
+
+  git filter-branch --env-filter '$git_command' --tag-name-filter cat -- --branches --tags
+
+else
+  echo -e $manul
+
+  exit 1
+fi
+
+exit #?
