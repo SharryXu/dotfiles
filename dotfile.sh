@@ -7,6 +7,7 @@
 #       3.Check Application folder for some specific apps like iTerm2.
 #       4.Check the input parameters and related command like basename.
 #       5.Use python to rewrite this.
+#       6.Try to use trap command.
 
 ###################################
 # Declare some constant variables.
