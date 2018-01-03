@@ -161,29 +161,6 @@ function configure_homebrew_tap() {
   done
 }
 
-#######################################
-# Check command existed or not.
-# Globals:
-#   command
-#   print
-# Arguments:
-#   Command Name
-# Returns:
-#   Command Exist Status
-#######################################
-function is_command_exist() {
-  if [ $# -eq 1 ]; then
-    if command -v $1 > /dev/null 2>&1; then
-      return $true
-    else
-      return $false
-    fi
-  else
-    print 3 $error-message
-    exit 1
-  fi
-}
-
 ################################################
 # Check whether specific server is alive or not.
 # Globals:
@@ -310,7 +287,7 @@ function is_folder_empty () {
 #######################################
 # Using npm tool to install packages.
 # Globals:
-#   is_command_exist
+#   command_exist
 #   npm
 #   print
 # Arguments:
@@ -322,9 +299,9 @@ function is_folder_empty () {
 function install_node_package() {
   if [ $# -gt 0 ]; then
     if [ $# -eq 2 ]; then
-      result=$(is_command_exist $2)
+      result=$(command_exist $2)
     else
-      result=$(is_command_exist $1)
+      result=$(command_exist $1)
     fi
 
     if [[ $result == $false ]]; then
@@ -344,7 +321,7 @@ function install_node_package() {
 # Using homebrew to install tool.
 # Globals:
 #   brew
-#   is_command_exist
+#   command_exist
 #   print
 # Arguments:
 #   Tool Name
@@ -357,9 +334,9 @@ function install_homebrew_package() {
   # By default, we think tool name ($1) is the command name ($2)
   if [ $# -gt 0 ]; then
     if [ $# -eq 2 ]; then
-      result=$(is_command_exist $2)
+      result=$(command_exist $2)
     else
-      result=$(is_command_exist $1)
+      result=$(command_exist $1)
     fi
 
     if [[ $result == $false ]]; then
@@ -607,14 +584,14 @@ function push_git_repository() {
 # Install homebrew
 # Globals:
 # Arguments:
-#   is_command_exist
+#   command_exist
 #   print
 # Returns:
 #   None
 ##################################
 function install_homebrew() {
   print 0 "Check brew..."
-  local result=$(is_command_exist 'brew')
+  local result=$(command_exist 'brew')
   if $result ; then
     brew update
     print 1 "brew has been successfully updated."
@@ -622,7 +599,7 @@ function install_homebrew() {
     brew upgrade
     print 1 "All brew packages have been updated."
   else
-    result=$(is_command_exist 'ruby')
+    result=$(command_exist 'ruby')
     if $result ; then
       print 3 "Please install Ruby first."
       exit 1
@@ -847,7 +824,7 @@ function install() {
   install_homebrew_package 'cloc'
 
   print 0 "Check live-stream video download tool..."
-  install_python_package 'you-get' '3'
+  install_homebrew_package 'you-get'
 
   print 0 "Check bash profile..."
   copy_folder $SourcePath/bash/ $HOME
@@ -962,6 +939,9 @@ function backup() {
 
   print 0 "Backup WakaTime Config..."
   copy_file $HOME/.wakatime.cfg $SourcePath/other/
+
+  print 0 "Make new program effective immediately..."
+  /bin/zsh $HOME/.zshrc
 
   print 1 "Done."
 }
