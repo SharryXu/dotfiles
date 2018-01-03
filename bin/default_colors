@@ -1,0 +1,12 @@
+#!/bin/bash
+
+###############################
+# Declare all used colors.
+###############################
+export d_Black='\033[0;30m'
+export d_Red='\033[0;31m'
+export d_Green='\033[0;32m'
+export d_Yellow='\033[0;33m'
+export d_Blue='\033[0;34m'
+export d_White='\033[1;37m'
+export d_NC='\033[0m'

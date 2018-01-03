@@ -19,17 +19,6 @@ declare -r default_git_commit_message='Sync latest settings.'
 declare -r error_message_check_parameters="Please check parameters."
 declare -r default_shell=/bin/zsh
 
-###############################
-# Declare all used colors.
-###############################
-declare -r d_Black='\033[0;30m'
-declare -r d_Red='\033[0;31m'
-declare -r d_Green='\033[0;32m'
-declare -r d_Yellow='\033[0;33m'
-declare -r d_Blue='\033[0;34m'
-declare -r d_White='\033[1;37m'
-declare -r d_NC='\033[0m'
-
 ######################################
 # Declare all used git repositories.
 ######################################
@@ -40,45 +29,6 @@ declare -r powerlinefonts=('Powerline-fonts' 'https://github.com/powerline/fonts
 declare -r nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 declare -r nvm=('Node Manager' 'https://github.com/creationix/nvm')
 declare -r ohmytmux=('Oh-My-Tmux' 'https://github.com/gpakosz/.tmux')
-
-#######################################
-# Print common results to stdout and error
-# results to stderr
-# Globals:
-#   d_Green
-#   d_Red
-#   d_Yellow
-#   d_Blue
-#   d_NC
-# Arguments:
-#   Status Code (Normal=0, Success=1, Warning=2, Error=3)
-#   Output sentence
-# Returns:
-#   None
-#######################################
-function print() {
-  if [[ $# == 2 ]]
-  then
-    if [[ $1 == 0 ]]
-    then
-      echo -e "${d_Blue}$2${d_NC}" >&1
-	  elif [[ $1 == 1 ]]
-    then
-      echo -e "${d_Green}$2${d_NC}" >&1
-    elif [[ $1 == 2 ]]
-    then
-      echo -e "${d_Yellow}$2${d_NC}" >&1 >&2
-    elif [[ $1 == 3 ]]
-    then
-      echo -e "${d_Red}$2${d_NC}" >&1
-    else
-      echo -e "${d_Red}Status code should only among 0, 1, 2 and 3.${d_NC}" >&1 >&2
-    fi
-  else
-    echo -e "${d_Red}$error_message_check_parameters${d_NC}" >&1 >&2
-    exit 1
-  fi
-}
 
 #########################################
 # Let user to answer yes-or-no question
@@ -161,74 +111,6 @@ function configure_homebrew_tap() {
   done
 }
 
-################################################
-# Check whether specific server is alive or not.
-# Globals:
-#   ping
-#   print
-# Arguments:
-#   Tool Name
-#   Command Line Name (Optional)
-# Returns:
-#   None
-################################################
-function is_server_alive () {
-  if [ $# -eq 1 ]; then
-    local tryCounts = 3
-    local result=$(ping $1 -c $tryCounts | grep "^\w\{2\} bytes from .*ttl=[0-9]" -c)
-    if [ $result -eq $tryCounts ]; then
-      return $true;
-    else
-      return $false;
-    fi
-  else
-    print 3 $error_message_check_parameters
-    exit 1
-  fi
-}
-
-################################################################
-# File copy (If the original file is newer than the target file)
-# Globals:
-#   basename
-#   print
-#   cp
-# Arguments:
-#   Source File Path
-#   Target Folder Path
-# Returns:
-#   None
-################################################################
-function copy_file () {
-  if [ $# -eq 2 ]; then
-    local filename=$(basename $1)
-
-    if [[ ! -f $1 ]]; then
-      print 3 "The file: $1 is not existed."
-      # TODO: Return status code
-    fi
-
-    if [[ ! -d $2 ]]; then
-      print 3 "The source folder: $2 is illegal."
-    fi
-
-    if [[ -f $2/$filename ]]; then
-      if [[ $1 -nt $2/$filename ]]; then
-        cp $1 $2
-        print 1 "File name $filename is replaced."
-      else
-        print 2 "File name $filename don't need to replace."
-      fi
-    else
-      cp $1 $2
-      print 1 "File name $filename has been created."
-    fi
-  else
-    print 3 $error_message_check_parameters
-    exit 1
-  fi
-}
-
 ################################################################
 # Folder copy (If the original file is newer than the target file)
 # Globals:
@@ -254,30 +136,6 @@ function copy_folder () {
     for filePath in $1/*; do
       copy_file $filePath $2
     done
-  else
-    print 3 $error_message_check_parameters
-    exit 1
-  fi
-}
-
-################################################
-# Check whether specific folder is empty or not.
-# Globals:
-#   find
-#   print
-# Arguments:
-#   Folder Path
-# Returns:
-#   Folder Status
-################################################
-function is_folder_empty () {
-  if [ $# -eq 1 ]; then
-    local result=$(find $1 -name '*' -maxdepth 1)
-    if [[ $result == $1 ]]; then
-      return $true
-    else
-      return $false
-    fi
   else
     print 3 $error_message_check_parameters
     exit 1
@@ -521,6 +379,11 @@ function install_custom_commands() {
   fi
 
   copy_folder $SourcePath/bin $HOME/.bin
+
+  # Make all files executable
+  for i in $HOME/.bin/*; do
+    chmod +x $i
+  done
 }
 
 #######################################
