@@ -1,5 +1,6 @@
 [core]
 	excludesfile = /Users/sxu204/.gitignore_global
+	ignorecase = false
 [diff]
 	tool = icdiff
 [difftool]
