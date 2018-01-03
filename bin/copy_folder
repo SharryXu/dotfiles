@@ -22,8 +22,12 @@ if [ $# -eq 2 ]; then
     print 3 "The target folder: $2 is illegal."
   fi
 
-  for filePath in $1/*; do
-    copy_file $filePath $2
+  for path in $1/* ; do
+	  if [[ -d $path ]]; then
+		  copy_folder $path $2
+	  else
+      copy_file $path $2
+	  fi
   done
 
   exit 0
