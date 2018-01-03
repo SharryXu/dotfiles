@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: Make parameter looks more clear. Remember to remove the lastest back slash.
+
 # Folder copy (If the original file is newer than the target file)
 # Globals:
 #   copy_file
@@ -16,18 +18,31 @@ if [ $# -eq 2 ]; then
   if [[ ! -d $1 ]]; then
     print 3 "The source folder: $1 is illegal."
     # TODO: Return status code
+    exit 2
   fi
 
   if [[ ! -d $2 ]]; then
     print 3 "The target folder: $2 is illegal."
+    exit 2
   fi
 
-  for path in $1/* ; do
-	  if [[ -d $path ]]; then
-		  copy_folder $path $2
-	  else
-      copy_file $path $2
-	  fi
+  if [[ $1 == $2 ]]; then
+    print 3 "Cannot copy files from $1 to $2.\nBecause there will be a inifinate cycle."
+    exit 3
+  fi
+
+  print 1 "Copy files from $1 to $2..."
+
+  for fileName in `ls -a $1`; do
+    fullFilePath=$1/$fileName
+
+    if [[ $fileName != "." && $fileName != ".." ]]; then
+	    if [[ -d $fullFilePath ]]; then
+		    copy_folder $fullFilePath $2
+	    else
+        copy_file $fullFilePath $2
+	    fi
+    fi
   done
 
   exit 0
