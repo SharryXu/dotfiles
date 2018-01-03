@@ -654,7 +654,6 @@ function configure_zsh() {
   check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
   copy_file $SourcePath/zsh/.zshrc $HOME
   copy_file $SourcePath/zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
-  # install_homebrew_package 'zsh-completions'
 }
 
 ###################################
@@ -768,7 +767,7 @@ function configure_git() {
   install_homebrew_package 'tig'
   copy_file $SourcePath/git/.gitconfig $HOME/
   copy_file $SourcePath/git/.gitignore_global $HOME/
-  install_python_package 'gitsome' '3'
+  install_python_package 'gitsome' '2'
 }
 
 ###################################
@@ -787,6 +786,8 @@ function configure_python() {
   install_homebrew_package 'python2'
   install_homebrew_package 'pip3'
   install_homebrew_package 'pip2'
+
+  # ln -s $(brew --cellar python) ~/.pyenv/versions
 }
 
 #######################################
@@ -811,7 +812,7 @@ function install() {
 
   print 0 "Check mongo database..."
   install_homebrew_package 'mongodb' 'mongo'
-  copy_file $SourcePath/mongoDB/.mongorc.js $HOME
+  copy_file $SourcePath/mongodb/.mongorc.js $HOME
 
   print 0 "Check MySQL database..."
   install_homebrew_package 'mariadb' 'mysql'
@@ -848,7 +849,12 @@ function install() {
   print 0 "Check live-stream video download tool..."
   install_python_package 'you-get' '3'
 
+  print 0 "Check bash profile..."
+  copy_folder $SourcePath/bash/ $HOME
+
   configure_zsh
+
+  configure_bash
 
   configure_tmux
 
@@ -916,15 +922,19 @@ function install() {
 #   None
 #######################################
 function backup() {
-  print 0 "Backup Zshrc and theme file..."
+  print 0 "Backup zsh and theme file..."
   copy_file $HOME/.zshrc $SourcePath/zsh/
   copy_file $HOME/.oh-my-zsh/themes/sharry.zsh-theme $SourcePath/zsh/
+
+  print 0 "Backup bash file..."
+  copy_file $HOME/.bash_profile $SourcePath/bash/
+  copy_file $HOME/.bashrc $SourcePath/bash/
 
   print 0 "Backup emacs..."
   copy_file $HOME/.spacemacs $SourcePath/emacs/
 
   print 0 "Backup mongo database..."
-  copy_file $HOME/.mongorc.js $SourcePath/mongoDB/
+  copy_file $HOME/.mongorc.js $SourcePath/mongodb/
   # TODO: backup mongo.conf file.
 
   print 0 "Backup mysql database..."

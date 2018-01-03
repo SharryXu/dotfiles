@@ -4,6 +4,8 @@ export EMACSPATH=/usr/local/Cellar/emacs-plus/25.3/bin
 export PYTHONPATH=$HOME/.emacs.d/.cache/anaconda-mode/0.1.9
 export PATH=$HOME/.bin:/usr/local/bin:$EMACSPATH:$PYTHONPATH:$PATH
 
+eval "$(pyenv init -)"
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
