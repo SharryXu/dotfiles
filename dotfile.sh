@@ -14,7 +14,6 @@
 ###################################
 declare -r true=0
 declare -r false=1
-declare -r max_retry_count=3
 declare -r default_git_commit_message='Sync latest settings.'
 declare -r error_message_check_parameters="Please check parameters."
 declare -r default_shell=/bin/zsh
@@ -774,7 +773,7 @@ else
     git icdiff
 
     if [[ $(git diff) != '' ]]; then
-      if choice_yes_no "Do you want push to the remote?"; then
+      if [[ $(choose_yes_no "Do you want push to the remote?") == $true ]]; then
         print 0 "Push to remote git repository..."
         push_git_repository $SourcePath
       fi
