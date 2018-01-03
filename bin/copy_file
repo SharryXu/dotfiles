@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: Remember to deal with lastest slash character.
+
 # File copy (If the original file is newer than the target file)
 # Globals:
 #   basename
@@ -43,5 +45,3 @@ else
   print 3 $error_message_check_parameters
   exit 1
 fi
-
-exit #?

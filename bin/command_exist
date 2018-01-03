@@ -16,9 +16,9 @@ if [ $# -eq 1 ]; then
   else
     echo 1
   fi
+
+  exit 0
 else
   echo -e $manual
   exit 1
 fi
-
-exit #?

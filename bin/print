@@ -41,6 +41,8 @@ then
   else
     echo -e "${d_Red}Status code should only among 0, 1, 2 and 3.${d_NC}" >&1 >&2
   fi
+
+  exit 0
 else
   echo -e $manual >&1 >&2
   exit 1

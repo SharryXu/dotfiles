@@ -230,7 +230,7 @@ function check_git_repository() {
   if [ $# -ge 3 ]; then
     local repoInfo=$2
     if [ -d $1 ]; then
-      if is_folder_empty $1 ; then
+      if [[ $(is_folder_empty $1) == $true ]] ; then
         print 2 "${repoInfo[0]} existed but it's empty."
         git clone ${repoInfo[1]} $1
         print 1 "${repoInfo[0]} has been successfully cloned."
@@ -416,7 +416,7 @@ function push_git_repository() {
   local repositoryname=$(basename $1)
 
   if [ $# -ge 1 ]; then
-    if [ -d $1 ] && ! is_folder_empty $1 ; then
+    if [ -d $1 ] && [[ $(is_folder_empty $1) == $false ]] ; then
 	    print 0 "Please provide appropriate message:"
       read commitMessage
       if [[ -z $commitMessage ]]; then
@@ -454,16 +454,14 @@ function push_git_repository() {
 ##################################
 function install_homebrew() {
   print 0 "Check brew..."
-  local result=$(command_exist 'brew')
-  if $result ; then
+  if [[ $(command_exist 'brew') == $true ]] ; then
     brew update
     print 1 "brew has been successfully updated."
     print 0 "Update all brew packages..."
     brew upgrade
     print 1 "All brew packages have been updated."
   else
-    result=$(command_exist 'ruby')
-    if $result ; then
+    if [[ $(command_exist 'ruby') == $true ]] ; then
       print 3 "Please install Ruby first."
       exit 1
     else
@@ -639,6 +637,9 @@ function configure_python() {
 #   None
 #######################################
 function install() {
+  print 0 "Create custom tools..."
+  install_custom_commands
+
   install_homebrew
 
   configure_homebrew_tap
@@ -690,7 +691,7 @@ function install() {
   install_homebrew_package 'you-get'
 
   print 0 "Check bash profile..."
-  copy_folder $SourcePath/bash/ $HOME
+  copy_folder $SourcePath/bash $HOME
 
   configure_zsh
 
@@ -736,9 +737,6 @@ function install() {
 
   print 0 "Check WakaTime tool..."
   copy_file $SourcePath/other/.wakatime.cfg $HOME
-
-  print 0 "Create custom tools..."
-  install_custom_commands
 
   print 0 "Install System Config..."
   copy_folder $SourcePath/config/fontconfig $HOME/.config/fontconfig
@@ -827,7 +825,7 @@ else
     SourcePath=$PWD/$(echo $SourcePath | sed 's/^\///g')
   fi
 
-  if [ ! -d $SourcePath ] || is_folder_empty $SourcePath; then
+  if [ ! -d $SourcePath ] || [[ $(is_folder_empty $SourcePath) == $true ]]; then
     print 2 "$SourcePath is not existed or empty."
     echo -e $manual
     exit 1
