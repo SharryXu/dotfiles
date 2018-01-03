@@ -30,42 +30,6 @@ declare -r nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
 declare -r nvm=('Node Manager' 'https://github.com/creationix/nvm')
 declare -r ohmytmux=('Oh-My-Tmux' 'https://github.com/gpakosz/.tmux')
 
-#########################################
-# Let user to answer yes-or-no question
-# results to stderr
-# Globals:
-#   Print
-# Arguments:
-#   Prompt message
-# Returns:
-#   customer result
-#########################################
-function choice_yes_no() {
-  if [ $# -eq 1 ]; then
-    local retry_count=0
-    while [[ retry_count -lt max_retry_count ]]; do
-      if [[ retry_count -eq 0 ]]; then
-        read -p "$1" yn
-      else
-        read -p "Please answer yes(y) or no(n):" yn
-      fi
-
-      case $yn in
-        [Yy]* ) return $true;;
-        [Nn]* ) return $false;;
-        * ) print 2 "Please try again.";;
-      esac
-
-      let retry_count=retry_count+1
-    done
-
-    return $false
-  else
-    print 3 $error_message_check_parameters
-    exit 1
-  fi
-}
-
 #############################
 # Install all homebrew tap
 # Globals:
@@ -109,37 +73,6 @@ function configure_homebrew_tap() {
       print 2 "$target_tap has already existed."
     fi
   done
-}
-
-################################################################
-# Folder copy (If the original file is newer than the target file)
-# Globals:
-#   copy_file
-#   print
-# Arguments:
-#   Source Folder Path
-#   Target Folder Path
-# Returns:
-#   None
-################################################################
-function copy_folder () {
-  if [ $# -eq 2 ]; then
-    if [[ ! -d $1 ]]; then
-      print 3 "The source folder: $1 is illegal."
-      # TODO: Return status code
-    fi
-
-    if [[ ! -d $2 ]]; then
-      print 3 "The target folder: $2 is illegal."
-    fi
-
-    for filePath in $1/*; do
-      copy_file $filePath $2
-    done
-  else
-    print 3 $error_message_check_parameters
-    exit 1
-  fi
 }
 
 #######################################

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Folder copy (If the original file is newer than the target file)
+# Globals:
+#   copy_file
+#   print
+# Arguments:
+#   Source Folder Path
+#   Target Folder Path
+# Returns:
+#   None
+
+declare -r manual="Usage: copy_folder <source folder path> <target folder path>"
+
+if [ $# -eq 2 ]; then
+  if [[ ! -d $1 ]]; then
+    print 3 "The source folder: $1 is illegal."
+    # TODO: Return status code
+  fi
+
+  if [[ ! -d $2 ]]; then
+    print 3 "The target folder: $2 is illegal."
+  fi
+
+  for filePath in $1/*; do
+    copy_file $filePath $2
+  done
+
+  exit 0
+else
+  echo -e $manual
+  exit 1
+fi
