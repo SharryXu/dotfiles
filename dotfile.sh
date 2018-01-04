@@ -8,6 +8,7 @@
 #       4.Check the input parameters and related command like basename.
 #       5.Use python to rewrite this.
 #       6.Try to use trap command.
+#       7.Try to avoid provide path parameter everytime.
 
 ###################################
 # Declare some constant variables.

@@ -454,7 +454,7 @@
 	<key>NSWindow Frame Preferences</key>
 	<string>269 150 606 456 0 0 1440 877 </string>
 	<key>NSWindow Frame ProfilesPanel</key>
-	<string>663 351 735 382 0 0 2560 1417 </string>
+	<string>430 229 735 382 0 0 1920 1057 </string>
 	<key>NSWindow Frame SUAutomaticUpdateAlert</key>
 	<string>438 527 616 174 0 0 1440 877 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
@@ -464,9 +464,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>138 203 599 519 0 0 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>800 193 796 473 0 0 1920 1057 </string>
+	<string>1256 256 796 473 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>322 204 1426 777 0 0 2560 1417 </string>
+	<string>1345 55 882 642 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>672 68 842 679 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -864,11 +864,11 @@
 			<key>HotKey Alternate Shortcuts</key>
 			<array/>
 			<key>HotKey Characters</key>
-			<string>i</string>
+			<string></string>
 			<key>HotKey Characters Ignoring Modifiers</key>
-			<string>i</string>
+			<string>t</string>
 			<key>HotKey Key Code</key>
-			<integer>34</integer>
+			<integer>17</integer>
 			<key>HotKey Modifier Activation</key>
 			<integer>3</integer>
 			<key>HotKey Modifier Flags</key>
@@ -1566,7 +1566,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-01-01T04:16:07Z</date>
+	<date>2018-01-04T11:12:19Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowBookmarkName</key>
