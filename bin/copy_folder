@@ -39,7 +39,8 @@ if [ $# -eq 2 ]; then
     if [[ $fileName != "." && $fileName != ".." ]]; then
 	    if [[ -d $fullFilePath ]]; then
 		    copy_folder $fullFilePath $2
-	    else
+		    # Skip link file.
+	    elif [[ ! -L $fullFilePath ]]; then
         copy_file $fullFilePath $2
 	    fi
     fi

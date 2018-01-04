@@ -472,6 +472,7 @@ function configure_emacs() {
     rm $HOME/.iterm2_shell_integration.zsh
   fi
   install_python_package 'wakatime' '3'
+  install_homebrew_package 'cppcheck'
 }
 
 ###################################

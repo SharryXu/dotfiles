@@ -108,6 +108,8 @@ if [[ $system_name == 'ubuntu' ]]; then
 	alias tmux='tmux -2'
 fi
 
+# set -o vi
+
 # Config homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export HOMEBREW_NO_AUTO_UPDATE=false
@@ -117,6 +119,9 @@ ZSH_TMUX_AUTOSTART=false
 ZSH_TMUX_AUTOQUIT=false
 
 source $ZSH/oh-my-zsh.sh
+
+# Do not enable auto-correct.
+unsetopt correct_all
 
 # Config node version manager
 export NVM_DIR="$HOME/.nvm"
