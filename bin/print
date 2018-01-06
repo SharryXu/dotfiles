@@ -14,7 +14,7 @@
 # Returns:
 #   None
 
-source $HOME/.bin/default_colors
+source $HOME/.bin/default-colors
 
 declare -r manual="Usage: print <status code> <message>\
 \n

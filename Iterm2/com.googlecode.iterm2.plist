@@ -466,7 +466,7 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>1256 256 796 473 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>1345 55 882 642 0 0 2560 1417 </string>
+	<string>322 204 1426 777 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>672 68 842 679 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -864,11 +864,11 @@
 			<key>HotKey Alternate Shortcuts</key>
 			<array/>
 			<key>HotKey Characters</key>
-			<string></string>
+			<string>	</string>
 			<key>HotKey Characters Ignoring Modifiers</key>
-			<string>t</string>
+			<string>i</string>
 			<key>HotKey Key Code</key>
-			<integer>17</integer>
+			<integer>34</integer>
 			<key>HotKey Modifier Activation</key>
 			<integer>3</integer>
 			<key>HotKey Modifier Flags</key>

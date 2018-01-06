@@ -78,7 +78,7 @@ function configure_homebrew_tap() {
 #######################################
 # Using npm tool to install packages.
 # Globals:
-#   command_exist
+#   command-exist
 #   npm
 #   print
 # Arguments:
@@ -90,9 +90,9 @@ function configure_homebrew_tap() {
 function install_node_package() {
   if [ $# -gt 0 ]; then
     if [ $# -eq 2 ]; then
-      result=$(command_exist $2)
+      result=$(command-exist $2)
     else
-      result=$(command_exist $1)
+      result=$(command-exist $1)
     fi
 
     if [[ $result == $false ]]; then
@@ -112,7 +112,7 @@ function install_node_package() {
 # Using homebrew to install tool.
 # Globals:
 #   brew
-#   command_exist
+#   command-exist
 #   print
 # Arguments:
 #   Tool Name
@@ -125,9 +125,9 @@ function install_homebrew_package() {
   # By default, we think tool name ($1) is the command name ($2)
   if [ $# -gt 0 ]; then
     if [ $# -eq 2 ]; then
-      result=$(command_exist $2)
+      result=$(command-exist $2)
     else
-      result=$(command_exist $1)
+      result=$(command-exist $1)
     fi
 
     if [[ $result == $false ]]; then
@@ -163,7 +163,7 @@ function check_git_repository() {
   if [ $# -ge 3 ]; then
     local repoInfo=$2
     if [ -d $1 ]; then
-      if [[ $(is_folder_empty $1) == $true ]] ; then
+      if [[ $(is-folder-empty $1) == $true ]] ; then
         print 2 "${repoInfo[0]} existed but it's empty."
         git clone ${repoInfo[1]} $1
         print 1 "${repoInfo[0]} has been successfully cloned."
@@ -300,7 +300,7 @@ function setup_macos_settings() {
 #######################################
 # Install custom commands.
 # Globals:
-#   copy_folder
+#   copy-folder
 # Arguments:
 #   None
 # Returns:
@@ -311,7 +311,7 @@ function install_custom_commands() {
     mkdir $HOME/.bin
   fi
 
-  copy_folder $SourcePath/bin $HOME/.bin
+  copy-folder $SourcePath/bin $HOME/.bin
 
   # Make all files executable
   for i in $HOME/.bin/*; do
@@ -322,7 +322,7 @@ function install_custom_commands() {
 #######################################
 # Backup custom commands.
 # Globals:
-#   copy_folder
+#   copy-folder
 # Arguments:
 #   None
 # Returns:
@@ -330,7 +330,7 @@ function install_custom_commands() {
 #######################################
 function backup_custom_commands() {
   # TODO: Only copy executable files.
-  copy_folder $HOME/.bin $SourcePath/bin
+  copy-folder $HOME/.bin $SourcePath/bin
 }
 
 #############################################
@@ -349,7 +349,7 @@ function push_git_repository() {
   local repositoryname=$(basename $1)
 
   if [ $# -ge 1 ]; then
-    if [ -d $1 ] && [[ $(is_folder_empty $1) == $false ]] ; then
+    if [ -d $1 ] && [[ $(is-folder-empty $1) == $false ]] ; then
 	    print 0 "Please provide appropriate message:"
       read commitMessage
       if [[ -z $commitMessage ]]; then
@@ -380,21 +380,21 @@ function push_git_repository() {
 # Install homebrew
 # Globals:
 # Arguments:
-#   command_exist
+#   command-exist
 #   print
 # Returns:
 #   None
 ##################################
 function install_homebrew() {
   print 0 "Check brew..."
-  if [[ $(command_exist 'brew') == $true ]] ; then
+  if [[ $(command-exist 'brew') == $true ]] ; then
     brew update
     print 1 "brew has been successfully updated."
     print 0 "Update all brew packages..."
     brew upgrade
     print 1 "All brew packages have been updated."
   else
-    if [[ $(command_exist 'ruby') == $true ]] ; then
+    if [[ $(command-exist 'ruby') == $true ]] ; then
       print 3 "Please install Ruby first."
       exit 1
     else
@@ -411,7 +411,7 @@ function install_homebrew() {
 #   install_homebrew_package
 #   chsh
 #   print
-#   copy_file
+#   copy-file
 #   check_git_repository
 # Returns:
 #   None
@@ -423,8 +423,8 @@ function configure_zsh() {
     chsh -s $default_shell
   fi
   check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
-  copy_file $SourcePath/zsh/.zshrc $HOME
-  copy_file $SourcePath/zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
+  copy-file $SourcePath/zsh/.zshrc $HOME
+  copy-file $SourcePath/zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
 }
 
 ###################################
@@ -434,7 +434,7 @@ function configure_zsh() {
 #   install_homebrew_package
 #   install_ruby_package
 #   print
-#   copy_file
+#   copy-file
 #   check_git_repository
 # Returns:
 #   None
@@ -446,7 +446,7 @@ function configure_tmux() {
   install_ruby_package 'tmuxinator'
   check_git_repository $HOME/.tmux ${ohmytmux[*]}
   ln -s -f $HOME/.tmux/.tmux.conf $HOME
-  copy_file $SourcePath/other/.tmux.conf.local $HOME
+  copy-file $SourcePath/other/.tmux.conf.local $HOME
 }
 
 ###################################
@@ -456,7 +456,7 @@ function configure_tmux() {
 #   install_homebrew_package
 #   install_python_package
 #   print
-#   copy_file
+#   copy-file
 #   check_git_repository
 # Returns:
 #   None
@@ -467,7 +467,7 @@ function configure_emacs() {
   install_homebrew_package 'ag'
   install_homebrew_package 'emacs-plus' 'emacs'
   check_git_repository $HOME/.emacs.d ${spacemacs[*]}
-  copy_file $SourcePath/emacs/.spacemacs $HOME
+  copy-file $SourcePath/emacs/.spacemacs $HOME
   # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
   if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
     rm $HOME/.iterm2_shell_integration.zsh
@@ -483,7 +483,7 @@ function configure_emacs() {
 #   install_homebrew_package
 #   install_python_package
 #   print
-#   copy_file
+#   copy-file
 #   check_git_repository
 # Returns:
 #   None
@@ -500,7 +500,7 @@ function configure_vim() {
   if [ ! -d $HOME/.Spacevim ]; then
     curl -sLf https://spacevim.org/install.sh | bash
   fi
-  copy_file $SourcePath/vim/* $HOME/.Spacevim.d/
+  copy-file $SourcePath/vim/* $HOME/.Spacevim.d/
 }
 
 ###################################
@@ -529,7 +529,7 @@ function install_fonts() {
 #   install_homebrew_package
 #   install_python_package
 #   print
-#   copy_file
+#   copy-file
 # Returns:
 #   None
 ###################################
@@ -537,8 +537,8 @@ function configure_git() {
   print 0 "Check git..."
   install_homebrew_package 'git'
   install_homebrew_package 'tig'
-  copy_file $SourcePath/git/.gitconfig $HOME/
-  copy_file $SourcePath/git/.gitignore_global $HOME/
+  copy-file $SourcePath/git/.gitconfig $HOME/
+  copy-file $SourcePath/git/.gitignore_global $HOME/
   install_python_package 'gitsome' '2'
 }
 
@@ -587,12 +587,12 @@ function install() {
 
   print 0 "Check mongo database..."
   install_homebrew_package 'mongodb' 'mongo'
-  copy_file $SourcePath/mongodb/.mongorc.js $HOME
+  copy-file $SourcePath/mongodb/.mongorc.js $HOME
 
   print 0 "Check MySQL database..."
   install_homebrew_package 'mariadb' 'mysql'
   install_homebrew_package 'mycli'
-  copy_file $SourcePath/mysql/.my.cnf $HOME
+  copy-file $SourcePath/mysql/.my.cnf $HOME
 
   print 0 "Check Microsoft SQL Server tool..."
   install_python_package 'mssql-cli' '3'
@@ -625,7 +625,7 @@ function install() {
   install_homebrew_package 'you-get'
 
   print 0 "Check bash profile..."
-  copy_folder $SourcePath/bash $HOME
+  copy-folder $SourcePath/bash $HOME
 
   configure_zsh
 
@@ -641,7 +641,7 @@ function install() {
 
   print 0 "Check ClangFormat tool..."
   install_homebrew_package 'clang-format'
-  copy_file $SourcePath/other/.clang-format $HOME
+  copy-file $SourcePath/other/.clang-format $HOME
 
   print 0 "Check system monitor tool..."
   install_homebrew_package 'htop'
@@ -670,11 +670,11 @@ function install() {
   install_ruby_package 'travis'
 
   print 0 "Check WakaTime tool..."
-  copy_file $SourcePath/other/.wakatime.cfg $HOME
+  copy-file $SourcePath/other/.wakatime.cfg $HOME
 
   print 0 "Install System Config..."
-  copy_folder $SourcePath/config/fontconfig $HOME/.config/fontconfig
-  copy_folder $SourcePath/config/tmuxinator $HOME/.config/tmuxinator
+  copy-folder $SourcePath/config/fontconfig $HOME/.config/fontconfig
+  copy-folder $SourcePath/config/tmuxinator $HOME/.config/tmuxinator
 
   print 0 "Setup Mac OS..."
   setup_macos_settings
@@ -695,45 +695,45 @@ function install() {
 #######################################
 function backup() {
   print 0 "Backup zsh and theme file..."
-  copy_file $HOME/.zshrc $SourcePath/zsh/
-  copy_file $HOME/.oh-my-zsh/themes/sharry.zsh-theme $SourcePath/zsh/
+  copy-file $HOME/.zshrc $SourcePath/zsh/
+  copy-file $HOME/.oh-my-zsh/themes/sharry.zsh-theme $SourcePath/zsh/
 
   print 0 "Backup bash file..."
-  copy_file $HOME/.bash_profile $SourcePath/bash/
-  copy_file $HOME/.bashrc $SourcePath/bash/
+  copy-file $HOME/.bash_profile $SourcePath/bash/
+  copy-file $HOME/.bashrc $SourcePath/bash/
 
   print 0 "Backup emacs..."
-  copy_file $HOME/.spacemacs $SourcePath/emacs/
+  copy-file $HOME/.spacemacs $SourcePath/emacs/
 
   print 0 "Backup mongo database..."
-  copy_file $HOME/.mongorc.js $SourcePath/mongodb/
+  copy-file $HOME/.mongorc.js $SourcePath/mongodb/
   # TODO: backup mongo.conf file.
 
   print 0 "Backup mysql database..."
-  copy_file $HOME/.my.cnf $SourcePath/mysql/
+  copy-file $HOME/.my.cnf $SourcePath/mysql/
 
   print 0 "Backup clang format information..."
-  copy_file $HOME/.clang-format $SourcePath/other/
+  copy-file $HOME/.clang-format $SourcePath/other/
 
   print 0 "Backup tmux tool's configuration..."
-  copy_file $HOME/.tmux.conf.local $SourcePath/other/
+  copy-file $HOME/.tmux.conf.local $SourcePath/other/
 
   print 0 "Backup Vim..."
-  copy_folder $HOME/.Spacevim.d $SourcePath/vim
+  copy-folder $HOME/.Spacevim.d $SourcePath/vim
 
   print 0 "Backup System Config..."
-  copy_folder $HOME/.config/fontconfig $SourcePath/config/fontconfig
-  copy_folder $HOME/.config/tmuxinator $SourcePath/config/tmuxinator
+  copy-folder $HOME/.config/fontconfig $SourcePath/config/fontconfig
+  copy-folder $HOME/.config/tmuxinator $SourcePath/config/tmuxinator
 
   print 0 "Backup Git Configuration..."
-  copy_file $HOME/.gitconfig $SourcePath/git/
-  copy_file $HOME/.gitignore_global $SourcePath/git/
+  copy-file $HOME/.gitconfig $SourcePath/git/
+  copy-file $HOME/.gitignore_global $SourcePath/git/
 
   print 0 "Backup custom tools..."
   backup_custom_commands
 
   print 0 "Backup WakaTime Config..."
-  copy_file $HOME/.wakatime.cfg $SourcePath/other/
+  copy-file $HOME/.wakatime.cfg $SourcePath/other/
 
   print 0 "Make new program effective immediately..."
   /bin/zsh $HOME/.zshrc
@@ -759,7 +759,7 @@ else
     SourcePath=$PWD/$(echo $SourcePath | sed 's/^\///g')
   fi
 
-  if [ ! -d $SourcePath ] || [[ $(is_folder_empty $SourcePath) == $true ]]; then
+  if [ ! -d $SourcePath ] || [[ $(is-folder-empty $SourcePath) == $true ]]; then
     print 2 "$SourcePath is not existed or empty."
     echo -e $manual
     exit 1
@@ -775,7 +775,7 @@ else
     git icdiff
 
     if [[ $(git diff) != '' ]]; then
-      if [[ $(choose_yes_no "Do you want push to the remote?") == $true ]]; then
+      if [[ $(choose-yes-or-no "Do you want push to the remote?") == $true ]]; then
         print 0 "Push to remote git repository..."
         push_git_repository $SourcePath
       fi
