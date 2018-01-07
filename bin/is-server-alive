@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Check whether specific server is alive or not.
+# Globals:
+#   ping
+#   print
+# Arguments:
+#   Tool Name
+#   Command Line Name (Optional)
+# Returns:
+#   IsAlive
+
+declare -r manual="Usage: is_server_alive <ip address|server address>\n"
+
+if [ $# -eq 1 ]; then
+  tryCounts = 3
+  result=$(ping $1 -c $tryCounts | grep "^\w\{2\} bytes from .*ttl=[0-9]" -c)
+  if [ $result -eq $tryCounts ]; then
+    echo 0
+  else
+    echo 1
+  fi
+
+  exit 0
+else
+  echo -e $manual
+  exit 1
+fi

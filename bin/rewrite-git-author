@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Rewrite all git commits' author info.
+
+declare -r manul='Usage: rewrite-git-author <author-name> <author-email>'
+
+if [[ $# -eq 2 ]]; then
+  git_command='export GIT_COMMITTER_NAME="'$1'"
+               export GIT_COMMITTER_EMAIL="'$2'"
+
+               export GIT_AUTHOR_NAME="'$1'"
+               export GIT_AUTHOR_EMAIL="'$2'"'
+
+  git filter-branch --env-filter $git_command --tag-name-filter cat -- --branches --tags
+else
+  echo -e $manul
+
+  exit 1
+fi
+
+exit #?

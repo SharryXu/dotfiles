@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Check whether specific folder is empty or not.
+# Globals:
+#   find
+#   print
+# Arguments:
+#   Folder Path
+# Returns:
+#   Folder Status
+
+declare -r manual="Usage: is_folder_empty <folder path>"
+
+if [ $# -eq 1 ]; then
+  folderPath=$(realpath $1)
+  result=$(find $folderPath -name '*' -maxdepth 1)
+  if [[ $result == $folderPath ]]; then
+    echo 0
+  else
+    echo 1
+  fi
+
+  exit 0
+else
+  echo -e $manual
+  exit 1
+fi

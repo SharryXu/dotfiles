@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Copy files from one folder to another folder.(If the original file is newer than the target file)
+# Globals:
+#   copy-file
+#   print
+# Arguments:
+#   Source Folder Path
+#   Target Folder Path
+# Returns:
+#   None
+
+declare -r manual="Usage: copy-folder <source folder path> <target folder path>"
+
+if [ $# -eq 2 ]; then
+  sourceFolderPath=$1
+  targetFolderPath=$2
+
+  if [[ ! -d $sourceFolderPath ]]; then
+    print 3 "The source folder: $sourceFolderPath is illegal."
+    exit 2
+  fi
+
+  if [[ ! -d $targetFolderPath ]]; then
+    print 3 "The target folder: $targetFolderPath is illegal."
+    exit 2
+  fi
+
+  if [[ $sourceFolderPath == $targetFolderPath ]]; then
+    print 3 "Cannot copy files from $sourceFolderPath to $targetFolderPath.\nBecause there will be a inifinate cycle."
+    exit 3
+  fi
+
+  print 1 "Copy files from $sourceFolderPath to $targetFolderPath..."
+
+  # Add missing or update files.
+  for fileName in `ls -a $sourceFolderPath`; do
+    fullFilePath=$sourceFolderPath/$fileName
+
+    if [[ $fileName != "." && $fileName != ".." ]]; then
+	    if [[ -d $fullFilePath ]]; then
+		    copy-folder $fullFilePath $targetFolderPath
+	    else
+        copy-file $fullFilePath $targetFolderPath
+	    fi
+    fi
+  done
+
+  exit 0
+else
+  echo -e $manual
+  exit 1
+fi

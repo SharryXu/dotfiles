@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# TODO: Remember to deal with lastest slash character.
+
+# File copy (If the original file is newer than the target file)
+# Globals:
+#   basename
+#   print
+#   cp
+# Arguments:
+#   Source File Path
+#   Target Folder Path
+# Returns:
+#   None
+
+declare -r manual="Usage: copy_file <source file path> <target folder path>"
+
+if [ $# -eq 2 ]; then
+  sourceFilePath=$(realpath $1)
+  targetFolderPath=$(realpath $2)
+  filename=$(basename $sourceFilePath)
+
+  if [[ ! -f $sourceFilePath ]]; then
+    print 3 "The file: $sourceFilePath is not existed."
+    exit 1
+  elif [[ -d $sourceFilePath ]]; then
+    print 3 "The source file path direct to a folder."
+    exit 3
+  fi
+
+  if [[ ! -d $targetFolderPath ]]; then
+    print 3 "The source folder: $targetFolderPath is illegal."
+    exit 2
+  fi
+
+  if [[ -f $targetFolderPath/$filename ]]; then
+    if [[ $sourceFilePath -nt $targetFolderPath/$filename ]]; then
+      cp $sourceFilePath $targetFolderPath
+      print 1 "File name $filename is replaced."
+    else
+      print 2 "File name $filename don't need to replace."
+    fi
+  else
+    cp $sourceFilePath $targetFolderPath
+    print 1 "File name $filename has been created."
+  fi
+
+  exit 0
+else
+  print 3 $error_message_check_parameters
+  exit 1
+fi
