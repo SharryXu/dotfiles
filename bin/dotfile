@@ -486,7 +486,7 @@ function configure_emacs() {
   if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
     rm $HOME/.iterm2_shell_integration.zsh
   fi
-  install_python_package 'wakatime' '3'
+  install_node_package 'wakatime'
   install_homebrew_package 'cppcheck'
 }
 
@@ -566,12 +566,8 @@ function configure_git() {
 #   None
 ###################################
 function configure_python() {
-  print 0 "Check python3..."
-  install_homebrew_package 'python3'
-  print 0 "Check python2..."
-  install_homebrew_package 'python2'
-  install_homebrew_package 'pip3'
-  install_homebrew_package 'pip2'
+  print 0 "Check python..."
+  install_homebrew_package 'pyenv'
 
   # ln -s $(brew --cellar python) ~/.pyenv/versions
 }
@@ -762,6 +758,9 @@ declare -r manual="Usage: dotfile [Options] <source path>\n\n
 -a  Integrate backup and install."
 
 # main program
+# exit the script if any statement returns a non-true return value
+set -e
+
 if [ ! $# -eq 2 ]; then
   echo -e $manual
   exit 1
@@ -792,6 +791,9 @@ else
 
     exit $?
   elif [[ $1 = "-i" ]]; then
+    # Ask user provider root password.
+    read -p "Please provide password: " -s password
+
     install
     exit $?
   elif [[ $1 = "-a" ]]; then
