@@ -9,6 +9,7 @@
 #       5.Use python to rewrite this.
 #       6.Try to use trap command.
 #       7.Try to avoid provide path parameter everytime.
+#       8.Try to concentrate same package tool installation.
 
 ###################################
 # Declare some constant variables.
@@ -19,6 +20,11 @@ declare -r default_git_commit_message='Sync latest settings.'
 declare -r error_message_check_parameters="Please check parameters."
 declare -r default_shell=/bin/zsh
 
+################################
+# Declare some global variables
+################################
+declare user_password=''
+
 ######################################
 # Declare all used git repositories.
 ######################################
@@ -27,15 +33,17 @@ declare -r spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
 declare -r zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt')
 declare -r powerlinefonts=('Powerline-fonts' 'https://github.com/powerline/fonts')
 declare -r nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
-declare -r nvm=('Node Manager' 'https://github.com/creationix/nvm')
-declare -r tmuxpluginmanager=('Tmux Plugin Manager' 'https://github.com/tmux-plugins/tpm')
-declare -r tmuxpluginyank=('Tmux Plugin: Yank' 'https://github.com/tmux-plugins/tmux-yank')
-declare -r tmuxpluginsensible=('Tmux Plugin: Sensible' 'https://github.com/tmux-plugins/tmux-sensible')
-declare -r tmuxpluginsidebar=('Tmux Plugin: Sidebar' 'https://github.com/tmux-plugins/tmux-sidebar')
+declare -r nodemanager=('Node-Manager' 'https://github.com/creationix/nvm')
+declare -r tmuxpluginmanager=('TmuxPluginManager' 'https://github.com/tmux-plugins/tpm')
+declare -r tmuxpluginyank=('TmuxPlugin:Yank' 'https://github.com/tmux-plugins/tmux-yank')
+declare -r tmuxpluginsensible=('TmuxPlugin:Sensible' 'https://github.com/tmux-plugins/tmux-sensible')
+declare -r tmuxpluginsidebar=('TmuxPlugin:Sidebar' 'https://github.com/tmux-plugins/tmux-sidebar')
 
 #############################
 # Install all homebrew tap
 # Globals:
+#   Homebrew
+#   Print
 # Arguments:
 # Returns:
 #   None
@@ -79,6 +87,42 @@ function configure_homebrew_tap() {
 }
 
 #######################################
+# Using homebrew tool to install gui packages.
+# Globals:
+#   homebrew
+#   print
+# Arguments:
+#   Cask Package name
+# Returns:
+#   None
+#######################################
+function install_homebrew_cask_package() {
+  if [[ $# == 1 ]]; then
+    OLD_IFS=$IFS
+    IFS=' '
+    local exist_cask_app_list=$(brew cask list)
+    IFS=$OLD_IFS
+
+    local need_install=1
+    for exist_cask in $exist_cask_app_list; do
+      if [[ $exist_cask == $1 ]]; then
+        need_install=0
+      fi
+    done
+
+    if [[ $need_install == 1 ]]; then
+      brew cask install $1
+      print 1 "$1 has been successfully installed."
+    else
+      print 2 "$1 has already existed."
+    fi
+  else
+    print 3 "$error_message_check_parameters"
+    exit 1
+  fi
+}
+
+######################################
 # Using npm tool to install packages.
 # Globals:
 #   command-exist
@@ -106,7 +150,7 @@ function install_node_package() {
       print 2 "$1 has already existed"
     fi
   else
-    print 3 $error_message_check_parameters
+    print 3 "$error_message_check_parameters"
     exit 1
   fi
 }
@@ -140,7 +184,7 @@ function install_homebrew_package() {
       print 2 "$1 has already existed."
     fi
   else
-    print 3 $error_message_check_parameters
+    print 3 "$error_message_check_parameters"
     exit 1
   fi
 }
@@ -196,7 +240,7 @@ function check_git_repository() {
       print 1 "${repoInfo[0]} has been successfully cloned."
     fi
   else
-    print 3 $error_message_check_parameters
+    print 3 "$error_message_check_parameters"
     exit 1
   fi
 }
@@ -225,13 +269,13 @@ function install_ruby_package() {
 
     if [[ $isExisted == $false ]]; then
       # Need root permission to write /Library/Ruby/Gems/2.0.0
-      sudo gem install $1
+      echo $user_password | sudo -S gem install $1
       print 1 "Ruby package name $1 has been successfully installed."
     else
       print 2 "Ruby package name $1 has already existed."
     fi
   else
-    print 3 $error_message_check_parameters
+    print 3 "$error_message_check_parameters"
     exit 1
   fi
 }
@@ -248,12 +292,30 @@ function install_ruby_package() {
 #   None
 #######################################
 function install_python_package() {
-  # Ignore case sensitive
-  shopt -s nocasematch
+  if [[ $(command-exist 'pyenv') == $false ]]; then
+	  print 3 "The program name pyenv is not existed."
+	  exit 1
+  else
+    eval "$(pyenv init -)"
+  fi
 
-  if [ $# -eq 2 ]; then
+  if [[ $# == 2 ]]; then
+    local version=$2
+
+    if [[ $version == 2 ]]; then
+      # TODO: Make those version more sensible.
+      pyenv shell 2.7.14
+    elif [[ $version == 3 ]]; then
+      pyenv shell 3.5.4
+    else
+      print 3 "Please check version."
+    fi
+
+    # Ignore case sensitive
+    shopt -s nocasematch
+
     local isExisted=$false
-    read -ra installedPackages <<< $(pip$2 list --format=columns | sed -n '3,$p')
+    read -ra installedPackages <<< $(pip$version list --format=columns | sed -n '3,$p')
     for ((i = 0; i < ${#installedPackages[@]}; i += 2)); do
       if [[ "${installedPackages[$i]}" == *"$1" ]]; then
         isExisted=$true
@@ -262,13 +324,13 @@ function install_python_package() {
     done
 
     if [[ $isExisted == $false ]]; then
-      pip$2 install --user $1
+      pip$version install --user $1
       print 1 "Python package name $1 has been successfully installed."
     else
       print 2 "Python package name $1 has already existed."
     fi
   else
-    print 3 $error_message_check_parameters
+    print 3 "$error_message_check_parameters"
     exit 1
   fi
 }
@@ -379,7 +441,7 @@ function push_git_repository() {
       cd $currentFolder
     fi
   else
-    print 3 $error_message_check_parameters
+    print 3 "$error_message_check_parameters"
     exit 1
   fi
 }
@@ -425,10 +487,11 @@ function install_homebrew() {
 #   None
 ###################################
 function configure_zsh() {
-  print 0 "check oh-My-Zsh..."
+  print 0 "Check oh-My-Zsh..."
   install_homebrew_package 'zsh'
-  if [[ $SHELL == $default_shell ]]; then
-    chsh -s $default_shell
+  print 0 "Check default shell..."
+  if [[ $SHELL != $default_shell ]]; then
+    echo $user_password | sudo -S chsh -s $default_shell
   fi
   check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
   copy-file $SourcePath/zsh/.zshrc $HOME
@@ -506,9 +569,8 @@ function configure_vim() {
   print 0 "Check Vim..."
   install_homebrew_package 'vim --with-override-system-vim' 'vim'
   install_homebrew_package 'neovim' 'nvim'
-  install_ruby_package 'neovim'
-  install_python_package 'neovim' '2'
-  install_python_package 'neovim' '3'
+  #install_ruby_package 'neovim'
+  #install_python_package 'neovim' '3'
   install_node_package 'neovim'
   # Configure SpaceVim
   if [ ! -d $HOME/.Spacevim ]; then
@@ -528,8 +590,10 @@ function configure_vim() {
 ###################################
 function install_fonts() {
   print 0 "Check Nerd fonts..."
-  check_git_repository $HOME/.fonts-nerd ${nerdfonts[*]}
-  $HOME/.fonts-nerd/install.sh 1> /dev/null
+  install_homebrew_cask_package 'font-hack-nerd-font'
+  # Use brew cask to install.
+  # check_git_repository $HOME/.fonts-nerd ${nerdfonts[*]}
+  # $HOME/.fonts-nerd/install.sh 1> /dev/null
 
   print 0 "Check Powerline fonts..."
   check_git_repository $HOME/.fonts-powerline ${powerlinefonts[*]}
@@ -553,7 +617,7 @@ function configure_git() {
   install_homebrew_package 'tig'
   copy-file $SourcePath/git/.gitconfig $HOME/
   copy-file $SourcePath/git/.gitignore_global $HOME/
-  install_python_package 'gitsome' '2'
+  install_python_package 'gitsome' '3'
 }
 
 ###################################
@@ -569,6 +633,8 @@ function configure_python() {
   print 0 "Check python..."
   install_homebrew_package 'pyenv'
 
+  # TODO: Need to install python3.5.4, 2.7.14 and switch to them.
+
   # ln -s $(brew --cellar python) ~/.pyenv/versions
 }
 
@@ -581,6 +647,9 @@ function configure_python() {
 #   None
 #######################################
 function install() {
+  # Ask user provider root password.
+  read -p "Please provide password: " -s user_password && echo -e "\n"
+
   print 0 "Create custom tools..."
   install_custom_commands
 
@@ -639,7 +708,7 @@ function install() {
 
   configure_zsh
 
-  configure_bash
+  # configure_bash
 
   configure_tmux
 
@@ -654,7 +723,7 @@ function install() {
   copy-file $SourcePath/other/.clang-format $HOME
 
   print 0 "Check system monitor tool..."
-  install_homebrew_package 'htop'
+  # install_homebrew_package 'htop'
   install_python_package 'glances' '3'
 
   print 0 "Check chez-scheme..."
@@ -665,7 +734,7 @@ function install() {
   install_homebrew_package 'npm'
 
   print 0 "Check Node Manager..."
-  check_git_repository $HOME/.nvm $nvm
+  check_git_repository $HOME/.nvm ${nodemanager[*]}
   source $HOME/.nvm/nvm.sh
 
   print 0 "Check hexo..."
@@ -791,9 +860,6 @@ else
 
     exit $?
   elif [[ $1 = "-i" ]]; then
-    # Ask user provider root password.
-    read -p "Please provide password: " -s password
-
     install
     exit $?
   elif [[ $1 = "-a" ]]; then

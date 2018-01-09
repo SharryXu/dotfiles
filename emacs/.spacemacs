@@ -96,7 +96,7 @@ values."
      osx-clipboard
      evil-terminal-cursor-changer
      apib-mode
-     wakatime-mode
+     ;;wakatime-mode
      geiser
      ac-geiser
      anaconda-mode
@@ -421,7 +421,7 @@ you should place your code here."
   (global-hl-line-mode)
   ;; global-auto-revert-mode nil
   (osx-clipboard-mode)
-  (global-wakatime-mode)
+  ;; (global-wakatime-mode)
   ;; Maybe slow
   (global-company-mode)
   ;; Check syntax error and warning
