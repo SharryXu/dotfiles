@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>customSites</key>
+	<dict>
+		<key>01236661-7489-4E12-982B-6E86830135E8</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>zh</string>
+			<key>text</key>
+			<string>Search 知乎 for '{query}'</string>
+			<key>url</key>
+			<string>https://www.zhihu.com/search?type=content&amp;q={query}</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
+		<key>3D818DF9-C30B-47B6-91D2-912E6C72EB4D</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>bd</string>
+			<key>text</key>
+			<string>Search Baidu for '{query}'</string>
+			<key>url</key>
+			<string>https://www.baidu.com/s?wd={query}</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
+		<key>96EA894B-900F-43D2-9AB9-6E692DC4ECDC</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>tb</string>
+			<key>text</key>
+			<string>Search Taobao for '{query}'</string>
+			<key>url</key>
+			<string>https://s.taobao.com/search?q={query}&amp;loc=上海&amp;search_type=item</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
+		<key>9E03A229-15AE-49DB-9EFA-27B9589359BC</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>jd</string>
+			<key>text</key>
+			<string>Search JD for '{query}'</string>
+			<key>url</key>
+			<string>https://search.jd.com/Search?keyword={query}</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
+		<key>FC1CE6ED-05AC-4C26-AE05-A11BE859E182</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>zdm</string>
+			<key>text</key>
+			<string>Search 什么值得买 for '{query}'</string>
+			<key>url</key>
+			<string>http://search.smzdm.com/?c=post&amp;s={query}&amp;order=time</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>onlyShowEnabledInPrefs</key>
+	<true/>
+</dict>
+</plist>
