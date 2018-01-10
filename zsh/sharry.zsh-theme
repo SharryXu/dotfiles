@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 
-local LAMBDA="%(?,%{$fg_bold[green]%}λ,%{$fg_bold[red]%}λ)"
 if [[ "$USER" == "root" ]]; then USERCOLOR="red"; else USERCOLOR="green"; fi
 
 # Git sometimes goes into a detached head state. git_prompt_info doesn't
@@ -8,35 +7,19 @@ if [[ "$USER" == "root" ]]; then USERCOLOR="red"; else USERCOLOR="green"; fi
 # for an empty string.
 function check_git_prompt_info() {
     if git rev-parse --git-dir > /dev/null 2>&1; then
-        if [[ -z $(git_prompt_info 2> /dev/null) ]]; then
-            echo "%{$fg[blue]%}detached-head%{$reset_color%}) $(git_prompt_status)
-%{$fg[yellow]%}➜ "
-        else
-            echo "$(git_prompt_info 2> /dev/null) $(git_prompt_status)
-%{$fg_bold[cyan]%}➜ "
-        fi
+#        if [[ -z $(git_prompt_info 2> /dev/null) ]]; then
+#            echo "%{$fg[blue]%}detached-head%{$reset_color%}) $(git_prompt_status) \n%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
+#        else
+            echo "$(git_prompt_info 2> /dev/null) $(git_prompt_status) \n%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
+#        fi
     else
-        echo "
-%{$fg_bold[cyan]%}➜ "
+        echo "\n%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
     fi
 }
 
 # Display full path
-PROMPT=$'\n'$LAMBDA'\
- %{$fg_bold[$USERCOLOR]%}%n\
- %{$fg_no_bold[magenta]%}[%~]\
- $(check_git_prompt_info)\
-%{$reset_color%}'
-
-# function get_right_prompt() {
-#     if git rev-parse --git-dir > /dev/null 2>&1; then
-#         echo -n "$(git_prompt_short_sha)%{$reset_color%}"
-#     else
-#         echo -n "%{$reset_color%}"
-#     fi
-# }
-# 
-# RPROMPT='$(get_right_prompt)'
+PROMPT=$'\
+%{$fg_bold[$USERCOLOR]%}%n on %{$fg_bold[$USERCOLOR]%}%m %{$fg_no_bold[magenta]%}[%~] $(check_git_prompt_info)%{$reset_color%}'
 
 # Format for git_prompt_info()
 ZSH_THEME_GIT_PROMPT_PREFIX="at %{$fg[blue]%} "
@@ -55,9 +38,6 @@ ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[cyan]%}?"
 # Format for git_prompt_ahead()
 ZSH_THEME_GIT_PROMPT_AHEAD=" %{$fg_bold[white]%}^"
 
-
 # Format for git_prompt_long_sha() and git_prompt_short_sha()
 ZSH_THEME_GIT_PROMPT_SHA_BEFORE=" %{$fg_bold[white]%}[%{$fg_bold[blue]%}"
 ZSH_THEME_GIT_PROMPT_SHA_AFTER="%{$fg_bold[white]%}]" 
-
-# echo "%{$fg_bold[cyan]%}%(#?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )%{$reset_color%}"
