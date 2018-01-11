@@ -15,7 +15,10 @@
 # Returns:
 #   None
 
-declare -r manual="Usage: copy_file <source file path> <target folder path>"
+function usage() {
+  echo "Usage: $(basename $0) source_file target_directory" 1>&2
+  exit 1
+}
 
 if [ $# -eq 2 ]; then
   sourceFilePath=$(realpath $1)
@@ -49,6 +52,6 @@ if [ $# -eq 2 ]; then
 
   exit 0
 else
-  print 3 $error_message_check_parameters
+  usage
   exit 1
 fi

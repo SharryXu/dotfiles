@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Define some customer's own variables.
+
+export dotfile_path=/Users/sxu204/Desktop/Projects/Dotfiles

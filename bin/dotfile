@@ -1,15 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash -l
 #
 # This program is used to backup or restore dot files.
 #
 # TODO: 1.Try to seperate all backup methods.
-#       2.Flexible parameters like dotfile / -i -b ,etc.
-#       3.Check Application folder for some specific apps like iTerm2.
-#       4.Check the input parameters and related command like basename.
-#       5.Use python to rewrite this.
-#       6.Try to use trap command.
-#       7.Try to avoid provide path parameter everytime.
-#       8.Try to concentrate same package tool installation.
+#       2.Check Application folder for some specific apps like iTerm2.
+#       3.Check the input parameters and related command like basename.
+#       4.Use python to rewrite this.
+#       5.Try to use trap command.
+#       6.Try to concentrate same package tool installation.
 
 ###################################
 # Declare some constant variables.
@@ -818,57 +816,74 @@ function backup() {
   /bin/zsh $HOME/.zshrc
 
   print 1 "Done."
+
+
+  # Redirect to the Source folder
+  cd $SourcePath
+
+  # Show difference
+  git icdiff
+
+  if [[ $(git diff) != '' ]]; then
+    if [[ $(choose-yes-or-no "Do you want push to the remote?") == $true ]]; then
+      print 0 "Push to remote git repository..."
+      push_git_repository $SourcePath
+    fi
+  fi
 }
 
-declare -r manual="Usage: dotfile [Options] <source path>\n\n
-[Options]:\n
--i  Install dot files to this machine.\n
--b  Backup dot files.\n
--a  Integrate backup and install."
-
-# main program
-# exit the script if any statement returns a non-true return value
-set -e
-
-if [ ! $# -eq 2 ]; then
-  echo -e $manual
+function usage () {
+  echo -e 'Usage: dotfile [Options] [source_folder_path]\n
+[Options]:
+-i  Install dot files to this machine.
+-b  Backup dot files.
+-a  Integrate backup and install.'
   exit 1
+}
+
+Install_Dotfiles=0
+Backup_Dotfiles=0
+InstallAndBackup_Dotfiles=0
+
+while getopts "abi" option; do
+  case $option in
+    a)InstallAndBackup_Dotfiles=1;;
+    b)Backup_Dotfiles=1;;
+    i)Install_Dotfiles=1;;
+    *)usage;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+if [ -z "$1" ]; then
+  SourcePath=$dotfile_path
 else
-  SourcePath=$(realpath $2)
+  SourcePath=$1
+fi
 
-  if [ ! -d $SourcePath ] || [[ $(is-folder-empty $SourcePath) == $true ]]; then
-    print 2 "$SourcePath is not existed or empty."
-    echo -e $manual
-    exit 1
-  fi
+SourcePath=$(realpath $SourcePath 2>/dev/null)
+if [[ $? != 0 ]]; then
+  print 2 "Please provide the source folder path."
+  exit 1
+elif [ ! -d $SourcePath ] || [[ $(is-folder-empty $SourcePath) == $true ]]; then
+  print 2 "$SourcePath is not existed or empty."
+  exit 1
+fi
 
-  if [[ $1 = "-b" ]]; then
-    backup
-
-    # Redirect to the Source folder
-    cd $SourcePath
-
-    # Show difference
-    git icdiff
-
-    if [[ $(git diff) != '' ]]; then
-      if [[ $(choose-yes-or-no "Do you want push to the remote?") == $true ]]; then
-        print 0 "Push to remote git repository..."
-        push_git_repository $SourcePath
-      fi
-    fi
-
-    exit $?
-  elif [[ $1 = "-i" ]]; then
-    install
-    exit $?
-  elif [[ $1 = "-a" ]]; then
-    backup
-    install
-  else
-    echo -e $manual
-    exit 1
-  fi
+if [[ $Install_Dotfiles == 1 ]]; then
+  install
+elif [[ $Backup_Dotfiles == 1 ]]; then
+  backup
+elif [[ $InstallAndBackup_Dotfiles == 1 ]]; then
+  backup
+  install
+else
+  usage
 fi
 
 exit $?
+
+# main program
+# exit the script if any statement returns a non-true return value
+# set -e
