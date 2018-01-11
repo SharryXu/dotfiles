@@ -4,9 +4,11 @@
 
 # File copy (If the original file is newer than the target file)
 # Globals:
+#   realpath
 #   basename
 #   print
 #   cp
+#   diff
 # Arguments:
 #   Source File Path
 #   Target Folder Path
@@ -34,11 +36,11 @@ if [ $# -eq 2 ]; then
   fi
 
   if [[ -f $targetFolderPath/$filename ]]; then
-    if [[ $sourceFilePath -nt $targetFolderPath/$filename ]]; then
+    if diff $sourceFilePath $targetFolderPath/$filename > /dev/null; then
+      print 2 "File name $filename don't need to replace."
+    else
       cp $sourceFilePath $targetFolderPath
       print 1 "File name $filename is replaced."
-    else
-      print 2 "File name $filename don't need to replace."
     fi
   else
     cp $sourceFilePath $targetFolderPath
