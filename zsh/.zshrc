@@ -5,7 +5,8 @@ export PYTHONPATH=$HOME/.emacs.d/.cache/anaconda-mode/0.1.9
 export PATH=$HOME/.bin:/usr/local/bin:$EMACSPATH:$PYTHONPATH:$PATH
 
 if [[ $(command-exist pyenv) == 0 ]]; then
-	eval "$(pyenv init -)"
+   eval "$(pyenv init -)"
+   pyenv shell 3.5.4
 fi
 
 # Path to your oh-my-zsh installation.
