@@ -833,23 +833,26 @@ function backup() {
 }
 
 function usage () {
-  echo -e 'Usage: dotfile [Options] [source_folder_path]\n
-[Options]:
+  echo -e "usage: dotfile [options] [source_folder_path]\n
+[options]:
 -i  Install dot files to this machine.
 -b  Backup dot files.
--a  Integrate backup and install.'
+-a  Integrate backup and install.
+-p  Print source folder's structure."
   exit 1
 }
 
 Install_Dotfiles=0
 Backup_Dotfiles=0
 InstallAndBackup_Dotfiles=0
+Print_Structure=0
 
-while getopts "abi" option; do
+while getopts "abip" option; do
   case $option in
     a)InstallAndBackup_Dotfiles=1;;
     b)Backup_Dotfiles=1;;
     i)Install_Dotfiles=1;;
+    p)Print_Structure=1;;
     *)usage;;
   esac
 done
@@ -878,6 +881,8 @@ elif [[ $Backup_Dotfiles == 1 ]]; then
 elif [[ $InstallAndBackup_Dotfiles == 1 ]]; then
   backup
   install
+elif [[ $Print_Structure == 1 ]]; then
+  tree -C $SourcePath
 else
   usage
 fi

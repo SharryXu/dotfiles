@@ -64,7 +64,7 @@ values."
             shell-apply-ansi-color 't
             shell-default-term-shell "/bin/zsh"
             shell-default-position 'bottom
-            shell-default-height 50
+            shell-default-height 30
             indent-tabs-mode nil
             sh-basic-offset 2
             sh-indentation 2)
@@ -103,7 +103,8 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    google-c-style)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -376,16 +377,16 @@ before packages are loaded. If you are unsure, you should try in setting them in
         system-uses-terminfo nil)
 
   ;; Set clang-format support
-  (add-hook 'c-mode-hook
-            (lambda ()
-              (when (executable-find "clang-format")
-                ;;使用 clang-format 作为默认排版工具
-                (local-set-key (kbd "C-M-\\") 'clang-format)
-                ;;当插入分号时自动对当前行排版
-                (local-set-key (kbd ";")
-                               'cpp/semicolon-clang-format)
-                (local-set-key (kbd "}")
-                               'cpp/brace-clang-format))))
+  ;;  (add-hook 'c-mode-hook
+  ;;            (lambda ()
+  ;;              (when (executable-find "clang-format")
+  ;;                ;;使用 clang-format 作为默认排版工具
+  ;;                (local-set-key (kbd "C-M-\\") 'clang-format)
+  ;;                ;;当插入分号时自动对当前行排版
+  ;;                (local-set-key (kbd ";")
+  ;;                               'cpp/semicolon-clang-format)
+  ;;                (local-set-key (kbd "}")
+  ;;                               'cpp/brace-clang-format))))
 
   ;; evil-normal-state-cursor
   ;; evil-insert-state-cursor
@@ -469,13 +470,13 @@ This function is called at the very end of Spacemacs initialization."
 
 (defun cpp/semicolon-clang-format (args)
   (message "format by clang-format when enter ';'")
-  (interactive "*P")
+  (interactive)
   (c-electric-semi&comma args)
   (clang-format-region (line-beginning-position 0) (line-beginning-position 2)))
 
 (defun cpp/brace-clang-format (args)
   (message "format by clang-format when enter '}'")
-  (interactive "*P")
+  (interactive)
   (c-electric-brace args)
   (let ((end-position (point))
         begin-position)
