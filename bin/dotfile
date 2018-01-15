@@ -6,8 +6,8 @@
 #       2.Check Application folder for some specific apps like iTerm2.
 #       3.Check the input parameters and related command like basename.
 #       4.Use python to rewrite this.
-#       5.Try to use trap command.
-#       6.Try to concentrate same package tool installation.
+#       5.Try to concentrate same package tool installation.
+#       6.Use built-in true/false to replace custom true/false.
 
 ###################################
 # Declare some constant variables.
@@ -60,11 +60,7 @@ function configure_homebrew_tap() {
     'omnisharp/omnisharp-roslyn'
   )
 
-  OLD_IFS=$IFS
-  IFS=' '
   local exist_homebrew_tap_list=$(brew tap)
-  IFS=$OLD_IFS
-
   local need_install=1
   for ((i = 0; i < ${#target_homebrew_tap_list[@]}; i++)); do
     target_tap=${target_homebrew_tap_list[i]}
@@ -166,16 +162,16 @@ function install_node_package() {
 #   None
 #######################################
 function install_homebrew_package() {
-  # TODO: Using $(brew list) to check.
-  # By default, we think tool name ($1) is the command name ($2)
-  if [ $# -gt 0 ]; then
-    if [ $# -eq 2 ]; then
-      result=$(command-exist $2)
-    else
-      result=$(command-exist $1)
-    fi
+  if [[ $# == 1 ]]; then
+    shopt -s nocasematch
+    local installed=1
+    for package in $(brew list); do
+      if [[ $package == $1 ]]; then
+        installed=0
+      fi
+    done
 
-    if [[ $result == $false ]]; then
+    if [[ $installed == $false ]]; then
       brew install $1
       print 1 "$1 has successfully been installed."
     else
@@ -279,13 +275,45 @@ function install_ruby_package() {
 }
 
 #######################################
+# Swtich shell's python version.
+# Globals:
+#   print
+# Arguments:
+#   Major version.
+#   Minor version. (Optional)
+# Returns:
+#   None
+#######################################
+function choose_appropriate_python_version() {
+  if [[ ($# -ge 1) && ($# -lt 3) && $(command-exist pyenv) == $true && $(is-number $1) == $true ]]; then
+    local set=1
+    local majorVer=$1
+    local minorVer=$2
+    for version in $(pyenv versions --bare); do
+      if [[ ($(is-number $minorVer) == $true && "$version" == "$majorVer.$2."*) || ($(is-number $minorVer) == $false && "$version" == "$majorVer."*) ]]; then
+        set=0
+        pyenv shell $version
+      fi
+    done
+
+    if [[ $set == $false ]]; then
+      print 3 "Please provide appropriate python version."
+    fi
+  else
+    print 3 "$error_message_check_parameters"
+    exit 1
+  fi
+}
+
+#######################################
 # Install python packages.
 # Globals:
 #   pip2,3
 #   print
 # Arguments:
 #   Package name
-#   Version (3=pip3, 2=pip2)
+#   Major version (3=pip3, 2=pip2)
+#   Minor version (Optional)
 # Returns:
 #   None
 #######################################
@@ -297,19 +325,9 @@ function install_python_package() {
     eval "$(pyenv init -)"
   fi
 
-  if [[ $# == 2 ]]; then
-    local version=$2
+  if [[ $# -ge 2 ]]; then
+    choose_appropriate_python_version $2 $3
 
-    if [[ $version == 2 ]]; then
-      # TODO: Make those version more sensible.
-      pyenv shell 2.7.14
-    elif [[ $version == 3 ]]; then
-      pyenv shell 3.5.4
-    else
-      print 3 "Please check version."
-    fi
-
-    # Ignore case sensitive
     shopt -s nocasematch
 
     local isExisted=$false
@@ -392,7 +410,6 @@ function install_custom_commands() {
 #   None
 #######################################
 function backup_custom_commands() {
-  # TODO: Only copy executable files.
   sync-folder $HOME/.bin $SourcePath/bin
 
   # Make all files executable
@@ -540,7 +557,7 @@ function configure_emacs() {
   # config emacs (substitute the default emacs installed by Mac OS)
   print 0 "Check emacs..."
   install_homebrew_package 'ag'
-  install_homebrew_package 'emacs-plus' 'emacs'
+  install_homebrew_package 'emacs-plus'
   check_git_repository $HOME/.emacs.d ${spacemacs[*]}
   copy-file $SourcePath/emacs/.spacemacs $HOME
   # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
@@ -565,8 +582,8 @@ function configure_emacs() {
 ###################################
 function configure_vim() {
   print 0 "Check Vim..."
-  install_homebrew_package 'vim --with-override-system-vim' 'vim'
-  install_homebrew_package 'neovim' 'nvim'
+  install_homebrew_package 'vim'
+  install_homebrew_package 'neovim'
   #install_ruby_package 'neovim'
   #install_python_package 'neovim' '3'
   install_node_package 'neovim'
@@ -619,6 +636,46 @@ function configure_git() {
 }
 
 ###################################
+# Install different python versions.
+# Globals:
+# Arguments:
+#   pyenv
+#   print
+# Returns:
+#   None
+###################################
+function install_python_versions() {
+  if [[ $(command-exist pyenv) == $false ]]; then
+    print 3 "Please install pyenv first."
+    exit 1
+  else
+    local target_python_versions=(
+      '2.7.14'
+      '3.5.4'
+    )
+
+    local exist_python_versions=$(pyenv versions --bare)
+    local need_install=1
+    for ((i = 0; i < ${#target_python_versions[@]}; i++)); do
+      target_version=${target_python_versions[i]}
+      print 0 "Check python version $target_version existed or not..."
+      for exist_version in $exist_python_versions; do
+        if [[ $exist_version == $target_version ]]; then
+          need_install=0
+        fi
+      done
+
+      if [[ $need_install == 1 ]]; then
+        pyenv install $target_version
+        print 1 "$target_version has been successfully installed."
+      else
+        print 2 "$target_version has already existed."
+      fi
+    done
+  fi
+}
+
+###################################
 # Configure Python
 # Globals:
 # Arguments:
@@ -630,8 +687,7 @@ function configure_git() {
 function configure_python() {
   print 0 "Check python..."
   install_homebrew_package 'pyenv'
-
-  # TODO: Need to install python3.5.4, 2.7.14 and switch to them.
+  install_python_versions
 
   # ln -s $(brew --cellar python) ~/.pyenv/versions
 }
@@ -663,11 +719,11 @@ function install() {
   configure_git
 
   print 0 "Check mongo database..."
-  install_homebrew_package 'mongodb' 'mongo'
+  install_homebrew_package 'mongodb'
   copy-file $SourcePath/mongodb/.mongorc.js $HOME
 
   print 0 "Check MySQL database..."
-  install_homebrew_package 'mariadb' 'mysql'
+  install_homebrew_package 'mariadb'
   install_homebrew_package 'mycli'
   copy-file $SourcePath/mysql/.my.cnf $HOME
 
@@ -725,7 +781,7 @@ function install() {
   install_python_package 'glances' '3'
 
   print 0 "Check chez-scheme..."
-  install_homebrew_package 'chezscheme' 'chez'
+  install_homebrew_package 'chezscheme'
 
   print 0 "Check NodeJS..."
   install_homebrew_package 'node'
