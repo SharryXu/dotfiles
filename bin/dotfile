@@ -904,7 +904,7 @@ Backup_Dotfiles=0
 InstallAndBackup_Dotfiles=0
 Print_Structure=0
 
-while getopts "abip" option; do
+while getopts "abiph" option; do
   case $option in
     a)InstallAndBackup_Dotfiles=1;;
     b)Backup_Dotfiles=1;;
