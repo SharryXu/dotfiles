@@ -10,10 +10,12 @@ function check_git_prompt_info() {
 #        if [[ -z $(git_prompt_info 2> /dev/null) ]]; then
 #            echo "%{$fg[blue]%}detached-head%{$reset_color%}) $(git_prompt_status) \n%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
 #        else
-            echo "$(git_prompt_info 2> /dev/null) $(git_prompt_status) \n%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
+            echo "$(git_prompt_info 2> /dev/null) $(git_prompt_status) 
+%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
 #        fi
     else
-        echo "\n%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
+        echo "
+%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
     fi
 }
 
