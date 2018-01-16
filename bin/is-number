@@ -22,7 +22,7 @@ while getopts "h" option; do
   esac
 done
 
-if [[ $# -gt 1 && $1 =~ $digital_pattern ]]; then
+if [[ $# -ge 1 && $1 =~ $digital_pattern ]]; then
   echo 0
 else
   echo 1

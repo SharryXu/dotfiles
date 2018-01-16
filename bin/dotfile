@@ -331,7 +331,7 @@ function install_python_package() {
     shopt -s nocasematch
 
     local isExisted=$false
-    read -ra installedPackages <<< $(pip$version list --format=columns | sed -n '3,$p')
+    read -ra installedPackages <<< $(pip$2 list --format=columns | sed -n '3,$p')
     for ((i = 0; i < ${#installedPackages[@]}; i += 2)); do
       if [[ "${installedPackages[$i]}" == *"$1" ]]; then
         isExisted=$true
@@ -340,7 +340,7 @@ function install_python_package() {
     done
 
     if [[ $isExisted == $false ]]; then
-      pip$version install --user $1
+      pip$2 install --user $1
       print 1 "Python package name $1 has been successfully installed."
     else
       print 2 "Python package name $1 has already existed."
@@ -704,9 +704,6 @@ function install() {
   # Ask user provider root password.
   read -p "Please provide password: " -s user_password && echo -e "\n"
 
-  print 0 "Create custom tools..."
-  install_custom_commands
-
   install_homebrew
 
   configure_homebrew_tap
@@ -815,6 +812,9 @@ function install() {
   print 0 "Enable Zsh settings..."
   /bin/zsh $HOME/.zshrc
 
+  print 0 "Create custom programs..."
+  install_custom_commands
+
   print 1 "Done."
 }
 
@@ -862,7 +862,7 @@ function backup() {
   copy-file $HOME/.gitconfig $SourcePath/git/
   copy-file $HOME/.gitignore_global $SourcePath/git/
 
-  print 0 "Backup custom tools..."
+  print 0 "Backup custom programs..."
   backup_custom_commands
 
   print 0 "Backup WakaTime Config..."
@@ -872,7 +872,6 @@ function backup() {
   /bin/zsh $HOME/.zshrc
 
   print 1 "Done."
-
 
   # Redirect to the Source folder
   cd $SourcePath
