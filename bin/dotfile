@@ -889,12 +889,13 @@ function backup() {
 }
 
 function usage () {
-  echo -e "usage: dotfile [options] [source_folder_path]\n
+  echo -e "usage: $(basename $0) [options] [source_folder_path]\n
 [options]:
 -i  Install dot files to this machine.
 -b  Backup dot files.
 -a  Integrate backup and install.
--p  Print source folder's structure."
+-p  Print source folder's structure.
+-h  Show help information."
   exit 1
 }
 
@@ -909,7 +910,7 @@ while getopts "abip" option; do
     b)Backup_Dotfiles=1;;
     i)Install_Dotfiles=1;;
     p)Print_Structure=1;;
-    *)usage;;
+    h|*)usage;;
   esac
 done
 
