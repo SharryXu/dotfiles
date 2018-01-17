@@ -26,16 +26,16 @@ declare user_password=''
 ######################################
 # Declare all used git repositories.
 ######################################
-declare -r ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh')
-declare -r spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs')
-declare -r zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt')
-declare -r powerlinefonts=('Powerline-fonts' 'https://github.com/powerline/fonts')
-declare -r nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts')
-declare -r nodemanager=('Node-Manager' 'https://github.com/creationix/nvm')
-declare -r tmuxpluginmanager=('TmuxPluginManager' 'https://github.com/tmux-plugins/tpm')
-declare -r tmuxpluginyank=('TmuxPlugin:Yank' 'https://github.com/tmux-plugins/tmux-yank')
-declare -r tmuxpluginsensible=('TmuxPlugin:Sensible' 'https://github.com/tmux-plugins/tmux-sensible')
-declare -r tmuxpluginsidebar=('TmuxPlugin:Sidebar' 'https://github.com/tmux-plugins/tmux-sidebar')
+declare -r ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh ')
+declare -r spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs ')
+declare -r zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt ')
+declare -r powerlinefonts=('Powerline-fonts' 'https://github.com/powerline/fonts ')
+declare -r nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts ')
+declare -r nodemanager=('Node-Manager' 'https://github.com/creationix/nvm ')
+declare -r tmuxpluginmanager=('TmuxPluginManager' 'https://github.com/tmux-plugins/tpm ')
+declare -r tmuxpluginyank=('TmuxPlugin:Yank' 'https://github.com/tmux-plugins/tmux-yank ')
+declare -r tmuxpluginsensible=('TmuxPlugin:Sensible' 'https://github.com/tmux-plugins/tmux-sensible ')
+declare -r tmuxpluginsidebar=('TmuxPlugin:Sidebar' 'https://github.com/tmux-plugins/tmux-sidebar ')
 
 #############################
 # Install all homebrew tap
