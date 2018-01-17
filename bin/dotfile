@@ -5,9 +5,7 @@
 # TODO: 1.Try to seperate all backup methods.
 #       2.Check Application folder for some specific apps like iTerm2.
 #       3.Check the input parameters and related command like basename.
-#       4.Use python to rewrite this.
-#       5.Try to concentrate same package tool installation.
-#       6.Use built-in true/false to replace custom true/false.
+#       4.Try to concentrate same package tool installation.
 
 ###################################
 # Declare some constant variables.
@@ -61,17 +59,17 @@ function configure_homebrew_tap() {
   )
 
   local exist_homebrew_tap_list=$(brew tap)
-  local need_install=1
+  local need_install=$true
   for ((i = 0; i < ${#target_homebrew_tap_list[@]}; i++)); do
     target_tap=${target_homebrew_tap_list[i]}
     print 0 "Check homebrew tap $target_tap..."
     for exist_tap in $exist_homebrew_tap_list; do
       if [[ $exist_tap == $target_tap ]]; then
-        need_install=0
+        need_install=$false
       fi
     done
 
-    if [[ $need_install == 1 ]]; then
+    if [[ $need_install == $true ]]; then
       brew tap $target_tap
       print 1 "$target_tap has been successfully added."
     else
@@ -92,19 +90,14 @@ function configure_homebrew_tap() {
 #######################################
 function install_homebrew_cask_package() {
   if [[ $# == 1 ]]; then
-    OLD_IFS=$IFS
-    IFS=' '
-    local exist_cask_app_list=$(brew cask list)
-    IFS=$OLD_IFS
-
-    local need_install=1
-    for exist_cask in $exist_cask_app_list; do
+    local need_install=$true
+    for exist_cask in $(brew cask list); do
       if [[ $exist_cask == $1 ]]; then
-        need_install=0
+        need_install=$false
       fi
     done
 
-    if [[ $need_install == 1 ]]; then
+    if [[ $need_install == $true ]]; then
       brew cask install $1
       print 1 "$1 has been successfully installed."
     else
@@ -128,15 +121,16 @@ function install_homebrew_cask_package() {
 # Returns:
 #   None
 #######################################
-function install_node_package() {
-  if [ $# -gt 0 ]; then
-    if [ $# -eq 2 ]; then
-      result=$(command-exist $2)
-    else
-      result=$(command-exist $1)
-    fi
+function install_npm_package() {
+  if [[ $# == 0 ]]; then
+    local need_install=$false
+    for exist_package in $(print-npm-packages); do
+      if [[ $exist_package == $1 ]]; then
+        need_install=$true
+      fi
+    done
 
-    if [[ $result == $false ]]; then
+    if [[ $need_install == $true ]]; then
       print 0 "Install latest version for $1..."
       npm install -g $1@latest
       print 1 "$1 has successfully been installed."
@@ -564,7 +558,7 @@ function configure_emacs() {
   if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
     rm $HOME/.iterm2_shell_integration.zsh
   fi
-  install_node_package 'wakatime'
+  install_npm_package 'wakatime'
   install_homebrew_package 'cppcheck'
 }
 
@@ -586,7 +580,7 @@ function configure_vim() {
   install_homebrew_package 'neovim'
   #install_ruby_package 'neovim'
   #install_python_package 'neovim' '3'
-  install_node_package 'neovim'
+  install_npm_package 'neovim'
   # Configure SpaceVim
   if [ ! -d $HOME/.Spacevim ]; then
     curl -sLf https://spacevim.org/install.sh | bash
@@ -780,9 +774,10 @@ function install() {
   print 0 "Check chez-scheme..."
   install_homebrew_package 'chezscheme'
 
-  print 0 "Check NodeJS..."
+  print 0 "Check NodeJS and node package manager..."
   install_homebrew_package 'node'
   install_homebrew_package 'npm'
+  npm install npm@latest -g
 
   print 0 "Check Node Manager..."
   check_git_repository $HOME/.nvm ${nodemanager[*]}
@@ -790,11 +785,11 @@ function install() {
 
   print 0 "Check hexo..."
   # TODO: Need to use 'npm list -g' to determine if packages are existed or not.
-  install_node_package 'hexo-cli' 'hexo'
+  install_npm_package 'hexo-cli'
 
   print 0 "Check API BluePrint..."
-  install_node_package 'drakov'
-  install_node_package 'aglio'
+  install_npm_package 'drakov'
+  install_npm_package 'aglio'
 
   print 0 "Check travis..."
   install_ruby_package 'travis'

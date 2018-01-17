@@ -1,0 +1,11 @@
+#!/usr/bin/env python
+
+import json
+import os
+
+rawJsonStr = os.popen("npm list --global --depth 0 --json").read()
+
+packages = json.loads(rawJsonStr)['dependencies'].keys()
+
+for package in packages:
+    print(package)
