@@ -6,6 +6,7 @@
 #       2.Check Application folder for some specific apps like iTerm2.
 #       3.Check the input parameters and related command like basename.
 #       4.Try to concentrate same package tool installation.
+#	5.Add prompt message to let user manually configure the sync folder in applications like Alfred.
 
 ###################################
 # Declare some constant variables.
