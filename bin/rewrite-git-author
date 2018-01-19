@@ -1,8 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 # Rewrite all git commits' author info.
 
-declare -r manul='Usage: rewrite-git-author <author-name> <author-email>'
+function usage() {
+  echo -e "usage: $(basename $0) author_name author_email"
+  exit 1
+}
 
 if [[ $# -eq 2 ]]; then
   git_command='export GIT_COMMITTER_NAME="'$1'"
@@ -12,10 +15,8 @@ if [[ $# -eq 2 ]]; then
                export GIT_AUTHOR_EMAIL="'$2'"'
 
   git filter-branch --env-filter $git_command --tag-name-filter cat -- --branches --tags
+
+  exit #?
 else
-  echo -e $manul
-
-  exit 1
+  usage
 fi
-
-exit #?

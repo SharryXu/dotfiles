@@ -9,7 +9,10 @@
 # Returns:
 #   Folder Status
 
-declare -r manual="Usage: is_folder_empty <folder path>"
+function usage() {
+  echo -e "usage: $(basename $0) folder_path"
+  exit 1
+}
 
 if [ $# -eq 1 ]; then
   folderPath=$(realpath $1)
@@ -22,6 +25,5 @@ if [ $# -eq 1 ]; then
 
   exit 0
 else
-  echo -e $manual
-  exit 1
+  usage
 fi

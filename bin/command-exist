@@ -8,7 +8,9 @@
 # Returns:
 #   Command Exist Status
 
-declare -r manual="Usage: command_exist <command name>"
+function usage() {
+  echo -e "usage: $(basename $0) command_name"
+}
 
 if [ $# -eq 1 ]; then
   if command -v $1 > /dev/null 2>&1; then
@@ -19,6 +21,5 @@ if [ $# -eq 1 ]; then
 
   exit 0
 else
-  echo -e $manual
-  exit 1
+  usage
 fi

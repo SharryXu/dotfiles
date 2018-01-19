@@ -10,7 +10,10 @@
 # Returns:
 #   IsAlive
 
-declare -r manual="Usage: is_server_alive <ip address|server address>\n"
+function usage() {
+  echo -e "usage: $(basename $0) ip_address|server_address\n"
+  exit 1
+}
 
 if [ $# -eq 1 ]; then
   tryCounts = 3
@@ -23,6 +26,5 @@ if [ $# -eq 1 ]; then
 
   exit 0
 else
-  echo -e $manual
-  exit 1
+  usage
 fi

@@ -3,7 +3,9 @@
 # Let user to answer yes-or-no question
 # results to stderr
 # Globals:
-#   Print
+#   xargs
+#   print
+#   getopts
 # Arguments:
 #   Prompt message
 # Returns:
@@ -11,30 +13,40 @@
 
 declare -r max_retry_count=3
 
-declare -r manual="Usage: choice_yes_no <prompt message>"
-
-if [[ $# -eq 1 ]]; then
-  retry_count=0
-  while [[ retry_count -lt max_retry_count ]]; do
-    if [[ retry_count -eq 0 ]]; then
-      read -p "$1" yn
-    else
-      read -p "Please answer yes(y) or no(n):" yn
-    fi
-
-    case $yn in
-      [Yy]* ) echo 0 && exit 0;;
-      [Nn]* ) echo 1 && exit 0;;
-      * ) print 2 "Please try again.";;
-    esac
-
-    let retry_count=retry_count+1
-  done
-
-  print 3 "You should input yes in Y/y or no in N/n."
-  exit 2
-else
-  echo -e $manual
-
+function usage() {
+  echo -e "usage: $(basename $0) [options] [prompt_message]\n
+[options]:
+-h  Show help information."
   exit 1
+}
+
+while getopts "h" option; do
+  case $option in
+    h)usage;;
+  esac
+done
+
+if [[ $OPTIND > 1 ]]; then
+  shift $((OPTIND-1))
 fi
+
+retry_count=0
+while [[ $retry_count -lt $max_retry_count ]]; do
+  if [[ $retry_count == 0 && -n $(echo $1 | xargs) ]]; then
+    read -p "$1
+Please answer yes(y) or no(n):" yn
+  else
+    read -p "Please answer yes(y) or no(n):" yn
+  fi
+
+  case $yn in
+    [Yy]* ) echo 0 && exit 0;;
+    [Nn]* ) echo 1 && exit 0;;
+    * ) print 2 "Please try again.";;
+  esac
+
+  let retry_count=retry_count+1
+done
+
+print 3 "You should input yes in Y/y or no in N/n."
+exit 1

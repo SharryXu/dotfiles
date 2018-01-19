@@ -16,13 +16,15 @@
 
 source $HOME/.bin/default-colors
 
-declare -r manual="Usage: print <status code> <message>\n\
-\n\
-status code:\n\
-0: Normal\n\
-1: Success\n\
-2: Warning\n\
+function usage() {
+  echo -e "Usage: print <status code> <message>\n
+status code:
+0: Normal
+1: Success
+2: Warning
 3: Error"
+  exit 1
+}
 
 if [ $# -eq 2 ]
 then
@@ -44,6 +46,5 @@ then
 
   exit 0
 else
-  echo -e $manual >&1 >&2
-  exit 1
+  usage
 fi

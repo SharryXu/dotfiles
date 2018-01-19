@@ -13,11 +13,13 @@
 # Returns:
 #   None
 
-declare -r manual="Usage: sync-folder <source folder path> <target folder path>\n\
-\n\
-After syncing, the target folder will have the same folder structures as the original one.\n\
-But all files that are not existed in the target folder will be added except link files, and\n\
-at meanwhile, all link files that are existed in the target folder will still remains.\n"
+function usage() {
+  echo -e "usage: $(basename $0) source_folder_path target_folder_path\n
+After syncing, the target folder will have the same folder structures as the original one.
+But all files that are not existed in the target folder will be added except link files, and
+at meanwhile, all link files that are existed in the target folder will still remains."
+  exit 1
+}
 
 if [ $# -eq 2 ]; then
   sourceFolderPath=$(realpath $1)
@@ -78,7 +80,5 @@ if [ $# -eq 2 ]; then
 
   exit 0
 else
-  echo -e $manual
-
-  exit 1
+  usage
 fi
