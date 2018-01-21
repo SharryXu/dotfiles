@@ -6,7 +6,8 @@
 #       2.Check Application folder for some specific apps like iTerm2.
 #       3.Check the input parameters and related command like basename.
 #       4.Try to concentrate same package tool installation.
-#	5.Add prompt message to let user manually configure the sync folder in applications like Alfred.
+#	      5.Add prompt message to let user manually configure the sync folder in applications like Alfred.
+#       6.Try to use which command to replace command-exist.
 
 ###################################
 # Declare some constant variables.
@@ -687,6 +688,65 @@ function configure_python() {
   # ln -s $(brew --cellar python) ~/.pyenv/versions
 }
 
+###################################
+# Configure Node
+# Globals:
+# Arguments:
+#   print
+# Returns:
+#   None
+###################################
+function configure_node() {
+  print 0 "Check NodeJS and node package manager..."
+
+  check_git_repository $HOME/.nvm ${nodemanager[*]}
+  source $HOME/.nvm/nvm.sh
+
+  install_node_versions
+
+  npm install npm@latest -g
+}
+
+###################################
+# Install different node versions.
+# Globals:
+# Arguments:
+#   nvm
+#   print
+# Returns:
+#   None
+###################################
+function install_node_versions() {
+  if [[ $(command-exist nvm) == $false ]]; then
+    print 3 "Please install node version manager first."
+    exit 1
+  else
+    local target_node_versions=(
+      '8.9.4'
+      '9.4.0'
+    )
+
+    local exist_node_versions=$(ls $HOME/.nvm/versions/node)
+    local need_install=$true
+    for ((i = 0; i < ${#target_node_versions[@]}; i++)); do
+      target_version=${target_node_versions[i]}
+      print 0 "Check node version $target_version existed or not..."
+      for exist_version in $exist_node_versions; do
+        if [[ "$exist_version" == "v$target_version" ]]; then
+          need_install=$false
+        fi
+      done
+
+      if [[ $need_install == $true ]]; then
+        nvm install $target_version
+        print 1 "$target_version has been successfully installed."
+      else
+        print 2 "$target_version has already existed."
+      fi
+    done
+  fi
+}
+
 #######################################
 # Install tools and settings.
 # Globals:
@@ -775,15 +835,7 @@ function install() {
   print 0 "Check chez-scheme..."
   install_homebrew_package 'chezscheme'
 
-  print 0 "Check NodeJS and node package manager..."
-  install_homebrew_package 'node'
-  install_homebrew_package 'npm'
-  npm install npm@latest -g
-
-  print 0 "Check Node Manager..."
-  check_git_repository $HOME/.nvm ${nodemanager[*]}
-  source $HOME/.nvm/nvm.sh
-
+  configure_node
   print 0 "Check hexo..."
   # TODO: Need to use 'npm list -g' to determine if packages are existed or not.
   install_npm_package 'hexo-cli'
