@@ -8,6 +8,7 @@
 #       4.Try to concentrate same package tool installation.
 #	      5.Add prompt message to let user manually configure the sync folder in applications like Alfred.
 #       6.Try to use which command to replace command-exist.
+#       7.Try to merge function name push-git-repository and check-git-repository to one function.
 
 ###################################
 # Declare some constant variables.
@@ -194,8 +195,6 @@ function install_homebrew_package() {
 #   None
 #############################################
 function check_git_repository() {
-  local currentFolder=$PWD
-
   # Please notice if the parameter is an array, then the number should count the array's length.
   if [ $# -ge 3 ]; then
     local repoInfo=$2
@@ -214,7 +213,7 @@ function check_git_repository() {
         fi
 
         git pull
-        cd $currentFolder
+        cd -
 
         print 1 "${repoInfo[0]} has been successfully updated."
       fi
@@ -426,7 +425,6 @@ function backup_custom_commands() {
 #   None
 #############################################
 function push_git_repository() {
-  local currentFolder=$PWD
   local repositoryname=$(basename $1)
 
   if [ $# -ge 1 ]; then
@@ -449,7 +447,7 @@ function push_git_repository() {
         print 3 "Something wrong happened when pushing the repository."
       fi
 
-      cd $currentFolder
+      cd -
     fi
   else
     print 3 "$error_message_check_parameters"
@@ -485,6 +483,13 @@ function install_homebrew() {
   fi
 }
 
+function configure_haskell() {
+  print 0 "Check Haskell environment..."
+
+  if [[ $(command-exist stack) == $false ]]; then
+    curl -sSL https://get.haskellstack.org/ | sh
+  fi
+}
 ###################################
 # Configure zsh and oh-my-zsh
 # Globals:
@@ -498,15 +503,23 @@ function install_homebrew() {
 #   None
 ###################################
 function configure_zsh() {
-  print 0 "Check oh-My-Zsh..."
+  print 0 "Check default shell to zsh..."
   install_homebrew_package 'zsh'
-  print 0 "Check default shell..."
   if [[ $SHELL != $default_shell ]]; then
     echo $user_password | sudo -S chsh -s $default_shell
   fi
+
+  print 0 "Check oh-My-Zsh..."
   check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
   copy-file $SourcePath/zsh/.zshrc $HOME
   copy-file $SourcePath/zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
+
+  print 0 "Configure Zsh git prompt..."
+  check_git_repository $HOME/.zsh-git-prompt ${zshgitprompt[*]}
+  if [[ $(command-exist stack) == $false ]]; then
+    configure_haskell
+  fi
+  cd $HOME/.zsh-git-prompt && stack setup && stack build && stack install && cd -
 }
 
 ###################################
@@ -770,6 +783,8 @@ function install() {
 
   configure_git
 
+  configure_haskell
+
   print 0 "Check mongo database..."
   install_homebrew_package 'mongodb'
   copy-file $SourcePath/mongodb/.mongorc.js $HOME
@@ -843,6 +858,9 @@ function install() {
   print 0 "Check API BluePrint..."
   install_npm_package 'drakov'
   install_npm_package 'aglio'
+
+  print 0 "Check Javascript analyzer..."
+  install_npm_package 'tern'
 
   print 0 "Check travis..."
   install_ruby_package 'travis'

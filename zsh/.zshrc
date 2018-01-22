@@ -3,13 +3,19 @@ system_name=$(uname -n)
 if [[ $system_name == 'mac' ]]; then
   source $HOME/.bin/custom-variables
   export EMACSPATH=/usr/local/Cellar/emacs-plus/25.3/bin
-  export PYTHONPATH=$HOME/.emacs.d/.cache/anaconda-mode/0.1.9
-  export PATH=$HOME/.bin:/usr/local/bin:$EMACSPATH:$PYTHONPATH:$PATH
+  export ZSH_GIT_PROMPT=$HOME/.zsh-git-prompt
+  export PATH=$HOME/.bin:/usr/local/bin:$ZSH_GIT_PROMPT/src/.bin:$EMACSPATH:$PATH
 
+  # Configure pyenv
   if [[ $(command-exist pyenv) == 0 ]]; then
     eval "$(pyenv init -)"
     pyenv shell 3.5.4
   fi
+
+  # Configure travis
+  [ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh
+
+  source $ZSH_GIT_PROMPT/zshrc.sh
 
   # Config homebrew
   export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
@@ -25,9 +31,7 @@ if [[ $system_name == 'mac' ]]; then
 	alias vim='nvim'
 	# Tmux
 	alias tmux='tmux -2'
-fi
-
-if [[ $system_name == 'ubuntu' ]]; then
+elif [[ $system_name == 'ubuntu' ]]; then
   export PATH=$HOME/.bin:/usr/local/bin:$PATH
 	alias mongod='mongod'
 	alias emacs='emacs'
@@ -51,6 +55,10 @@ ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="false"
 # HIST_STAMPS="mm/dd/yyyy"
+HISTSIZE=1000
+SAVEHIST=1000
+GIT_PROMPT_EXECUTABLE="haskell"
+ZSH_THEME_GIT_PROMPT_CACHE="true"
 
 export UPDATE_ZSH_DAYS=1
 export LANG=en_US.UTF-8
@@ -58,10 +66,9 @@ export EDITOR='nvim'
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 plugins=(
-  brew
-  osx
   git
   tmux
+  zsh-syntax-highlighting
 )
 
 # Config tmux
