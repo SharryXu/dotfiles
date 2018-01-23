@@ -1,0 +1,26 @@
+#!/usr/bin/env bash -l
+
+# Check specific function existed or not.
+# Globals:
+#   type
+# Arguments:
+#   Function Name
+# Returns:
+#   Function Exist Status
+
+function usage() {
+  echo -e "usage: $(basename $0) function_name"
+}
+
+if [ $# -eq 1 ]; then
+	if [[ $(type -t $1) == "function" ]]; then
+                echo 0
+        else
+    echo 1
+  fi
+
+  exit 0
+else
+  usage
+fi
+
