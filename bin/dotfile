@@ -393,7 +393,7 @@ function install_custom_commands() {
     mkdir $HOME/.bin
   fi
 
-  sync-folder $SourcePath/bin $HOME/.bin
+  sync-folder -s "$user_password" $SourcePath/bin $HOME/.bin
 
   # Make all files executable
   for i in $HOME/.bin/*; do
@@ -411,7 +411,7 @@ function install_custom_commands() {
 #   None
 #######################################
 function backup_custom_commands() {
-  sync-folder $HOME/.bin $SourcePath/bin
+  sync-folder -s "$user_password" $HOME/.bin $SourcePath/bin
 
   # Make all files executable
   for i in $SourcePath/bin/*; do
@@ -776,9 +776,6 @@ function install_node_versions() {
 #   None
 #######################################
 function install() {
-  # Ask user provider root password.
-  read -p "Please provide password: " -s user_password && echo -e "\n"
-
   install_homebrew
 
   configure_homebrew_tap
@@ -876,8 +873,7 @@ function install() {
   copy-file $SourcePath/other/.wakatime.cfg $HOME
 
   print 0 "Install System Config..."
-  copy-folder $SourcePath/config/fontconfig $HOME/.config/fontconfig
-  copy-folder $SourcePath/config/tmuxinator $HOME/.config/tmuxinator
+  sync-folder -s "$user_password" $SourcePath/config $HOME/.config
 
   print 0 "Setup Mac OS..."
   setup_macos_settings
@@ -928,8 +924,7 @@ function backup() {
   copy-folder $HOME/.Spacevim.d $SourcePath/vim
 
   print 0 "Backup System Config..."
-  copy-folder $HOME/.config/fontconfig $SourcePath/config/fontconfig
-  copy-folder $HOME/.config/tmuxinator $SourcePath/config/tmuxinator
+  sync-folder -s "$user_password" $HOME/.config $SourcePath/config
 
   print 0 "Backup Git Configuration..."
   copy-file $HOME/.gitconfig $SourcePath/git/
@@ -1002,6 +997,9 @@ elif [ ! -d $SourcePath ] || [[ $(is-folder-empty $SourcePath) == $true ]]; then
   print 2 "$SourcePath is not existed or empty."
   exit 1
 fi
+
+# Ask user provider root password.
+read -p "Please provide password: " -s user_password && echo -e "\n"
 
 if [[ $Install_Dotfiles == 1 ]]; then
   install

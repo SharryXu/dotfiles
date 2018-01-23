@@ -4,8 +4,7 @@
 
 # Sync folder
 # Globals:
-#   copy-file
-#   copy-folder
+#   rsync
 #   print
 # Arguments:
 #   Source Folder Path
@@ -14,14 +13,26 @@
 #   None
 
 function usage() {
-  echo -e "usage: $(basename $0) source_folder_path target_folder_path\n
-After syncing, the target folder will have the same folder structures as the original one.
-But all files that are not existed in the target folder will be added except link files, and
-at meanwhile, all link files that are existed in the target folder will still remains."
+  echo -e "usage: $(basename $0) [options] source_folder_path target_folder_path\n
+[options]:
+-s  Sudo password
+-h  Show help information"
+
   exit 1
 }
 
-if [ $# -eq 2 ]; then
+sudo_password=''
+
+while getopts "s:h" option; do
+  case $option in
+    s)sudo_password=${OPTARG};;
+    h|*)usage;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+if [[ $# == 2 && -n $sudo_password ]]; then
   sourceFolderPath=$(realpath $1)
   targetFolderPath=$(realpath $2)
 
@@ -35,50 +46,9 @@ if [ $# -eq 2 ]; then
     exit 2
   fi
 
-  # Remove last backslash
-  if [[ ${#sourceFolderPath} > 1 ]]; then
-    sourceFolderPath=${sourceFolderPath%/}
-  fi
+  echo $sudo_password | sudo -S rsync -avz --delete $sourceFolderPath/ $targetFolderPath
 
-  if [[ ${#targetFolderPath} > 1 ]]; then
-    targetFolderPath=${targetFolderPath%/}
-  fi
-
-    for fileName in `ls -a $targetFolderPath`; do
-    if [[ $fileName != "." && $fileName != ".." ]]; then
-      sourceFilePath=$sourceFolderPath/$fileName
-      targetFilePath=$targetFolderPath/$fileName
-
-	    if [[ -d $targetFilePath && -d $sourceFilePath ]]; then
-		    sync-folder $sourceFolderPath $targetFolderPath
-	    else
-        # Remove all files that are not existed in the original folder.
-        if [[ ! -f $sourceFilePath && -f $targetFilePath && ! -d $targetFilePath ]]; then
-          rm $targetFilePath
-          print 3 "File name: $targetFilePath has been deleted."
-        elif [[ -d $targetFilePath && ! -d $sourceFilePath ]]; then
-          rm -r $targetFilePath
-          print 3 "Folder name: $targetFilePath has been deleted."
-        fi
-      fi
-    fi
-  done
-
-  for fileName in `ls -a $sourceFolderPath`; do
-    if [[ $fileName != "." && $fileName != ".." ]]; then
-      sourceFilePath=$sourceFolderPath/$fileName
-      targetFilePath=$targetFolderPath/$fileName
-
-	    if [[ -d $sourceFilePath ]]; then
-		    sync-folder $sourceFolderPath $targetFolderPath
-        # Copy all files that are not existed in the target folder.
-	    else
-        copy-file $sourceFilePath $targetFolderPath
-      fi
-    fi
-  done
-
-  exit 0
+  exit $?
 else
   usage
 fi
