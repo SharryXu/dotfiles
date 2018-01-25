@@ -2,21 +2,6 @@
 
 if [[ "$USER" == "root" ]]; then USERCOLOR="red"; else USERCOLOR="green"; fi
 
-# Git sometimes goes into a detached head state. git_prompt_info doesn't
-# return anything in this case. So wrap it in another function and check
-# for an empty string.
-function get_git_prompt_info() {
-    if git rev-parse --git-dir > /dev/null 2>&1; then
-        if [[ -z $(git_prompt_info 2> /dev/null) ]]; then
-            echo "%{$fg[blue]%}detached-head%{$reset_color%}) $(git_prompt_status)"
-        else
-            echo "$(git_prompt_info 2> /dev/null) $(git_prompt_status)"
-        fi
-    else
-        echo ""
-    fi
-}
-
 function get_proper_arrow() {
         echo "
 %(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
