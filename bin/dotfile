@@ -9,6 +9,7 @@
 #	      5.Add prompt message to let user manually configure the sync folder in applications like Alfred.
 #       6.Try to use which command to replace command-exist.
 #       7.Try to merge function name push-git-repository and check-git-repository to one function.
+#       8.Add vscode backup like code --list-extensions
 
 ###################################
 # Declare some constant variables.
