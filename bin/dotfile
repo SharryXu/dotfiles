@@ -390,6 +390,8 @@ function setup_macos_settings() {
 #   None
 #######################################
 function install_custom_commands() {
+  print 0 "Create custom programs..."
+
   if [ ! -d "$HOME/.bin" ]; then
     mkdir $HOME/.bin
   fi
@@ -403,6 +405,25 @@ function install_custom_commands() {
 }
 
 #######################################
+# Install global configs.
+# Globals:
+#   sync-folder
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function install_global_config() {
+  print 0 "Install global Config..."
+  sync-folder -s "$user_password" $SourcePath/config/cppman $HOME/.config/cppman
+  sync-folder -s "$user_password" $SourcePath/config/fontconfig $HOME/.config/fontconfig
+  sync-folder -s "$user_password" $SourcePath/config/karabiner $HOME/.config/karabiner
+  sync-folder -s "$user_password" $SourcePath/config/nvim $HOME/.config/nvim
+  sync-folder -s "$user_password" $SourcePath/config/tmuxinator $HOME/.config/tmuxinator
+  sync-folder -s "$user_password" $SourcePath/config/configstore $HOME/.config/configstore
+}
+
+#######################################
 # Backup custom commands.
 # Globals:
 #   copy-folder
@@ -412,12 +433,32 @@ function install_custom_commands() {
 #   None
 #######################################
 function backup_custom_commands() {
+  print 0 "Backup custom programs..."
   sync-folder -s "$user_password" $HOME/.bin $SourcePath/bin
 
   # Make all files executable
   for i in $SourcePath/bin/*; do
     chmod +x $i
   done
+}
+
+#######################################
+# Backup global configs.
+# Globals:
+#   sync-folder
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function backup_global_config() {
+  print 0 "Backup global Config..."
+  sync-folder -s "$user_password" $HOME/.config/cppman $SourcePath/config/cppman
+  sync-folder -s "$user_password" $HOME/.config/fontconfig $SourcePath/config/fontconfig
+  sync-folder -s "$user_password" $HOME/.config/karabiner $SourcePath/config/karabiner
+  sync-folder -s "$user_password" $HOME/.config/nvim $SourcePath/config/nvim
+  sync-folder -s "$user_password" $HOME/.config/tmuxinator $SourcePath/config/tmuxinator
+  sync-folder -s "$user_password" $HOME/.config/configstore $SourcePath/config/configstore
 }
 
 #############################################
@@ -873,8 +914,7 @@ function install() {
   print 0 "Check WakaTime tool..."
   copy-file $SourcePath/other/.wakatime.cfg $HOME
 
-  print 0 "Install System Config..."
-  sync-folder -s "$user_password" $SourcePath/config $HOME/.config
+  install_global_config
 
   print 0 "Setup Mac OS..."
   setup_macos_settings
@@ -882,7 +922,6 @@ function install() {
   print 0 "Enable Zsh settings..."
   /bin/zsh $HOME/.zshrc
 
-  print 0 "Create custom programs..."
   install_custom_commands
 
   print 1 "Done."
@@ -924,14 +963,12 @@ function backup() {
   print 0 "Backup Vim..."
   copy-folder $HOME/.Spacevim.d $SourcePath/vim
 
-  print 0 "Backup System Config..."
-  sync-folder -s "$user_password" $HOME/.config $SourcePath/config
+  backup_global_config
 
   print 0 "Backup Git Configuration..."
   copy-file $HOME/.gitconfig $SourcePath/git/
   copy-file $HOME/.gitignore_global $SourcePath/git/
 
-  print 0 "Backup custom programs..."
   backup_custom_commands
 
   print 0 "Backup WakaTime Config..."
