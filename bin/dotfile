@@ -1036,6 +1036,7 @@ elif [ ! -d $SourcePath ] || [[ $(is-folder-empty $SourcePath) == $true ]] || [[
   exit 1
 fi
 
+# TODO: Make a separate program.
 if [[ "$SourcePath" != "$dotfile_path" ]]; then
   dotfile_path=$SourcePath
   typeset -p dotfile_path > $HOME/.bin/custom-variables
