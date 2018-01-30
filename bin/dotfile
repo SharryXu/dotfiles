@@ -1028,12 +1028,18 @@ else
 fi
 
 SourcePath=$(realpath $SourcePath 2>/dev/null)
-if [ ! -d $SourcePath ] || [[ $(is-folder-empty $SourcePath) == $true ]]; then
+if [[ $? == 1 ]]; then
+  print 2 "Please provide the source folder path."
+  exit 1
+elif [ ! -d $SourcePath ] || [[ $(is-folder-empty $SourcePath) == $true ]] || [[ $? == 0 ]]; then
   print 2 "Please check the source folder path."
   exit 1
 fi
 
-typeset -p dotfile_path > $HOME/.bin/custom-variables
+if [[ "$SourcePath" != "$dotfile_path" ]]; then
+  dotfile_path=$SourcePath
+  typeset -p dotfile_path > $HOME/.bin/custom-variables
+fi
 
 # Ask user provider root password.
 read -p "Please provide password: " -s user_password && echo -e "\n"

@@ -1,7 +1,10 @@
 system_name=$(uname -n)
 
 if [[ $system_name == 'mac' ]]; then
-  source $HOME/.bin/custom-variables
+  if [[ -f $HOME/.bin/custom-variables ]]; then
+    source $HOME/.bin/custom-variables
+  fi
+
   export EMACSPATH=/usr/local/Cellar/emacs-plus/25.3/bin
   export ZSH_GIT_PROMPT=$HOME/.zsh-git-prompt
   export PATH=$HOME/.bin:/usr/local/bin:$ZSH_GIT_PROMPT/src/.bin:$EMACSPATH:$PATH
