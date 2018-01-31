@@ -621,6 +621,8 @@ function configure_emacs() {
   fi
   install_npm_package 'wakatime'
   install_homebrew_package 'cppcheck'
+  install_python_package 'importmagic' '3'
+  install_python_package 'epc' '3'
 }
 
 ###################################
@@ -628,7 +630,6 @@ function configure_emacs() {
 # Globals:
 # Arguments:
 #   install_homebrew_package
-#   install_python_package
 #   print
 #   copy-file
 #   check_git_repository
