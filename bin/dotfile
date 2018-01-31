@@ -2,14 +2,6 @@
 #
 # This program is used to backup or restore dot files.
 #
-# TODO: 1.Try to seperate all backup methods.
-#       2.Check Application folder for some specific apps like iTerm2.
-#       3.Check the input parameters and related command like basename.
-#       4.Try to concentrate same package tool installation.
-#	      5.Add prompt message to let user manually configure the sync folder in applications like Alfred.
-#       6.Try to use which command to replace command-exist.
-#       7.Try to merge function name push-git-repository and check-git-repository to one function.
-#       8.Add vscode backup like code --list-extensions
 
 ###################################
 # Declare some constant variables.
