@@ -418,9 +418,8 @@ function install_global_config() {
   sync-folder -s "$user_password" $SourcePath/config/cppman $HOME/.config/cppman
   sync-folder -s "$user_password" $SourcePath/config/fontconfig $HOME/.config/fontconfig
   sync-folder -s "$user_password" $SourcePath/config/karabiner $HOME/.config/karabiner
-  sync-folder -s "$user_password" $SourcePath/config/nvim $HOME/.config/nvim
+  copy-file $SourcePath/config/nvim/init.vim $HOME/.config/nvim
   sync-folder -s "$user_password" $SourcePath/config/tmuxinator $HOME/.config/tmuxinator
-  sync-folder -s "$user_password" $SourcePath/config/configstore $HOME/.config/configstore
 }
 
 #######################################
@@ -456,9 +455,8 @@ function backup_global_config() {
   sync-folder -s "$user_password" $HOME/.config/cppman $SourcePath/config/cppman
   sync-folder -s "$user_password" $HOME/.config/fontconfig $SourcePath/config/fontconfig
   sync-folder -s "$user_password" $HOME/.config/karabiner $SourcePath/config/karabiner
-  sync-folder -s "$user_password" $HOME/.config/nvim $SourcePath/config/nvim
+  copy-file $HOME/.config/nvim/init.vim $SourcePath/config/nvim
   sync-folder -s "$user_password" $HOME/.config/tmuxinator $SourcePath/config/tmuxinator
-  sync-folder -s "$user_password" $HOME/.config/configstore $SourcePath/config/configstore
 }
 
 #############################################
@@ -857,6 +855,9 @@ function install() {
 
   print 0 "Check icdiff tool..."
   install_homebrew_package 'icdiff'
+
+  print 0 "Check github language analysis tool..."
+  install_ruby_package 'github-linguist'
 
   print 0 "Check python format tool..."
   install_python_package 'yapf' '3'
