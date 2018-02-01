@@ -755,8 +755,10 @@ function configure_node() {
 
   install_node_versions
 
-  print 0 "Update npm..."
-  npm install npm@latest -g
+  copy-file $HOME/.npmrc $SourcePath/other/
+
+  #print 0 "Update npm..."
+  #npm install npm@latest -g
 }
 
 ###################################
@@ -967,6 +969,9 @@ function backup() {
 
   print 0 "Backup WakaTime Config..."
   copy-file $HOME/.wakatime.cfg $SourcePath/other/
+
+  print 0 "Backup npm config..."
+  copy-file $HOME/.npmrc $SourcePath/other/
 
   print 0 "Make new program effective immediately..."
   /bin/zsh $HOME/.zshrc
