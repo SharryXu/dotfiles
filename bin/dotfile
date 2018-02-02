@@ -973,6 +973,9 @@ function backup() {
   print 0 "Backup npm config..."
   copy-file $HOME/.npmrc $SourcePath/other/
 
+  print 0 "Backup vs code settings..."
+  copy-file "$HOME/Library/Application Support/Code/User/settings.json" $SourcePath/other/
+
   print 0 "Make new program effective immediately..."
   /bin/zsh $HOME/.zshrc
 

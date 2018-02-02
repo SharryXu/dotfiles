@@ -18,20 +18,20 @@ function usage() {
 }
 
 if [ $# -eq 2 ]; then
-  sourceFolderPath=$1
-  targetFolderPath=$2
+  sourceFolderPath="$1"
+  targetFolderPath="$2"
 
-  if [[ ! -d $sourceFolderPath ]]; then
+  if [[ ! -d "$sourceFolderPath" ]]; then
     print 3 "The source folder: $sourceFolderPath is illegal."
     exit 2
   fi
 
-  if [[ ! -d $targetFolderPath ]]; then
+  if [[ ! -d "$targetFolderPath" ]]; then
     print 3 "The target folder: $targetFolderPath is illegal."
     exit 2
   fi
 
-  if [[ $sourceFolderPath == $targetFolderPath ]]; then
+  if [[ "$sourceFolderPath" == "$targetFolderPath" ]]; then
     print 3 "Cannot copy files from $sourceFolderPath to $targetFolderPath.\nBecause there will be a inifinate cycle."
     exit 3
   fi
@@ -40,13 +40,13 @@ if [ $# -eq 2 ]; then
 
   # Add missing or update files.
   for fileName in `ls -a $sourceFolderPath`; do
-    fullFilePath=$sourceFolderPath/$fileName
+    fullFilePath="$sourceFolderPath/$fileName"
 
-    if [[ $fileName != "." && $fileName != ".." ]]; then
-	    if [[ -d $fullFilePath ]]; then
-		    copy-folder $fullFilePath $targetFolderPath
+    if [[ "$fileName" != "." && "$fileName" != ".." ]]; then
+	    if [[ -d "$fullFilePath" ]]; then
+		    copy-folder "$fullFilePath" "$targetFolderPath"
 	    else
-        copy-file $fullFilePath $targetFolderPath
+        copy-file "$fullFilePath" "$targetFolderPath"
 	    fi
     fi
   done

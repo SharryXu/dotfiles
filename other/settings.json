@@ -1,0 +1,21 @@
+{
+    // Vim Configuration
+    "vim.leader": "SPC",
+    "vim.enableNeovim": false,
+
+    // Color Theme
+    "workbench.colorTheme": "Visual Studio Light",
+
+    // File Icon Theme
+    "workbench.iconTheme": "easy-icons",
+
+    // Clang-Format
+    "editor.formatOnSave": true,
+
+    // Editor
+    "editor.minimap.enabled": false,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false
+}
