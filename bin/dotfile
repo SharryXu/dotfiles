@@ -6,8 +6,6 @@
 ###################################
 # Declare some constant variables.
 ###################################
-declare -r true=0
-declare -r false=1
 declare -r default_git_commit_message='Sync latest settings.'
 declare -r error_message_check_parameters="Please check parameters."
 declare -r default_shell=/bin/zsh

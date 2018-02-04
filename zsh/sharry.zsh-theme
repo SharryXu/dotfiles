@@ -2,15 +2,8 @@
 
 if [[ "$USER" == "root" ]]; then USERCOLOR="red"; else USERCOLOR="green"; fi
 
-function get_proper_arrow() {
-        echo "
-%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) "
-}
-
 PROMPT=$'\
-%{$fg_bold[$USERCOLOR]%}%n on %{$fg_bold[$USERCOLOR]%}%m %{$fg_no_bold[magenta]%}[%~] $(get_proper_arrow)%{$reset_color%}'
-
-RPROMPT=$'$(git_super_status)%{$reset_color%}'
+%{$fg_bold[$USERCOLOR]%}%n on %{$fg_bold[$USERCOLOR]%}%m %{$fg_no_bold[magenta]%}[%~] $(git_super_status)\n%(?,%{$fg_bold[green]%}➜,%{$fg_bold[red]%}➜) %{$reset_color%}'
 
 # Format for git_prompt_info()
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[blue]%} "
@@ -31,4 +24,4 @@ ZSH_THEME_GIT_PROMPT_AHEAD=" %{$fg_bold[white]%}^"
 
 # Format for git_prompt_long_sha() and git_prompt_short_sha()
 ZSH_THEME_GIT_PROMPT_SHA_BEFORE=" %{$fg_bold[white]%}[%{$fg_bold[blue]%}"
-ZSH_THEME_GIT_PROMPT_SHA_AFTER="%{$fg_bold[white]%}]" 
+ZSH_THEME_GIT_PROMPT_SHA_AFTER="%{$fg_bold[white]%}]"

@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# TODO: 1.Add parameter to deal Depth
+
 # Sync git repository.
 # Globals:
 #   print
 #   git
 # Arguments:
-#   Local Folder Path
+#   Folder Path
 #   Remote Repository Name
 #   Remote Repository Path
 #   Branch Name (Optional)
@@ -14,61 +16,59 @@
 #   None
 
 function usage() {
-  echo -e "usage: $(basename $0) [options] local_folder_path
+  echo -e "\nusage: $(basename $0) [options] local_folder_path
+
 [options]:
--n  Remote repository name
--p  Remote repository address
-    like: https://github.com/SharryXu/Dotfiles
--b  Branch
--d  Depth
--h  Show help information."
+-l  local repository folder path
+-r  remote repository path
+    For example: https://github.com/SharryXu/dotfiles
+-b  branch. Default value is master.
+-s  source name. Default value is origin.
+-t  target name. Default value is origin.
+-h  help information.
+
+Warning: For now, we assume the branch name in source and target are the same."
   exit 1
 }
 
-while getopts "n:p:b:d:h" option; do
+branch="master"
+source_name="origin"
+target_name="origin"
+local_repo_path=""
+remote_repo_path=""
+
+while getopts "l:r:b:s:t:h" option; do
   case $option in
-    n);;
-    h)usage;;
+    l) local_repo_path=$(realpath ${OPTARG})
+       ;;
+    r) remote_repo_path=${OPTARG}
+       if [[ "$remote_repo_path" != "https:"* ]]; then
+         print 3 "The remote repository path should be an HTTPS address."
+         usage
+       fi
+       ;;
+    b) if [[ ! -z "${OPTARG}" ]]; then
+         branch=${OPTARG}
+       fi
+       ;;
+    s) if [[ ! -z "${OPTARG}" ]]; then
+         $source_name=${OPTARG}
+       fi
+       ;;
+    t) if [[ ! -z "${OPTARG}" ]]; then
+         $target_name=${OPTARG}
+       fi
+       ;;
+    h) usage
+      ;;
   esac
 done
 
-  local currentFolder=$PWD
-
-  # Please notice if the parameter is an array, then the number should count the array's length.
-  if [[ $# -ge 3 ]]; then
-    local repoInfo=$2
-    if [ -d $1 ]; then
-      if [[ $(is-folder-empty $1) == $true ]] ; then
-        print 2 "${repoInfo[0]} existed but it's empty."
-        git clone ${repoInfo[1]} $1
-        print 1 "${repoInfo[0]} has been successfully cloned."
-      else
-        print 0 "${repoInfo[0]} existed and now will pull the latest version."
-        cd $1
-
-        if [ $# -ge 4 ]; then
-          print 1 "Checkout to branch: $4."
-          git checkout $4
-        fi
-
-        git pull
-        cd $currentFolder
-
-        print 1 "${repoInfo[0]} has been successfully updated."
-      fi
-    else
-      print 2 "${repoInfo[0]} is not existed and now downloading..."
-
-      if [ $# -ge 5 ]; then
-        sudo git clone ${repoInfo[1]} $1 --depth $5
-      else
-        sudo git clone ${repoInfo[1]} $1
-      fi
-
-      print 1 "${repoInfo[0]} has been successfully cloned."
-    fi
-  else
-    print 3 "$error_message_check_parameters"
-    exit 1
-  fi
-
+if [[ ! -d $local_repo_path ]]; then
+  print 3 "Please provide local git repository folder."
+  usage
+elif [[ -d $local_repo_path && $(is-git-repo ) ]]
+echo "branch: $branch"
+echo "local path: $local_repo_path"
+echo "remote path: $remote_repo_path"
+fi

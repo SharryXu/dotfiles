@@ -5,6 +5,7 @@ if [[ $system_name == 'mac' ]]; then
     source $HOME/.bin/custom-variables
   fi
 
+  export NVM_DIR="$HOME/.nvm"
   export EMACSPATH=/usr/local/Cellar/emacs-plus/25.3/bin
   export ZSH_GIT_PROMPT=$HOME/.zsh-git-prompt
   export PATH=$HOME/.bin:/usr/local/bin:$ZSH_GIT_PROMPT/src/.bin:$EMACSPATH:$PATH
@@ -14,9 +15,6 @@ if [[ $system_name == 'mac' ]]; then
     eval "$(pyenv init -)"
     pyenv shell 3.5.4
   fi
-
-  # Configure travis
-  [ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh
 
   source $ZSH_GIT_PROMPT/zshrc.sh
 
@@ -61,7 +59,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="false"
 HISTSIZE=1000
 SAVEHIST=1000
 GIT_PROMPT_EXECUTABLE="haskell"
-ZSH_THEME_GIT_PROMPT_CACHE="true"
+ZSH_THEME_GIT_PROMPT_CACHE="false"
 
 export UPDATE_ZSH_DAYS=1
 export LANG=en_US.UTF-8
@@ -80,8 +78,16 @@ ZSH_TMUX_AUTOQUIT=false
 
 source $ZSH/oh-my-zsh.sh
 
-# Config node version manager
-export NVM_DIR="$HOME/.nvm"
+function load-nvm() {
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 nvm use default 1>/dev/null 2>&1
+}
+
+function load-travis() {
+  [ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh
+  }
+
+# Custom parameters
+declare -r true=0
+declare -r false=1
