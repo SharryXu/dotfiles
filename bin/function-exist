@@ -13,9 +13,9 @@ function usage() {
 }
 
 if [ $# -eq 1 ]; then
-	if [[ $(type -t $1) == "function" ]]; then
-                echo 0
-        else
+  if [[ $(type -t $1) == "function" ]]; then
+    echo 0
+  else
     echo 1
   fi
 

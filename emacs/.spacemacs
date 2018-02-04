@@ -379,10 +379,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Set clang-format support
   (add-hook 'c-mode-hook
             (lambda ()
-              (interactive)
               (when (executable-find "clang-format")
                 (local-set-key (kbd "}")
-                               'cpp/brace-clang-format))))
+                               'sharry/format-c-c++-code))))
 
   ;; evil-normal-state-cursor
   ;; evil-insert-state-cursor
@@ -467,7 +466,13 @@ This function is called at the very end of Spacemacs initialization."
  )
 )
 
-(defun cpp/brace-clang-format ()
+(defun sharry/clean-code ()
+  "Use spaces to substitute tabs and indent all lines."
+  (interactive)
+  (indent-region (point-min) (point-max))
+  (untabify (point-min) (point-max)))
+
+(defun sharry/format-c-c++-code ()
   "format by clang-format when enter '}'"
   (interactive)
   (command-execute #'c-electric-brace)

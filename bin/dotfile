@@ -312,10 +312,10 @@ function choose_appropriate_python_version() {
 function install_python_package() {
   if [[ $(command-exist 'pyenv') == $true ]]; then
     eval "$(pyenv init -)"
-	else
+  else
     print 3 "The program name pyenv is not existed."
     install_homebrew_package 'pyenv'
-	  exit 1
+    exit 1
   fi
 
   if [[ $# -ge 2 ]]; then
@@ -465,7 +465,7 @@ function push_git_repository() {
 
   if [ $# -ge 1 ]; then
     if [ -d $1 ] && [[ $(is-folder-empty $1) == $false ]] ; then
-	    print 0 "Please provide appropriate message:"
+      print 0 "Please provide appropriate message:"
       read commitMessage
       if [[ -z $commitMessage ]]; then
         commitMessage=$default_git_commit_message

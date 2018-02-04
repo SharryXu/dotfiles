@@ -22,22 +22,22 @@ if [[ $system_name == 'mac' ]]; then
   export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
   export HOMEBREW_NO_AUTO_UPDATE=true
 
-	# Clang aliases
-	alias clo='clang -o a.out '
-	# Mongo aliases
-	alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
-	# Emacs without GUI
-	alias emacs-term='emacs -nw'
-	# Vim aliases
-	alias vim='nvim'
-	# Tmux
-	alias tmux='tmux -2'
+  # Clang aliases
+  alias clo='clang -o a.out '
+  # Mongo aliases
+  alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
+  # Emacs without GUI
+  alias emacs-term='emacs -nw'
+  # Vim aliases
+  alias vim='nvim'
+  # Tmux
+  alias tmux='tmux -2'
 elif [[ $system_name == 'ubuntu' ]]; then
   export PATH=$HOME/.bin:/usr/local/bin:$PATH
-	alias mongod='mongod'
-	alias emacs='emacs'
-	alias vim='nvim'
-	alias tmux='tmux -2'
+  alias mongod='mongod'
+  alias emacs='emacs'
+  alias vim='nvim'
+  alias tmux='tmux -2'
 fi
 
 export ZSH=$HOME/.oh-my-zsh
@@ -79,14 +79,14 @@ ZSH_TMUX_AUTOQUIT=false
 source $ZSH/oh-my-zsh.sh
 
 function load-nvm() {
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-nvm use default 1>/dev/null 2>&1
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+  nvm use default 1>/dev/null 2>&1
 }
 
 function load-travis() {
   [ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh
-  }
+}
 
 # Custom parameters
 declare -r true=0
