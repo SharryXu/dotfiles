@@ -18,7 +18,7 @@ declare user_password=''
 ######################################
 # Declare all used git repositories.
 ######################################
-declare -r ohmyzsh=('Oh-My-Zsh' 'https://github.com/robbyrussell/oh-my-zsh ')
+declare -r ohmyzsh=('Oh-My-Zsh' 'https://github.com/SharryXu/oh-my-zsh ')
 declare -r spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs ')
 declare -r zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt ')
 declare -r powerlinefonts=('Powerline-fonts' 'https://github.com/powerline/fonts ')
@@ -548,7 +548,6 @@ function configure_zsh() {
   print 0 "Check oh-My-Zsh..."
   check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
   copy-file $SourcePath/zsh/.zshrc $HOME
-  copy-file $SourcePath/zsh/sharry.zsh-theme $HOME/.oh-my-zsh/themes/
 
   print 0 "Configure Zsh git prompt..."
   check_git_repository $HOME/.zsh-git-prompt ${zshgitprompt[*]}
@@ -932,7 +931,6 @@ function install() {
 function backup() {
   print 0 "Backup zsh and theme file..."
   copy-file $HOME/.zshrc $SourcePath/zsh/
-  copy-file $HOME/.oh-my-zsh/themes/sharry.zsh-theme $SourcePath/zsh/
 
   print 0 "Backup bash file..."
   copy-file $HOME/.bash_profile $SourcePath/bash/
