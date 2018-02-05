@@ -27,11 +27,11 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 
 # TODOs
 
-1. Try to seperate all backup methods.
-1. Check Application folder for some specific apps like iTerm2.
-1. Check the input parameters and related command like basename.
-1. Try to concentrate same package tool installation.
-1. Add prompt message to let user manually configure the sync folder in applications like Alfred.
-1. Try to use which command to replace command-exist.
-1. Try to merge function name push-git-repository and check-git-repository to one function.
-1. Add vscode backup like code --list-extensions
+- [ ] Try to seperate all backup methods.
+- [ ] Check Application folder for some specific apps like iTerm2.
+- [ ] Check the input parameters and related command like basename.
+- [ ] Try to concentrate same package tool installation.
+- [ ] Add prompt message to let user manually configure the sync folder in applications like Alfred.
+- [ ] Try to use which command to replace command-exist.
+- [ ] Try to merge function name push-git-repository and check-git-repository to one function.
+- [ ] Add vscode backup like code --list-extensions
