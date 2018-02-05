@@ -44,7 +44,7 @@ function main() {
   git clone --depth 1 https://github.com/SharryXu/dotfiles "$local_folder"
 
   dotfile="$local_folder/bin/dotfile"
-  sudo "$dotfile" -i "$local_folder"
+  "$dotfile" -i "$local_folder"
 
   if [[ $? == 0 ]]; then
     printf "${GREEN}"
