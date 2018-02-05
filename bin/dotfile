@@ -118,6 +118,10 @@ function install_homebrew_cask_package() {
 #   None
 #######################################
 function install_npm_package() {
+  if [[ $(command-exist npm) == $false ]]; then
+    load-nvm
+  fi
+
   #TODO: Converge all npm packages in one place.
   # Warning: Most npm packages need python2.
   choose_appropriate_python_version '2'
@@ -768,7 +772,8 @@ function configure_node() {
 #   None
 ###################################
 function install_node_versions() {
-  if [[ $(function-exist nvm) == $true ]]; then
+  nvm --version 2>/dev/null 1>&2
+  if [[ $? == 0 ]]; then
     local target_node_versions=(
       '8.9.4'
       '9.4.0'
@@ -793,6 +798,9 @@ function install_node_versions() {
         print 2 "$target_version has already existed."
       fi
     done
+  elif [[ $(function-exist load-nvm) == $true ]]; then
+    load-nvm
+    install_node_versions
   else
     print 3 "Please install node version manager first."
     exit 1
