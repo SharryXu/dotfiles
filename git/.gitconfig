@@ -8,7 +8,7 @@
 [difftool "icdiff"]
 	cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
 [user]
-	name = SharryXu
+	name = Sharry Xu
 	email = sharry.r.xu@gmail.com
 [commit]
 	template = /Users/sxu204/.stCommitMsg
