@@ -816,6 +816,8 @@ function install_node_versions() {
 #   None
 #######################################
 function install() {
+  print 0 "Beginning installation..."
+
   install_homebrew
 
   configure_homebrew_tap
