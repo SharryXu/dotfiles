@@ -41,10 +41,10 @@ function main() {
   }
 
   local_folder="$(realpath .)/dotfiles"
-  git clone https://github.com/SharryXu/dotfiles "$local_folder"
+  git clone --depth 1 https://github.com/SharryXu/dotfiles "$local_folder"
 
   dotfile="$local_folder/bin/dotfile"
-  chmod +x "$dotfile" | "$dotfile -i $local_folder"
+  chmod +x "$dotfile" | "$dotfile" -i "$local_folder"
 
   if [[ $? == 0 ]]; then
     printf "${GREEN}"
