@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash -l
 
 # TODO: 1.Add parameter to deal Depth
 
@@ -19,7 +19,6 @@ function usage() {
   echo -e "\nusage: $(basename $0) [options] local_folder_path
 
 [options]:
--l  local repository folder path
 -r  remote repository path
     For example: https://github.com/SharryXu/dotfiles
 -b  branch. Default value is master.
@@ -37,38 +36,64 @@ target_name="origin"
 local_repo_path=""
 remote_repo_path=""
 
-while getopts "l:r:b:s:t:h" option; do
+while getopts "r:b:s:t:h" option; do
   case $option in
-    l) local_repo_path=$(realpath ${OPTARG})
-       ;;
     r) remote_repo_path=${OPTARG}
-       if [[ "$remote_repo_path" != "https:"* ]]; then
+       if [[ "$remote_repo_path" != "git@"* ]]; then
          print 3 "The remote repository path should be an HTTPS address."
-         usage
+         exit 1
        fi
        ;;
-    b) if [[ ! -z "${OPTARG}" ]]; then
-         branch=${OPTARG}
+    b) if [[ -z "${OPTARG}" ]]; then
+         print 3 "The branch name cannot be empty or whitespaces."
+         exit 1
        fi
+       branch=${OPTARG}
        ;;
-    s) if [[ ! -z "${OPTARG}" ]]; then
-         $source_name=${OPTARG}
+    s) if [[ -z "${OPTARG}" ]]; then
+         print 3 "The source ref name cannot be empty or whitespaces."
+         exit 1
        fi
+       source_name=${OPTARG}
        ;;
-    t) if [[ ! -z "${OPTARG}" ]]; then
-         $target_name=${OPTARG}
+    t) if [[ -z "${OPTARG}" ]]; then
+         print 3 "The target ref name cannot be empty or whitespaces."
+         exit 1
        fi
+       target_name=${OPTARG}
        ;;
     h) usage
-      ;;
+       ;;
   esac
 done
 
-if [[ ! -d $local_repo_path ]]; then
-  print 3 "Please provide local git repository folder."
+shift $((OPTIND-1))
+
+if [[ $# == 1 && ! -z $1 ]]; then
+  local_repo_path=$(realpath "$1")
+  if [[ $(is-git-repo "$local_repo_path") == $true ]]; then
+    cd "$local_repo_path"
+    if [[ "$source_name" == "$target_name" ]]; then
+      # No need to merge.
+      git pull "$target_name" "$branch"
+    else
+      git stash
+      # git checkout "$source_name/$branch"
+      git fetch "$target_name" "$branch"
+      git merge "$target_name/$branch"
+    fi
+    cd - 1>/dev/null 2>&1
+  elif [[ -d $local_repo_path && $(is-folder-empty "$local_repo_path") == $true ]]; then
+    print 3 "The folder is not a git repository and it's not empty."
+    exit 1
+  elif [[ ! -z $remote_repo_path ]]; then
+    git clone "$remote_repo_path" "$local_repo_path"
+  else
+    print 3 "Please provide valid local or remote git repository."
+    exit 1
+  fi
+else
+  print 3 "Please provide local folder."
   usage
-elif [[ -d $local_repo_path && $(is-git-repo ) ]]
-echo "branch: $branch"
-echo "local path: $local_repo_path"
-echo "remote path: $remote_repo_path"
 fi
+
