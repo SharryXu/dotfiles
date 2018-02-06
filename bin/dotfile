@@ -18,16 +18,16 @@ declare user_password=''
 ######################################
 # Declare all used git repositories.
 ######################################
-declare -r ohmyzsh=('Oh-My-Zsh' 'https://github.com/SharryXu/oh-my-zsh ')
-declare -r spacemacs=('Spacemacs' 'https://github.com/SharryXu/spacemacs ')
-declare -r zshgitprompt=('Zsh-prompt' 'https://github.com/olivierverdier/zsh-git-prompt ')
-declare -r powerlinefonts=('Powerline-fonts' 'https://github.com/powerline/fonts ')
-declare -r nerdfonts=('Nerd-fonts' 'https://github.com/ryanoasis/nerd-fonts ')
-declare -r nodemanager=('Node-Manager' 'https://github.com/creationix/nvm ')
-declare -r tmuxpluginmanager=('TmuxPluginManager' 'https://github.com/tmux-plugins/tpm ')
-declare -r tmuxpluginyank=('TmuxPlugin:Yank' 'https://github.com/tmux-plugins/tmux-yank ')
-declare -r tmuxpluginsensible=('TmuxPlugin:Sensible' 'https://github.com/tmux-plugins/tmux-sensible ')
-declare -r tmuxpluginsidebar=('TmuxPlugin:Sidebar' 'https://github.com/tmux-plugins/tmux-sidebar ')
+declare -r ohmyzsh='https://github.com/SharryXu/oh-my-zsh'
+declare -r spacemacs='https://github.com/SharryXu/spacemacs'
+declare -r zshgitprompt='https://github.com/olivierverdier/zsh-git-prompt'
+declare -r powerlinefonts='https://github.com/powerline/fonts'
+declare -r nerdfonts='https://github.com/ryanoasis/nerd-fonts'
+declare -r nodemanager='https://github.com/creationix/nvm'
+declare -r tmuxpluginmanager='https://github.com/tmux-plugins/tpm'
+declare -r tmuxpluginyank='https://github.com/tmux-plugins/tmux-yank'
+declare -r tmuxpluginsensible='https://github.com/tmux-plugins/tmux-sensible'
+declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
 
 #############################
 # Install all homebrew tap
@@ -175,60 +175,6 @@ function install_homebrew_package() {
       print 1 "$1 has successfully been installed."
     else
       print 2 "$1 has already existed."
-    fi
-  else
-    print 3 "$error_message_check_parameters"
-    exit 1
-  fi
-}
-
-#############################################
-# Using Git to get latest version or clone.
-# Globals:
-#   git
-#   print
-# Arguments:
-#   Local Folder Path
-#   Remote Repository Name
-#   Remote Repository Path
-#   Branch Name (Optional)
-#   Depth (Optional)
-# Returns:
-#   None
-#############################################
-function check_git_repository() {
-  # Please notice if the parameter is an array, then the number should count the array's length.
-  if [ $# -ge 3 ]; then
-    local repoInfo=$2
-    if [ -d $1 ]; then
-      if [[ $(is-folder-empty $1) == $true ]] ; then
-        print 2 "${repoInfo[0]} existed but it's empty."
-        git clone ${repoInfo[1]} $1
-        print 1 "${repoInfo[0]} has been successfully cloned."
-      else
-        print 0 "${repoInfo[0]} existed and now will pull the latest version."
-        cd $1
-
-        if [ $# -ge 4 ]; then
-          print 1 "Checkout to branch: $4."
-          git checkout $4
-        fi
-
-        git pull
-        cd - 1>/dev/null
-
-        print 1 "${repoInfo[0]} has been successfully updated."
-      fi
-    else
-      print 2 "${repoInfo[0]} is not existed and now downloading..."
-
-      if [ $# -ge 5 ]; then
-        sudo git clone ${repoInfo[1]} $1 --depth $5
-      else
-        sudo git clone ${repoInfo[1]} $1
-      fi
-
-      print 1 "${repoInfo[0]} has been successfully cloned."
     fi
   else
     print 3 "$error_message_check_parameters"
@@ -453,48 +399,6 @@ function backup_global_config() {
   sync-folder -s "$user_password" $HOME/.config/tmuxinator $SourcePath/config/tmuxinator
 }
 
-#############################################
-# Push git repository. (Default: master branch)
-# Globals:
-#   git
-#   basename
-#   print
-# Arguments:
-#   Local Repository Name
-# Returns:
-#   None
-#############################################
-function push_git_repository() {
-  local repositoryname=$(basename $1)
-
-  if [ $# -ge 1 ]; then
-    if [ -d $1 ] && [[ $(is-folder-empty $1) == $false ]] ; then
-      print 0 "Please provide appropriate message:"
-      read commitMessage
-      if [[ -z $commitMessage ]]; then
-        commitMessage=$default_git_commit_message
-      fi
-
-      cd $1
-
-      git add .
-      git commit -m "$commitMessage"
-      git push
-
-      if [ $? -eq 0 ]; then
-        print 1 "Repository name $repositoryname has been successfully pushed."
-      else
-        print 3 "Something wrong happened when pushing the repository."
-      fi
-
-      cd - 1>/dev/null
-    fi
-  else
-    print 3 "$error_message_check_parameters"
-    exit 1
-  fi
-}
-
 ##################################
 # Install homebrew
 # Globals:
@@ -538,7 +442,7 @@ function configure_haskell() {
 #   chsh
 #   print
 #   copy-file
-#   check_git_repository
+#   sync-git-repo
 # Returns:
 #   None
 ###################################
@@ -550,11 +454,11 @@ function configure_zsh() {
   fi
 
   print 0 "Check oh-My-Zsh..."
-  check_git_repository $HOME/.oh-my-zsh ${ohmyzsh[*]}
+  sync-git-repo -r $ohmyzsh $HOME/.oh-my-zsh/
   copy-file $SourcePath/zsh/.zshrc $HOME
 
   print 0 "Configure Zsh git prompt..."
-  check_git_repository $HOME/.zsh-git-prompt ${zshgitprompt[*]}
+  sync-git-repo -r $zshgitprompt $HOME/.zsh-git-prompt
   if [[ $(command-exist stack) == $false ]]; then
     configure_haskell
   fi
@@ -569,7 +473,7 @@ function configure_zsh() {
 #   install_ruby_package
 #   print
 #   copy-file
-#   check_git_repository
+#   sync-git-repo
 # Returns:
 #   None
 ###################################
@@ -581,10 +485,10 @@ function configure_tmux() {
 
   print 0 "Check related tmux plugins..."
   install_homebrew_package 'reattach-to-user-namespace'
-  check_git_repository $HOME/.tmux/plugins/tpm ${tmuxpluginmanager[*]}
-  check_git_repository $HOME/.tmux/plugins/tmux-yank ${tmuxpluginyank[*]}
-  check_git_repository $HOME/.tmux/plugins/tmux-sensible ${tmuxpluginsensible[*]}
-  check_git_repository $HOME/.tmux/plugins/tmux-sidebar ${tmuxpluginsidebar[*]}
+  sync-git-repo -r $tmuxpluginmanager $HOME/.tmux/plugins/tpm
+  sync-git-repo -r $tmuxpluginyank $HOME/.tmux/plugins/tmux-yank
+  sync-git-repo -r $tmuxpluginsensible $HOME/.tmux/plugins/tmux-sensible/
+  sync-git-repo -r $tmuxpluginsidebar $HOME/.tmux/plugins/tmux-sidebar/
 
   tmux source-file ~/.tmux.conf
 }
@@ -597,7 +501,7 @@ function configure_tmux() {
 #   install_python_package
 #   print
 #   copy-file
-#   check_git_repository
+#   sync-git-repo
 # Returns:
 #   None
 ###################################
@@ -606,7 +510,7 @@ function configure_emacs() {
   print 0 "Check emacs..."
   install_homebrew_package 'ag'
   install_homebrew_package 'emacs-plus'
-  check_git_repository $HOME/.emacs.d ${spacemacs[*]}
+  sync-git-repo -r $spacemacs -b develop -s author -t origin $HOME/.emacs.d
   copy-file $SourcePath/emacs/.spacemacs $HOME
   # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
   if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
@@ -625,7 +529,7 @@ function configure_emacs() {
 #   install_homebrew_package
 #   print
 #   copy-file
-#   check_git_repository
+#   sync-git-repo
 # Returns:
 #   None
 ###################################
@@ -646,19 +550,16 @@ function configure_vim() {
 # Globals:
 # Arguments:
 #   print
-#   check_git_repository
+#   sync-git-repo
 # Returns:
 #   None
 ###################################
 function install_fonts() {
   print 0 "Check Nerd fonts..."
   install_homebrew_cask_package 'font-hack-nerd-font'
-  # Use brew cask to install.
-  # check_git_repository $HOME/.fonts-nerd ${nerdfonts[*]}
-  # $HOME/.fonts-nerd/install.sh 1> /dev/null
 
   print 0 "Check Powerline fonts..."
-  check_git_repository $HOME/.fonts-powerline ${powerlinefonts[*]}
+  sync-git-repo -r $powerlinefonts $HOME/.fonts-powerline
   $HOME/.fonts-powerline/install.sh 1> /dev/null
 }
 
@@ -751,7 +652,7 @@ function configure_python() {
 function configure_node() {
   print 0 "Check NodeJS and node package manager..."
 
-  check_git_repository $HOME/.nvm ${nodemanager[*]}
+  sync-git-repo -r $nodemanager $HOME/.nvm
   source $HOME/.nvm/nvm.sh
 
   install_node_versions
@@ -983,20 +884,13 @@ function backup() {
   print 0 "Make new program effective immediately..."
   /bin/zsh $HOME/.zshrc
 
+
+  # Redirect to the Source folder to show difference
+  cd $SourcePath && git icdiff --staged --word-diff
+
+  sync-git-repo $SourcePath
+
   print 1 "Done."
-
-  # Redirect to the Source folder
-  cd $SourcePath
-
-  # Show difference
-  git icdiff
-
-  if [[ $(git diff) != '' ]]; then
-    if [[ $(choose-yes-or-no "Do you want push to the remote?") == $true ]]; then
-      print 0 "Push to remote git repository..."
-      push_git_repository $SourcePath
-    fi
-  fi
 }
 
 function usage () {
