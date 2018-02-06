@@ -72,17 +72,27 @@ shift $((OPTIND-1))
 if [[ $# == 1 && ! -z $1 ]]; then
   local_repo_path=$(realpath "$1")
   if [[ $(is-git-repo "$local_repo_path") == $true ]]; then
-    cd "$local_repo_path"
-    if [[ "$source_name" == "$target_name" ]]; then
-      # No need to merge.
-      git pull "$target_name" "$branch"
+    print 1 "Redirect to $local_repo_path" && cd "$local_repo_path"
+    current_remote_repo_path=$(git ls-remote --get-url)
+    if [[ -z $remote_repo_path || $current_remote_repo_path == $remote_repo_path ]]; then
+      print 0 "Repository has already existed."
+      if [[ "$source_name" == "$target_name" ]]; then
+        # No need to merge.
+        print 0 "Pulling latest code..."
+        git pull "$target_name" "$branch"
+      else
+        print 0 "Save uncommited files to stash list..."
+        git stash
+        # git checkout "$source_name/$branch"
+        print 0 "Get latest code from "
+        git fetch "$target_name" "$branch"
+        git merge "$target_name/$branch"
+      fi
     else
-      git stash
-      # git checkout "$source_name/$branch"
-      git fetch "$target_name" "$branch"
-      git merge "$target_name/$branch"
+      print 3 "The current address is $current_remote_repo_path which is not match with the one you provide $remote_repo_path."
+      exit 1
     fi
-    cd - 1>/dev/null 2>&1
+    print 1 "Redirect to original folder" && cd - 1>/dev/null 2>&1
   elif [[ -d $local_repo_path && $(is-folder-empty "$local_repo_path") == $true ]]; then
     print 3 "The folder is not a git repository and it's not empty."
     exit 1
