@@ -884,15 +884,13 @@ function backup() {
   print 0 "Make new program effective immediately..."
   /bin/zsh $HOME/.zshrc
 
-  print 1 "Done."
 
-  # Redirect to the Source folder
-  cd $SourcePath
-
-  # Show difference
-  git icdiff
+  # Redirect to the Source folder to show difference
+  cd $SourcePath && git icdiff --staged --word-diff
 
   sync-git-repo $SourcePath
+
+  print 1 "Done."
 }
 
 function usage () {

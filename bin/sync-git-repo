@@ -24,6 +24,7 @@ function usage() {
 -b  branch. Default value is master.
 -s  source name. Default value is origin.
 -t  target name. Default value is origin.
+-f  directly push unstaged changes.
 -h  help information.
 
 Warning: For now, we assume the branch name in source and target are the same."
@@ -35,8 +36,9 @@ source_name="origin"
 target_name="origin"
 local_repo_path=""
 remote_repo_path=""
+directly_push=$false
 
-while getopts "r:b:s:t:h" option; do
+while getopts "r:b:s:t:hf" option; do
   case $option in
     r) remote_repo_path=${OPTARG}
        if [[ "$remote_repo_path" != "git@"* ]]; then
@@ -62,6 +64,8 @@ while getopts "r:b:s:t:h" option; do
        fi
        target_name=${OPTARG}
        ;;
+    f) directly_push=$true
+       ;;
     h) usage
        ;;
   esac
@@ -80,25 +84,36 @@ if [[ $# == 1 && ! -z $1 ]]; then
       if [[ -z "$(git status --porcelain)" ]]; then
         print 0 "Current repository is clean."
       else
-        if [[ $(choose-yes-or-no "Do you want to commit those changes?") == $true ]]; then
+        if [[ $directly_push == $true || $(choose-yes-or-no "Do you want to commit those changes?") == $true ]]; then
           print 0 "Please provide appropriate message:"
           read commitMessage
           if [[ -z $commitMessage ]]; then
             commitMessage="Save latest changes."
           fi
-          git add . && git commit -m "$commitMessage" && git push $target_name $branch
-          print 1 "Push changes success."
-
+          git add . \
+            && git commit -m "$commitMessage" \
+            && git push -u $target_name $branch \
+            && git push
+          if [[ $? == $true ]]; then
+            print 1 "Push changes success."
+          else
+            print 3 "Push changes failed."
+            exit 1
+          fi
         else
-          print 0 "Save uncommited files to stash list..."
-          git stash
+          print 0 "There are uncommited files."
+          exit 0
         fi
       fi
 
       if [[ "$source_name" == "$target_name" ]]; then
         # No need to merge.
-        print 0 "Pulling latest code..."
-        git pull "$target_name" "$branch"
+        for file in "$local_repo_path"/.git/refs/heads/*; do
+          current_head=${file##*/}
+          print 0 "Pulling latest code for $current_head branch..."
+          git checkout $current_head && git pull "$target_name" "$current_head"
+        done
+        # TODO: Try to return to previous branch.
       else
         # git checkout "$source_name/$branch"
         print 0 "Get latest code from "
@@ -123,4 +138,3 @@ else
   print 3 "Please provide local folder."
   usage
 fi
-
