@@ -91,3 +91,4 @@ function load-travis() {
 # Custom parameters
 declare -r true=0
 declare -r false=1
+

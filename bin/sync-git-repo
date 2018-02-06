@@ -76,16 +76,33 @@ if [[ $# == 1 && ! -z $1 ]]; then
     current_remote_repo_path=$(git ls-remote --get-url)
     if [[ -z $remote_repo_path || $current_remote_repo_path == $remote_repo_path ]]; then
       print 0 "Repository has already existed."
+
+      if [[ -z "$(git status --porcelain)" ]]; then
+        print 0 "Current repository is clean."
+      else
+        if [[ $(choose-yes-or-no "Do you want to commit those changes?") == $true ]]; then
+          print 0 "Please provide appropriate message:"
+          read commitMessage
+          if [[ -z $commitMessage ]]; then
+            commitMessage="Save latest changes."
+          fi
+          git add . && git commit -m "$commitMessage" && git push $target_name $branch
+          print 1 "Push changes success."
+
+        else
+          print 0 "Save uncommited files to stash list..."
+          git stash
+        fi
+      fi
+
       if [[ "$source_name" == "$target_name" ]]; then
         # No need to merge.
         print 0 "Pulling latest code..."
         git pull "$target_name" "$branch"
       else
-        print 0 "Save uncommited files to stash list..."
-        git stash
         # git checkout "$source_name/$branch"
         print 0 "Get latest code from "
-        git fetch "$target_name" "$branch"
+        git fetch "$source_name" "$branch"
         git merge "$target_name/$branch"
       fi
     else
