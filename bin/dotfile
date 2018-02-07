@@ -886,7 +886,7 @@ function backup() {
 
 
   # Redirect to the Source folder to show difference
-  cd $SourcePath && git icdiff --staged --word-diff
+  cd $SourcePath && git icdiff --word-diff
 
   sync-git-repo $SourcePath
 

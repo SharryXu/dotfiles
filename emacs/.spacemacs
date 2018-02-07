@@ -20,7 +20,7 @@ values."
    ;; installation feature and you have to explicitly list a layer in the
    ;; variable `dotspacemacs-configuration-layers' to install it.
    ;; (default 'unused)
-   dotspacemacs-enable-lazy-installation 'nil
+   dotspacemacs-enable-lazy-installation 'unused
    ;; If non-nil then Spacemacs will ask for confirmation before installing
    ;; a layer lazily. (default t)
    dotspacemacs-ask-for-lazy-installation t
@@ -41,7 +41,8 @@ values."
                       auto-completion-enable-snippets-in-popup nil
                       auto-completion-enable-sort-by-usage t
                       auto-completion-tab-key-behavior 'cycle
-                      auto-completion-return-key-behavior 'complete)
+                      auto-completion-return-key-behavior 'complete
+                      indent-tabs-mode nil)
      (c-c++ :variables
             c-default-style "linux"
             c-c++-enable-clang-support t
@@ -49,19 +50,19 @@ values."
             clang-format-style "file"
             indent-tabs-mode nil
             c-basic-offset 4)
-     sql
-     html
-     javascript
+     ;; sql
+     ;; html
+     ;; javascript
      (markdown :variables
                markdown-live-preview-engine 'ymd
                markdown-display-inline-images t
                markdown-toggle-inline-images t
                markdown-toc-generate-toc t)
      ivy
-     better-defaults
+     ;; better-defaults
      emacs-lisp
-     git
-     org
+     ;; git
+     ;; org
      (shell :variables
             shell-apply-ansi-color 't
             shell-default-term-shell "/bin/zsh"
@@ -75,7 +76,6 @@ values."
      (python :variables
              indent-tabs-mode t
              python-indent-offset 4)
-     git
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -466,11 +466,11 @@ This function is called at the very end of Spacemacs initialization."
  )
 )
 
-(defun sharry/clean-code ()
-  "Use spaces to substitute tabs and indent all lines."
-  (interactive)
-  (indent-region (point-min) (point-max))
-  (untabify (point-min) (point-max)))
+(defun sharry/format-code (begin-position end-position)
+  "Use spaces to substitute tabs, deleteing unnecessary whitespaces and indent all lines."
+  (delete-trailing-whitespace)
+  (indent-region begin-position end-position)
+  (untabify begin-position end-position))
 
 (defun sharry/format-c-c++-code ()
   "format by clang-format when enter '}'"
@@ -479,8 +479,12 @@ This function is called at the very end of Spacemacs initialization."
   (let ((end-position (point))
         (begin-position (point-min)))
 		(progn
-      (indent-region begin-position
-                     end-position)
+      (sharry/format-code begin-position end-position)
       (clang-format-region begin-position
                            end-position))))
+
+(defun sharry/quick-format ()
+  "format code quickly."
+  (interactive)
+  (sharry/format-code (point-min) (point-max)))
 

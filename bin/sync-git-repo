@@ -108,6 +108,7 @@ if [[ $# == 1 && ! -z $1 ]]; then
 
       if [[ "$source_name" == "$target_name" ]]; then
         # No need to merge.
+        # TODO: git pull --all
         for file in "$local_repo_path"/.git/refs/heads/*; do
           current_head=${file##*/}
           print 0 "Pulling latest code for $current_head branch..."
