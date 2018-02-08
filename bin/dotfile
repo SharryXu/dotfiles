@@ -18,8 +18,8 @@ declare user_password=''
 ######################################
 # Declare all used git repositories.
 ######################################
-declare -r ohmyzsh='https://github.com/SharryXu/oh-my-zsh'
-declare -r spacemacs='https://github.com/SharryXu/spacemacs'
+declare -r ohmyzsh='git@github.com:SharryXu/oh-my-zsh'
+declare -r spacemacs='git@github.com:SharryXu/spacemacs'
 declare -r zshgitprompt='https://github.com/olivierverdier/zsh-git-prompt'
 declare -r powerlinefonts='https://github.com/powerline/fonts'
 declare -r nerdfonts='https://github.com/ryanoasis/nerd-fonts'
@@ -28,6 +28,8 @@ declare -r tmuxpluginmanager='https://github.com/tmux-plugins/tpm'
 declare -r tmuxpluginyank='https://github.com/tmux-plugins/tmux-yank'
 declare -r tmuxpluginsensible='https://github.com/tmux-plugins/tmux-sensible'
 declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
+declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefix-highlight'
+declare -r iterm2configuration='git@github.com:SharryXu/iTerm2'
 
 #############################
 # Install all homebrew tap
@@ -104,6 +106,24 @@ function install_homebrew_cask_package() {
     exit 1
   fi
 }
+
+######################################
+# Configure iTerm2
+# Arguments:
+#   Command Line Name (Optional)
+# Returns:
+#   None
+#######################################
+function install_iTerm2() {
+  print 0 "Install iterm2..."
+
+  install_homebrew_cask_package 'iterm2'
+
+  sync-git-repo -r $iterm2configuration $HOME/.iterm2
+
+  print 1 "Please link those sync folder manually in the GUI."
+}
+
 
 ######################################
 # Using npm tool to install packages.
@@ -489,6 +509,7 @@ function configure_tmux() {
   sync-git-repo -r $tmuxpluginyank $HOME/.tmux/plugins/tmux-yank
   sync-git-repo -r $tmuxpluginsensible $HOME/.tmux/plugins/tmux-sensible/
   sync-git-repo -r $tmuxpluginsidebar $HOME/.tmux/plugins/tmux-sidebar/
+  sync-git-repo -r $tmuxpluginprefixhighlight $HOME/.tmux/plugins/tmux-prefix-highlight/
 
   tmux source-file ~/.tmux.conf
 }
@@ -777,6 +798,7 @@ function install() {
 
   configure_zsh
 
+  install_iTerm2
   # configure_bash
 
   configure_tmux
@@ -940,7 +962,7 @@ fi
 # exit the script if any statement returns a non-true return value
 set -e
 
-print 1 "\nLet's go!" && sync
+print 1 "Let's go!" && sync
 
 # Ask user provider root password.
 read -p "Please provide password: " -s user_password && echo -e "\n"

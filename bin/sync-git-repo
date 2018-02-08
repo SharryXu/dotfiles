@@ -6,6 +6,8 @@
 # Globals:
 #   print
 #   git
+#   is-git-repo
+#   current-git-branch
 # Arguments:
 #   Folder Path
 #   Remote Repository Name
@@ -41,8 +43,8 @@ directly_push=$false
 while getopts "r:b:s:t:hf" option; do
   case $option in
     r) remote_repo_path=${OPTARG}
-       if [[ "$remote_repo_path" != "git@"* ]]; then
-         print 3 "The remote repository path should be an HTTPS address."
+       if [[ "$remote_repo_path" != "git@"* && "$remote_repo_path" != "https"* ]]; then
+         print 3 "The remote repository path has invalid format."
          exit 1
        fi
        ;;
@@ -75,11 +77,13 @@ shift $((OPTIND-1))
 
 if [[ $# == 1 && ! -z $1 ]]; then
   local_repo_path=$(realpath "$1")
-  if [[ $(is-git-repo "$local_repo_path") == $true ]]; then
+  if is-git-repo "$local_repo_path"; then
     print 1 "Redirect to $local_repo_path" && cd "$local_repo_path"
     current_remote_repo_path=$(git ls-remote --get-url)
-    if [[ -z $remote_repo_path || $current_remote_repo_path == $remote_repo_path ]]; then
+    # Sometimes, the URL ends with '.git'.
+    if [[ -z $remote_repo_path || "$current_remote_repo_path" == "$remote_repo_path"* ]]; then
       print 0 "Repository has already existed."
+      current_branch=$(current-git-branch)
 
       if [[ -z "$(git status --porcelain)" ]]; then
         print 0 "Current repository is clean."
@@ -120,6 +124,10 @@ if [[ $# == 1 && ! -z $1 ]]; then
         print 0 "Get latest code from "
         git fetch "$source_name" "$branch"
         git merge "$target_name/$branch"
+      fi
+
+      if [[ $current_branch != "unamed" ]]; then
+        git checkout $current_branch
       fi
     else
       print 3 "The current address is $current_remote_repo_path which is not match with the one you provide $remote_repo_path."

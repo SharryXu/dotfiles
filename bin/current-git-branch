@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Acquire current git branch name.
+# Globals:
+#   git
+#   is-git-repo
+#   print
+# Arguments:
+#   folder path
+# Returns:
+#   IsAlive
+
+function usage() {
+  echo -e "\nusage: $(basename $0) folder_path"
+  exit 1
+}
+
+if [[ $# -eq 1 ]]; then
+  folder_path=$(realpath "$1")
+else
+  folder_path=$(realpath ".")
+fi
+
+if is-git-repo $folder_path; then
+  cd $folder_path
+  branch_name="$(git symbolic-ref HEAD 2>/dev/null)" ||
+    branch_name="unamed"
+
+  echo ${branch_name##refs/heads/}
+  cd - 1>/dev/null 2>&1
+fi
