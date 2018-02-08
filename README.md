@@ -35,3 +35,5 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 - [ ] Try to use which command to replace command-exist.
 - [ ] Try to merge function name push-git-repository and check-git-repository to one function.
 - [ ] Add vscode backup like code --list-extensions
+- [ ] Try to use homebrew cask to substitute download applications.
+- [ ] Unify shell script's return way, like '''echo 0''' or '''exit 0'''.
