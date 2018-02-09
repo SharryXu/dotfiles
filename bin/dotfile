@@ -87,6 +87,7 @@ function configure_homebrew_tap() {
 #######################################
 function install_homebrew_cask_package() {
   if [[ $# == 1 ]]; then
+    print 0 "Check mac GUI application name $1..."
     local need_install=$true
     for exist_cask in $(brew cask list); do
       if [[ $exist_cask == $1 ]]; then
@@ -729,6 +730,30 @@ function install_node_versions() {
   fi
 }
 
+###################################
+# Install mac GUI applications.
+# Globals:
+# Arguments:
+#   print
+# Returns:
+#   None
+###################################
+function install_mac_programs() {
+  install_homebrew_cask_package 'dash'
+  install_homebrew_cask_package 'sourcetree'
+  install_homebrew_cask_package 'p4merge'
+  install_homebrew_cask_package 'p4merge'
+  install_homebrew_cask_package 'karabiner'
+  install_homebrew_cask_package 'karabiner-elements'
+  install_homebrew_cask_package 'docker'
+  install_homebrew_cask_package 'kindle'
+  install_homebrew_cask_package 'mysqlworkbench'
+  install_homebrew_cask_package 'gitter'
+  install_homebrew_cask_package 'postman'
+  install_homebrew_cask_package 'neteasemusic'
+  install_homebrew_cask_package 'wireshark'
+}
+
 #######################################
 # Install tools and settings.
 # Globals:
@@ -800,6 +825,8 @@ function install() {
 
   install_iTerm2
   # configure_bash
+
+  install_mac_programs
 
   configure_tmux
 
@@ -987,4 +1014,3 @@ else
 fi
 
 exit $?
-

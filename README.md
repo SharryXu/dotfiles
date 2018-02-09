@@ -28,7 +28,7 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 # TODOs
 
 - [ ] Try to seperate all backup methods.
-- [ ] Check Application folder for some specific apps like iTerm2.
+- [x] Check Application folder for some specific apps like iTerm2.
 - [ ] Check the input parameters and related command like basename.
 - [ ] Try to concentrate same package tool installation.
 - [ ] Add prompt message to let user manually configure the sync folder in applications like Alfred.
