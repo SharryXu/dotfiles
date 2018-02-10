@@ -88,21 +88,23 @@ if [[ $# == 1 && ! -z $1 ]]; then
       if [[ -z "$(git status --porcelain)" ]]; then
         print 0 "Current repository is clean."
       else
-        if [[ $directly_push == $true || $(choose-yes-or-no "Do you want to commit those changes?") == $true ]]; then
+        if [[ $(choose-yes-or-no "Do you want to commit those changes?") == $true ]]; then
           print 0 "Please provide appropriate message:"
           read commitMessage
           if [[ -z $commitMessage ]]; then
             commitMessage="Save latest changes."
           fi
-          git add . \
-            && git commit -m "$commitMessage" \
-            && git push -u $target_name $branch \
-            && git push
-          if [[ $? == $true ]]; then
-            print 1 "Push changes success."
-          else
-            print 3 "Push changes failed."
-            exit 1
+
+          git add . && git commit -m "$commitMessage"
+
+          if [[ $directly_push == $true || $(choose-yes-or-no "Do you want to push thos changes?") == $true ]]; then
+            git push -u $target_name $branch && git push
+            if [[ $? == $true ]]; then
+              print 1 "Push changes success."
+            else
+              print 3 "Push changes failed."
+              exit 1
+            fi
           fi
         else
           print 0 "There are uncommited files."
