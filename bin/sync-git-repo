@@ -85,6 +85,8 @@ if [[ $# == 1 && ! -z $1 ]]; then
       print 0 "Repository has already existed."
       current_branch=$(current-git-branch)
 
+      # TODO: Make this a new command.
+      # ===================================================
       if [[ -z "$(git status --porcelain)" ]]; then
         print 0 "Current repository is clean."
       else
@@ -111,24 +113,25 @@ if [[ $# == 1 && ! -z $1 ]]; then
           exit 0
         fi
       fi
+      # ===================================================
 
-      if [[ "$source_name" == "$target_name" ]]; then
-        # No need to merge.
-        # TODO: git pull --all
-        for file in "$local_repo_path"/.git/refs/heads/*; do
-          current_head=${file##*/}
-          print 0 "Pulling latest code for $current_head branch..."
-          git checkout $current_head && git pull "$target_name" "$current_head"
-        done
-        # TODO: Try to return to previous branch.
-      else
+      # TODO: git pull --all
+      for file in "$local_repo_path"/.git/refs/heads/*; do
+        current_head=${file##*/}
+        print 0 "Pulling latest code for $current_head branch..."
+        git checkout $current_head && git pull "$target_name" "$current_head"
+      done
+
+      if [[ "$source_name" != "$target_name" ]]; then
         # git checkout "$source_name/$branch"
-        print 0 "Get latest code from "
+        print 0 "Fetch latest code from $source_name/$branch..."
         git fetch "$source_name" "$branch"
+        print 0 "Merge the code from $source_name/$branch to $target_name/$branch..."
         git merge "$target_name/$branch"
       fi
 
       if [[ $current_branch != "unamed" ]]; then
+        print 0 "Checkout to the original branch..."
         git checkout $current_branch
       fi
     else
