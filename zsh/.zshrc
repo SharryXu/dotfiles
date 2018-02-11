@@ -1,6 +1,6 @@
-system_name=$(uname -n)
+system_name=$(uname -s)
 
-if [[ $system_name == 'mac' ]]; then
+if [[ $system_name == 'Darwin' ]]; then
   if [[ -f $HOME/.bin/custom-variables ]]; then
     source $HOME/.bin/custom-variables
   fi
@@ -30,14 +30,14 @@ if [[ $system_name == 'mac' ]]; then
   alias emacs-term='emacs -nw'
   # Vim aliases
   alias vim='nvim'
-  # Tmux
-  alias tmux='tmux -2'
-elif [[ $system_name == 'ubuntu' ]]; then
-  export PATH=$HOME/.bin:/usr/local/bin:$PATH
+elif [[ $system_name == 'Linux' ]]; then
+  export ZSH_GIT_PROMPT=$HOME/.zsh-git-prompt
+  export PATH=$HOME/.bin:$ZSH_GIT_PROMPT/src/.bin:/usr/local/bin:$PATH
   alias mongod='mongod'
   alias emacs='emacs'
   alias vim='nvim'
-  alias tmux='tmux -2'
+
+  source $ZSH_GIT_PROMPT/zshrc.sh
 fi
 
 export ZSH=$HOME/.oh-my-zsh
