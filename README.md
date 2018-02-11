@@ -31,9 +31,10 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 - [x] Check Application folder for some specific apps like iTerm2.
 - [ ] Check the input parameters and related command like basename.
 - [ ] Try to concentrate same package tool installation.
-- [ ] Add prompt message to let user manually configure the sync folder in applications like Alfred.
+- [x] Add prompt message to let user manually configure the sync folder in applications like Alfred.
 - [ ] Try to use which command to replace command-exist.
 - [ ] Try to merge function name push-git-repository and check-git-repository to one function.
 - [ ] Add vscode backup like code --list-extensions
-- [ ] Try to use homebrew cask to substitute download applications.
+- [x] Try to use homebrew cask to substitute download applications.
 - [ ] Unify shell script's return way, like ```echo 0``` or ```exit 0```.
+- [ ] Sort and accomplish all todo comments.

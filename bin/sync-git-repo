@@ -99,7 +99,7 @@ if [[ $# == 1 && ! -z $1 ]]; then
 
           git add . && git commit -m "$commitMessage"
 
-          if [[ $directly_push == $true || $(choose-yes-or-no "Do you want to push thos changes?") == $true ]]; then
+          if [[ $directly_push == $true || $(choose-yes-or-no "Do you want to push those changes?") == $true ]]; then
             git push -u $target_name $branch && git push
             if [[ $? == $true ]]; then
               print 1 "Push changes success."
