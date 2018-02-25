@@ -78,12 +78,12 @@ shift $((OPTIND-1))
 if [[ $# == 1 && ! -z $1 ]]; then
   local_repo_path=$(realpath "$1")
   if is-git-repo "$local_repo_path"; then
+    current_branch=$(current-git-branch)
     print 1 "Redirect to $local_repo_path" && cd "$local_repo_path"
     current_remote_repo_path=$(git ls-remote --get-url)
     # Sometimes, the URL ends with '.git'.
     if [[ -z $remote_repo_path || "$current_remote_repo_path" == "$remote_repo_path"* ]]; then
       print 0 "Repository has already existed."
-      current_branch=$(current-git-branch)
 
       # TODO: Make this a new command.
       # ===================================================
