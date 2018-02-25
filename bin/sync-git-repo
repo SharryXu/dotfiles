@@ -127,7 +127,8 @@ if [[ $# == 1 && ! -z $1 ]]; then
         print 0 "Fetch latest code from $source_name/$branch..."
         git fetch "$source_name" "$branch"
         print 0 "Merge the code from $source_name/$branch to $target_name/$branch..."
-        git merge "$target_name/$branch"
+        git checkout $branch
+        git merge "$source_name/$branch"
       fi
 
       if [[ $current_branch != "unamed" ]]; then
