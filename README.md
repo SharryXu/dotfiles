@@ -25,7 +25,7 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 1. Clone this repository to your local folder.
 1. Run `./previous-folder/bin/dotfile -i .` to install all those userful settings and dotfiles.
 
-# TODOs
+## TODOs
 
 - [ ] Try to seperate all backup methods.
 - [x] Check Application folder for some specific apps like iTerm2.
