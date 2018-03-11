@@ -75,74 +75,84 @@ done
 
 shift $((OPTIND-1))
 
-if [[ $# == 1 && ! -z $1 ]]; then
-  local_repo_path=$(realpath "$1")
-  if is-git-repo "$local_repo_path"; then
-    current_branch=$(current-git-branch)
-    print 1 "Redirect to $local_repo_path" && cd "$local_repo_path"
-    current_remote_repo_path=$(git ls-remote --get-url)
-    # Sometimes, the URL ends with '.git'.
-    if [[ -z $remote_repo_path || "$current_remote_repo_path" == "$remote_repo_path"* ]]; then
-      print 0 "Repository has already existed."
+function update_all_branchs() {
+  for file in "$local_repo_path"/.git/refs/heads/*; do
+    local current_head="${file##*/}"
+    print 0 "Pulling latest code for $current_head branch..."
+    git checkout $current_head && git pull "$target_name" "$current_head"
+  done
+}
 
-      # TODO: Make this a new command.
-      # ===================================================
-      if [[ -z "$(git status --porcelain)" ]]; then
-        print 0 "Current repository is clean."
-      else
-        if [[ $(choose-yes-or-no "Do you want to commit those changes?") == $true ]]; then
-          print 0 "Please provide appropriate message:"
-          read commitMessage
-          if [[ -z $commitMessage ]]; then
-            commitMessage="Save latest changes."
-          fi
+function commit_exist_changes() {
+  if [[ -z "$(git status --porcelain)" ]]; then
+    print 0 "Current repository is clean."
+  else
+    if [[ $(choose-yes-or-no "Do you want to commit those changes?") == $true ]]; then
+      print 0 "Please provide appropriate message:"
+      read commitMessage
+      if [[ -z $commitMessage ]]; then
+        commitMessage="Save latest changes."
+      fi
 
-          git add . && git commit -m "$commitMessage"
+      git add . && git commit -m "$commitMessage"
 
-          if [[ $directly_push == $true || $(choose-yes-or-no "Do you want to push those changes?") == $true ]]; then
-            git push -u $target_name $branch && git push
-            if [[ $? == $true ]]; then
-              print 1 "Push changes success."
-            else
-              print 3 "Push changes failed."
-              exit 1
-            fi
-          fi
+      if [[ $directly_push == $true || $(choose-yes-or-no "Do you want to push those changes?") == $true ]]; then
+        git push -u $target_name $branch && git push
+        if [[ $? == $true ]]; then
+          print 1 "Push changes success."
         else
-          print 0 "There are uncommited files."
-          exit 0
+          print 3 "Push changes failed."
+          exit 1
         fi
       fi
-      # ===================================================
-
-      # TODO: git pull --all
-      for file in "$local_repo_path"/.git/refs/heads/*; do
-        current_head=${file##*/}
-        print 0 "Pulling latest code for $current_head branch..."
-        git checkout $current_head && git pull "$target_name" "$current_head"
-      done
-
-      if [[ "$source_name" != "$target_name" ]]; then
-        # git checkout "$source_name/$branch"
-        print 0 "Fetch latest code from $source_name/$branch..."
-        git fetch "$source_name" "$branch"
-        print 0 "Merge the code from $source_name/$branch to $target_name/$branch..."
-        git checkout $branch
-        git merge "$source_name/$branch"
-      fi
-
-      if [[ $current_branch != "unamed" ]]; then
-        print 0 "Checkout to the original branch..."
-        git checkout $current_branch
-      fi
     else
-      print 3 "The current address is $current_remote_repo_path which is not match with the one you provide $remote_repo_path."
-      exit 1
+      print 0 "There are uncommited files."
+      exit 0
     fi
-    print 1 "Redirect to original folder" && cd - 1>/dev/null 2>&1
-  elif [[ -d $local_repo_path && $(is-folder-empty "$local_repo_path") == $true ]]; then
-    print 3 "The folder is not a git repository and it's not empty."
-    exit 1
+  fi
+}
+
+function redirect_to_branch() {
+  local $branch="$1"
+  if [[ $branch != "unamed" ]]; then
+    print 0 "Checkout to $branch..."
+    git checkout $branch
+  fi
+}
+
+function merge_different_remote_for_same_branch() {
+  # Sometimes, the original repo has more or less branches than the fork one.
+  # So, in here, you need to specify one.
+  if [[ "$source_name" != "$target_name" ]]; then
+    print 0 "Fetch latest code from $source_name/$branch..."
+    git fetch "$source_name" "$branch"
+    print 0 "Merge the code from $source_name/$branch to $target_name/$branch..."
+    git checkout $branch
+    git merge "$source_name/$branch"
+  fi
+}
+
+function sync_exist_repo() {
+  print 1 "Redirect to $local_repo_path" && cd "$local_repo_path"
+
+  local current_branch=$(current-git-branch)
+
+  commit_exist_changes
+
+  update_all_branchs
+
+  merge_different_remote_for_same_branch
+
+  redirect_to_branch $current_branch
+
+  print 1 "Redirect to original folder" && cd - 1>/dev/null 2>&1
+}
+
+if [[ $# == 1 && ! -z $1 ]]; then
+  local_repo_path=$(realpath "$1")
+
+  if is-git-repo "$local_repo_path"; then
+    sync_exist_repo
   elif [[ ! -z $remote_repo_path ]]; then
     git clone "$remote_repo_path" "$local_repo_path"
   else

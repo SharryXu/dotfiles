@@ -1,6 +1,6 @@
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export NVM_DIR="$HOME/.nvm"
-export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="/usr/local/bin:$PATH:$HOME/.rvm/bin"
 
 if [[ -f $HOME/.bin/custom-variables ]]; then
   source $HOME/.bin/custom-variables

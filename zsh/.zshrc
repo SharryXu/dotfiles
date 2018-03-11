@@ -30,6 +30,8 @@ if [[ $system_name == 'Darwin' ]]; then
   alias emacs-term='emacs -nw'
   # Vim aliases
   alias vim='nvim'
+
+  ZSH_TMUX_ITERM2="true"
 elif [[ $system_name == 'Linux' ]]; then
   export ZSH_GIT_PROMPT=$HOME/.zsh-git-prompt
   export PATH=$HOME/.bin:$ZSH_GIT_PROMPT/src/.bin:/usr/local/bin:$PATH
@@ -52,7 +54,7 @@ HYPHEN_INSENSITIVE="true"
 DISABLE_AUTO_UPDATE="false"
 DISABLE_LS_COLORS="false"
 DISABLE_AUTO_TITLE="false"
-ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="false"
 # HIST_STAMPS="mm/dd/yyyy"
@@ -70,6 +72,8 @@ plugins=(
   git
   tmux
   zsh-syntax-highlighting
+  zsh-autosuggestions
+  zsh-completions
 )
 
 # Config tmux
@@ -77,6 +81,8 @@ ZSH_TMUX_AUTOSTART=false
 ZSH_TMUX_AUTOQUIT=false
 
 source $ZSH/oh-my-zsh.sh
+
+autoload -U compinit && compinit
 
 function load-nvm() {
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -89,6 +95,6 @@ function load-travis() {
 }
 
 # Custom parameters
-declare -r true=0
-declare -r false=1
+export true=0
+export false=1
 
