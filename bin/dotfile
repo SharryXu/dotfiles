@@ -497,6 +497,11 @@ function configure_zsh() {
 
   print 0 "Clean exist completion dump files..."
   rm -rf $HOME/.zcompdump*
+
+  print 0 "Check fzf tool..."
+  install_homebrew_package 'fzf'
+  copy-file $SourcePath/zsh/.fzf.zsh $HOME
+  copy-file $SourcePath/bash/.fzf.bash $HOME
 }
 
 ###################################
@@ -900,12 +905,12 @@ function install() {
 #   None
 #######################################
 function backup() {
-  print 0 "Backup zsh and theme file..."
+  print 0 "Backup zsh and bash file..."
   copy-file $HOME/.zshrc $SourcePath/zsh/
-
-  print 0 "Backup bash file..."
   copy-file $HOME/.bash_profile $SourcePath/bash/
   copy-file $HOME/.bashrc $SourcePath/bash/
+  copy-file $HOME/.fzf.zsh $SourcePath/zsh/
+  copy-file $HOME/.fzf.bash $SourcePath/bash/
 
   print 0 "Backup emacs..."
   copy-file $HOME/.spacemacs $SourcePath/emacs/

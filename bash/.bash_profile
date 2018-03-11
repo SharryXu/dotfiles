@@ -18,6 +18,10 @@ function load-travis() {
   [ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh
 }
 
+function load-fzf() {
+  [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+}
+
 # Custom parameters
-declare -r true=0
-declare -r false=1
+export true=0
+export false=1

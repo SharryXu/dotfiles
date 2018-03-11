@@ -16,8 +16,6 @@ if [[ $system_name == 'Darwin' ]]; then
     pyenv shell 3.5.4
   fi
 
-  source $ZSH_GIT_PROMPT/zshrc.sh
-
   # Config homebrew
   export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
   export HOMEBREW_NO_AUTO_UPDATE=true
@@ -31,7 +29,6 @@ if [[ $system_name == 'Darwin' ]]; then
   # Vim aliases
   alias vim='nvim'
 
-  ZSH_TMUX_ITERM2="true"
 elif [[ $system_name == 'Linux' ]]; then
   export ZSH_GIT_PROMPT=$HOME/.zsh-git-prompt
   export PATH=$HOME/.bin:$ZSH_GIT_PROMPT/src/.bin:/usr/local/bin:$PATH
@@ -39,8 +36,9 @@ elif [[ $system_name == 'Linux' ]]; then
   alias emacs='emacs'
   alias vim='nvim'
 
-  source $ZSH_GIT_PROMPT/zshrc.sh
 fi
+
+source $ZSH_GIT_PROMPT/zshrc.sh
 
 export ZSH=$HOME/.oh-my-zsh
 
@@ -71,8 +69,9 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 plugins=(
   git
   tmux
+  iterm2
   zsh-syntax-highlighting
-  zsh-autosuggestions
+  #  zsh-autosuggestions
   zsh-completions
 )
 
@@ -94,7 +93,10 @@ function load-travis() {
   [ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh
 }
 
+function load-fzf() {
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+}
+
 # Custom parameters
 export true=0
 export false=1
-
