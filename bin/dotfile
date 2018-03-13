@@ -23,7 +23,6 @@ declare -r zshsyntaxhighlighting='https://github.com/zsh-users/zsh-syntax-highli
 declare -r zshcompletions='https://github.com/zsh-users/zsh-completions'
 declare -r zshautosuggestions='https://github.com/zsh-users/zsh-autosuggestions'
 declare -r spacemacs='git@github.com:SharryXu/spacemacs'
-declare -r zshgitprompt='https://github.com/olivierverdier/zsh-git-prompt'
 declare -r powerlinefonts='https://github.com/powerline/fonts'
 declare -r nerdfonts='https://github.com/ryanoasis/nerd-fonts'
 declare -r nodemanager='https://github.com/creationix/nvm'
@@ -487,13 +486,6 @@ function configure_zsh() {
   sync-git-repo -r $zshsyntaxhighlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
   sync-git-repo -r $zshcompletions $HOME/.oh-my-zsh/custom/plugins/zsh-completions
   sync-git-repo -r $zshautosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-
-  print 0 "Configure Zsh git prompt..."
-  sync-git-repo -r $zshgitprompt $HOME/.zsh-git-prompt
-  if [[ $(command-exist stack) == $false ]]; then
-    configure_haskell
-  fi
-  cd $HOME/.zsh-git-prompt && stack setup && stack build && stack install && cd - 1>/dev/null
 
   print 0 "Clean exist completion dump files..."
   rm -rf $HOME/.zcompdump*

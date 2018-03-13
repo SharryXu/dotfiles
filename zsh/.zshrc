@@ -7,8 +7,7 @@ if [[ $system_name == 'Darwin' ]]; then
 
   export NVM_DIR="$HOME/.nvm"
   export EMACSPATH=/usr/local/Cellar/emacs-plus/25.3/bin
-  export ZSH_GIT_PROMPT=$HOME/.zsh-git-prompt
-  export PATH=$HOME/.bin:/usr/local/bin:$ZSH_GIT_PROMPT/src/.bin:$EMACSPATH:$PATH
+  export PATH=$HOME/.bin:/usr/local/bin:$EMACSPATH:$PATH
 
   # Configure pyenv
   if [[ $(command-exist pyenv) == 0 ]]; then
@@ -30,15 +29,12 @@ if [[ $system_name == 'Darwin' ]]; then
   alias vim='nvim'
 
 elif [[ $system_name == 'Linux' ]]; then
-  export ZSH_GIT_PROMPT=$HOME/.zsh-git-prompt
-  export PATH=$HOME/.bin:$ZSH_GIT_PROMPT/src/.bin:/usr/local/bin:$PATH
+  export PATH=$HOME/.bin:/usr/local/bin:$PATH
   alias mongod='mongod'
   alias emacs='emacs'
   alias vim='nvim'
 
 fi
-
-source $ZSH_GIT_PROMPT/zshrc.sh
 
 export ZSH=$HOME/.oh-my-zsh
 
@@ -58,7 +54,6 @@ DISABLE_UNTRACKED_FILES_DIRTY="false"
 # HIST_STAMPS="mm/dd/yyyy"
 HISTSIZE=1000
 SAVEHIST=1000
-GIT_PROMPT_EXECUTABLE="haskell"
 ZSH_THEME_GIT_PROMPT_CACHE="false"
 
 export UPDATE_ZSH_DAYS=1
@@ -68,6 +63,7 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 plugins=(
   git
+  git-prompt
   tmux
   iterm2
   zsh-syntax-highlighting
