@@ -23,9 +23,15 @@ fi
 
 if is-git-repo $folder_path; then
   cd $folder_path
-  branch_name="$(git symbolic-ref HEAD 2>/dev/null)" ||
-    branch_name="unamed"
-
-  echo ${branch_name##refs/heads/}
-  cd - 1>/dev/null 2>&1
+  branch_name="$(git symbolic-ref --short HEAD 2>/dev/null)"
+  if [[ $? != 0 ]]; then
+    print 3 "Not on any branch."
+    exit 1
+  else
+    print 1 $branch_name
+    cd - 1>/dev/null 2>&1
+  fi
+else
+  print 3 "$folder_path is not a valid git repository."
+  exit 1
 fi

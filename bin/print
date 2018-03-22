@@ -18,7 +18,7 @@ source $HOME/.bin/default-colors
 
 function usage() {
   echo -e "Usage: print <status code> <message>\n
-status code:
+Status Code:
 0: Normal
 1: Success
 2: Warning
