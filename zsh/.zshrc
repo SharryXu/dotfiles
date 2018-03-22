@@ -71,9 +71,14 @@ plugins=(
   zsh-completions
 )
 
-# Config tmux
-ZSH_TMUX_AUTOSTART=false
+# When not in emacs's terminal, automatically startup tmux.
+if [ -z "$INSIDE_EMACS" ]; then
+ZSH_TMUX_AUTOSTART=true
 ZSH_TMUX_AUTOQUIT=false
+else
+ZSH_TMUX_AUTOSTART=false
+fi
+
 
 source $ZSH/oh-my-zsh.sh
 

@@ -31,8 +31,6 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     javascript
-     markdown
      (auto-completion :variables
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-snippets-in-popup nil
@@ -41,7 +39,9 @@ values."
                       auto-completion-return-key-behavior 'complete
                       indent-tabs-mode nil)
      (c-c++ :variables
-            c-default-style "linux"
+            c-set-style "Stroustrup"
+            c-c++-enable-c++11 t
+            c-c++-enable-clang-format-on-save t
             c-c++-enable-clang-support t
             c-c++-default-mode-for-headers 'c-mode
             clang-format-style "file"
@@ -51,7 +51,7 @@ values."
      emacs-lisp
      (shell :variables
             shell-apply-ansi-color 't
-            shell-default-term-shell "/bin/zsh"
+            shell-default-term-shell "/usr/local/bin/zsh"
             shell-default-position 'bottom
             shell-default-height 30
             indent-tabs-mode nil
@@ -169,7 +169,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Consolas"
-                               :size 13
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -214,7 +214,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -223,7 +223,7 @@ values."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'cache
+   dotspacemacs-auto-save-file-location 'original
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
@@ -305,7 +305,7 @@ values."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis nil
+   dotspacemacs-smart-closing-parenthesis t
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -326,7 +326,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'all
+   dotspacemacs-whitespace-cleanup 'trailing
    )
   )
 
@@ -339,13 +339,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
   ;; Set elpa source
-;;  (setq configuration-layer-elpa-archives
-;;        '(("melpa-cn" . "http://mirrors.163.com/elpa/melpa/")
-;;          ("org-cn"   . "http://mirrors.163.com/elpa/org/")
-;;          ("gnu-cn"   . "http://mirrors.163.com/elpa/gnu/")))
-
-  ;; Set omnisharp
-  (setq omnisharp-server-executable-path "/usr/local/bin/omnisharp")
+  (setq configuration-layer-elpa-archives
+        '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+          ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+          ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
 
   ;; Set file configuration
   (setq exec-path-from-shell-check-startup-files nil)
@@ -359,12 +356,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
         neo-vc-integration 'face
         neo-show-hidden-files t)
 
-  ;; Set clang-format support
-  (add-hook 'c-mode-hook
-            (lambda ()
-              (when (executable-find "clang-format")
-                (local-set-key (kbd "}")
-                               'sharry/format-c-c++-code))))
+  (add-hook 'c-mode-hook (lambda ()
+                           (local-set-key (kbd ";")
+                         'sharry/format-c-c++-code-type-semi&comma)))
+  (add-hook 'c-mode-hook (lambda ()
+                           (local-set-key (kbd "}")
+                         'sharry/format-c-c++-code-type-brace)))
+  (add-hook 'c-mode-hook 'sharry/disable-c-toggle-auto-newline)
 
   ;; evil-normal-state-cursor
   ;; evil-insert-state-cursor
@@ -428,7 +426,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (realgud yapfify pyvenv pytest pyenv-mode py-isort pip-requirements osx-clipboard live-py-mode hy-mode evil-terminal-cursor-changer cython-mode company-quickhelp company-anaconda apib-mode anaconda-mode pythonic org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ac-geiser geiser wakatime-mode orgit magit-popup yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
+    (yasnippet-snippets symon string-inflection spaceline-all-the-icons realgud test-simple loc-changes load-relative pippel pipenv password-generator overseer nameless monokai-theme ivy-xref ivy-rtags ivy-purpose window-purpose imenu-list importmagic epc ctable concurrent deferred flycheck-rtags evil-lion evil-cleverparens paredit editorconfig company-rtags rtags centered-cursor-mode markdown-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements osx-clipboard live-py-mode hy-mode evil-terminal-cursor-changer cython-mode company-quickhelp company-anaconda apib-mode anaconda-mode pythonic org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ac-geiser geiser wakatime-mode orgit magit-popup yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -443,18 +441,38 @@ This function is called at the very end of Spacemacs initialization."
   (indent-region begin-position end-position)
   (untabify begin-position end-position))
 
-(defun sharry/format-c-c++-code ()
-  "format by clang-format when enter '}'"
-  (interactive)
-  (command-execute #'c-electric-brace)
-  (let ((end-position (point))
-        (begin-position (point-min)))
-    (progn
-      (sharry/format-code begin-position end-position)
-      (clang-format-region begin-position
-                           end-position))))
-
 (defun sharry/quick-format ()
   "format code quickly."
   (interactive)
   (sharry/format-code (point-min) (point-max)))
+
+(defun sharry/disable-c-toggle-auto-newline ()
+  "Toggle auto-newline."
+  (c-toggle-auto-newline -1))
+
+(defun sharry/format-c-c++-code-type-brace ()
+  "Format by clang-format when enter '}'."
+  (interactive)
+  (message "Formatting `%s'..." (buffer-name))
+  (command-execute #'c-electric-brace)
+  (let ((end-position (point-max))
+        (begin-position (point-min)))
+    (progn
+      (sharry/format-code begin-position end-position)
+      (when (executable-find "clang-format")
+      (clang-format-region begin-position
+                           end-position)))))
+
+(defun sharry/format-c-c++-code-type-semi&comma ()
+  "Format by clang-format when enter ';'."
+  (interactive)
+  (message "Formatting `%s'..." (buffer-name))
+  (command-execute #'c-electric-semi&comma)
+  (let ((end-position (line-end-position))
+        (begin-position (line-beginning-position)))
+    (progn
+      (clang-format-buffer)
+      (sharry/format-code begin-position end-position)
+      (when (executable-find "clang-format")
+      (clang-format-region begin-position
+                           end-position)))))
