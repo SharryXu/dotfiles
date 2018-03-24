@@ -356,14 +356,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
         neo-vc-integration 'face
         neo-show-hidden-files t)
 
-  (add-hook 'c-mode-hook (lambda ()
-                           (local-set-key (kbd ";")
-                         'sharry/format-c-c++-code-type-semi&comma)))
-  (add-hook 'c-mode-hook (lambda ()
-                           (local-set-key (kbd "}")
-                         'sharry/format-c-c++-code-type-brace)))
-  (add-hook 'c-mode-hook 'sharry/disable-c-toggle-auto-newline)
-
   ;; evil-normal-state-cursor
   ;; evil-insert-state-cursor
   ;; evil-visual-state-cursor
@@ -376,8 +368,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Setup geiser for scheme
   (setq geiser-chez-binary "/usr/local/Cellar/chezscheme/9.5/bin/chez")
   (setq geiser-active-implementations '(chez))
-
-  (add-hook 'after-init-hook #'global-flycheck-mode)
   )
 
 (defun dotspacemacs/user-config ()
@@ -390,7 +380,19 @@ you should place your code here."
   (global-hl-line-mode)
   (osx-clipboard-mode)
   (global-company-mode)
-  (global-flycheck-mode)
+  ;;(global-flycheck-mode)
+
+  (add-hook 'c-mode-hook (lambda ()
+                           (local-set-key (kbd ";")
+                                          'sharry/format-c-c++-code-type-semi&comma)))
+  (add-hook 'c-mode-hook (lambda ()
+                           (local-set-key (kbd "}")
+                                          'sharry/format-c-c++-code-type-brace)))
+  (add-hook 'c-mode-hook 'sharry/disable-c-toggle-auto-newline)
+  (add-hook 'c-mode-hook 'flycheck-mode)
+
+  (add-hook 'sh-mode-hook (lambda ()
+                            (flycheck-mode 1)))
 
   (unless (display-graphic-p)
     (require 'evil-terminal-cursor-changer)

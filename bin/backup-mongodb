@@ -1,0 +1,31 @@
+reated by: Sharry
+# Intent: To backup some specific databases on the mongodb server on this machine.
+# Create Time: 2017-9-13 00:02
+#=========================
+
+user=pi
+password=qazwsxedc
+database=leanote
+port=26666
+defaultFileName=$(date "+%G-%m-%d_%H-%M-%S")
+backupdir=/home/pi/DataCenter/sharryspi/data/mongodb
+
+executeBackup (){
+	echo "Running backup..."
+
+	sudo mongodump --username $user --password $password --db $database --port $port --out ${backupdir}/${1}
+	if [ -z "$?" ]; then
+		echo "backup failure! Please see below message."
+		echo -e "\n$?"
+	else
+		echo "backup success!"
+	fi
+}
+
+if [ $# -lt 1 ]; then
+	executeBackup $defaultFileName
+else
+	executeBackup $1
+fi
+
+exit 0

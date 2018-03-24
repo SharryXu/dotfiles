@@ -1,10 +1,10 @@
-#!/usr/bin/env bash -l
+#!/usr/bin/env bash
 
 # TODO: 1.Add parameter to deal Depth
 
 # Sync git repository.
 # Globals:
-#   print
+#   color-print
 #   git
 #   is-git-repo
 #   current-git-branch
@@ -17,8 +17,10 @@
 # Returns:
 #   None
 
+declare -r default_git_commit_message='Sync latest settings.'
+
 function usage() {
-  echo -e "\nusage: $(basename $0) [options] local_folder_path
+  echo -e "usage: $(basename "$0") [options] local_folder_path
 
 [options]:
 -r  remote repository path
@@ -38,37 +40,39 @@ source_name="origin"
 target_name="origin"
 local_repo_path=""
 remote_repo_path=""
-directly_push=$false
+directly_push=false
 
 while getopts "r:b:s:t:hf" option; do
   case $option in
     r) remote_repo_path=${OPTARG}
        if [[ "$remote_repo_path" != "git@"* && "$remote_repo_path" != "https"* ]]; then
-         print 3 "The remote repository path has invalid format."
+         color-print 3 "The remote repository path has invalid format."
          exit 1
        fi
        ;;
     b) if [[ -z "${OPTARG}" ]]; then
-         print 3 "The branch name cannot be empty or whitespaces."
+         color-print 3 "The branch name cannot be empty or whitespaces."
          exit 1
        fi
        branch=${OPTARG}
        ;;
     s) if [[ -z "${OPTARG}" ]]; then
-         print 3 "The source ref name cannot be empty or whitespaces."
+         color-print 3 "The source ref name cannot be empty or whitespaces."
          exit 1
        fi
        source_name=${OPTARG}
        ;;
     t) if [[ -z "${OPTARG}" ]]; then
-         print 3 "The target ref name cannot be empty or whitespaces."
+         color-print 3 "The target ref name cannot be empty or whitespaces."
          exit 1
        fi
        target_name=${OPTARG}
        ;;
-    f) directly_push=$true
+    f) directly_push=true
        ;;
     h) usage
+       ;;
+    *) usage
        ;;
   esac
 done
@@ -78,45 +82,37 @@ shift $((OPTIND-1))
 function update_all_branchs() {
   for file in "$local_repo_path"/.git/refs/heads/*; do
     local current_head="${file##*/}"
-    print 0 "Pulling latest code for $current_head branch..."
-    git checkout $current_head && git pull "$target_name" "$current_head"
+    color-print 0 "Pulling latest code for $current_head branch..."
+    git checkout "$current_head" && git pull "$target_name" "$current_head"
   done
 }
 
 function commit_exist_changes() {
   if [[ -z "$(git status --porcelain)" ]]; then
-    print 0 "Current repository is clean."
+    color-print 0 "Current repository is clean."
   else
-    if [[ $(choose-yes-or-no "Do you want to commit those changes?") == $true ]]; then
-      print 0 "Please provide appropriate message:"
-      read commitMessage
+    if [[ $(choose-yes-or-no "Do you want to commit those changes?") == true ]]; then
+      color-print 0 "Please provide appropriate message:"
+      read -r commitMessage
       if [[ -z $commitMessage ]]; then
-        commitMessage="Save latest changes."
+        commitMessage=$default_git_commit_message
       fi
 
       git add . && git commit -m "$commitMessage"
 
-      if [[ $directly_push == $true || $(choose-yes-or-no "Do you want to push those changes?") == $true ]]; then
-        git push -u $target_name $branch && git push
-        if [[ $? == $true ]]; then
-          print 1 "Push changes success."
+      if [[ $directly_push == true || $(choose-yes-or-no "Do you want to push those changes?") == true ]]; then
+        git push -u "$target_name" "$branch" && git push
+        if [[ $? == true ]]; then
+          color-print 1 "Push changes success."
         else
-          print 3 "Push changes failed."
+          color-print 3 "Push changes failed."
           exit 1
         fi
       fi
     else
-      print 0 "There are uncommited files."
+      color-print 0 "There are uncommited files."
       exit 0
     fi
-  fi
-}
-
-function redirect_to_branch() {
-  local $branch="$1"
-  if [[ $branch != "unamed" ]]; then
-    print 0 "Checkout to $branch..."
-    git checkout $branch
   fi
 }
 
@@ -124,18 +120,25 @@ function merge_different_remote_for_same_branch() {
   # Sometimes, the original repo has more or less branches than the fork one.
   # So, in here, you need to specify one.
   if [[ "$source_name" != "$target_name" ]]; then
-    print 0 "Fetch latest code from $source_name/$branch..."
+    color-print 0 "Fetch latest code from $source_name/$branch..."
     git fetch "$source_name" "$branch"
-    print 0 "Merge the code from $source_name/$branch to $target_name/$branch..."
-    git checkout $branch
+    color-print 0 "Merge the code from $source_name/$branch to $target_name/$branch..."
+    git checkout "$branch"
     git merge "$source_name/$branch"
   fi
 }
 
-function sync_exist_repo() {
-  print 1 "Redirect to $local_repo_path" && cd "$local_repo_path"
+function redirect_branch_to() {
+  color-print 0 "Redirect to $1"
 
-  local current_branch=$(current-git-branch)
+  git checkout "$1"
+}
+
+function sync_exist_repo() {
+  color-print 1 "Redirect to $local_repo_path" && cd "$local_repo_path" || exit 1
+
+  local current_branch
+  current_branch="$(current-git-branch)"
 
   commit_exist_changes
 
@@ -143,9 +146,9 @@ function sync_exist_repo() {
 
   merge_different_remote_for_same_branch
 
-  redirect_to_branch $current_branch
+  redirect_branch_to "$current_branch"
 
-  print 1 "Redirect to original folder" && cd - 1>/dev/null 2>&1
+  color-print 1 "Redirect to original folder" && cd - 1>/dev/null 2>&1 || exit 1
 }
 
 if [[ $# == 1 && ! -z $1 ]]; then
@@ -156,10 +159,10 @@ if [[ $# == 1 && ! -z $1 ]]; then
   elif [[ ! -z $remote_repo_path ]]; then
     git clone "$remote_repo_path" "$local_repo_path"
   else
-    print 3 "Please provide valid local or remote git repository."
+    color-print 3 "Please provide valid local or remote git repository."
     exit 1
   fi
 else
-  print 3 "Please provide local folder."
+  color-print 3 "Please provide local folder."
   usage
 fi

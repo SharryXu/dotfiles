@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check whether specific folder is empty or not.
 # Globals:
@@ -10,20 +10,20 @@
 #   Folder Status
 
 function usage() {
-  echo -e "usage: $(basename $0) folder_path"
+  echo -e "usage: $(basename "$0") folder_path"
+
   exit 1
 }
 
 if [ $# -eq 1 ]; then
-  folderPath=$(realpath $1)
-  result=$(find $folderPath -name '*' -maxdepth 1)
-  if [[ $result == $folderPath ]]; then
-    echo 0
-  else
-    echo 1
-  fi
+  folderPath=$(realpath "$1")
+  result=$(find "$folderPath" -name '*' -maxdepth 1)
 
-  exit 0
+  if [[ "$result" == "$folderPath" ]]; then
+    exit 0
+  else
+    exit 1
+  fi
 else
   usage
 fi

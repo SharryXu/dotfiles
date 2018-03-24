@@ -1,0 +1,29 @@
+reated by: Sharry
+# Intent: To backup all the database on the mysql server on this machine.
+# Create Time: 2017-9-8 17:12
+#=========================
+
+user=root
+password=
+defaultFileName=$(date "+%G-%m-%d_%H-%M-%S")
+backupdir=/home/pi/DataCenter/sharryspi/data/mysql
+
+executeBackup (){
+	echo "Running backup..."
+	
+	mysqldump -u$user --all-databases > $backupdir/$1.sql
+
+	if [ $? -eq 0 ]; then
+		echo "backup success!"
+	else
+		echo "backup failed!"
+	fi
+}
+
+if [ $# -lt 1 ]; then
+	executeBackup $defaultFileName
+else
+	executeBackup $1
+fi
+
+exit 0

@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Let user to answer yes-or-no question
 # results to stderr
 # Globals:
 #   xargs
-#   print
+#   color-print
 #   getopts
 # Arguments:
 #   Prompt message
@@ -14,39 +14,44 @@
 declare -r max_retry_count=3
 
 function usage() {
-  echo -e "usage: $(basename $0) [options] [prompt_message]\n
+  echo -e "usage: $(basename "$0") [options] [prompt_message]
+
 [options]:
 -h  Show help information."
+
   exit 1
 }
 
 while getopts "h" option; do
   case $option in
     h)usage;;
+    *)usage;;
   esac
 done
 
-if [[ $OPTIND > 1 ]]; then
+if [[ $OPTIND -gt 1 ]]; then
   shift $((OPTIND-1))
 fi
 
 retry_count=0
+
 while [[ $retry_count -lt $max_retry_count ]]; do
-  if [[ $retry_count == 0 && -n $(echo $1 | xargs) ]]; then
-    read -p "$1
+  if [[ $retry_count == 0 && -n $(echo "$1" | xargs) ]]; then
+    read -r -p "$1
 Please answer yes(y) or no(n):" yn
   else
-    read -p "Please answer yes(y) or no(n):" yn
+    read -r -p "Please answer yes(y) or no(n):" yn
   fi
 
   case $yn in
     [Yy]* ) echo 0 && exit 0;;
     [Nn]* ) echo 1 && exit 0;;
-    * ) print 2 "Please try again.";;
+    * ) color-print 2 "Please try again.";;
   esac
 
-  let retry_count=retry_count+1
+  ((retry_count=retry_count+1))
 done
 
-print 3 "You should input yes in Y/y or no in N/n."
+color-print 3 "You should input yes in Y/y or no in N/n."
+
 exit 1

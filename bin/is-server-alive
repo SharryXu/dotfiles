@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check whether specific server is alive or not.
 # Globals:
@@ -11,20 +11,20 @@
 #   IsAlive
 
 function usage() {
-  echo -e "usage: $(basename $0) ip_address|server_address\n"
+  echo -e "usage: $(basename "$0") ip_address|server_address"
+
   exit 1
 }
 
 if [ $# -eq 1 ]; then
-  tryCounts = 3
-  result=$(ping $1 -c $tryCounts | grep "^\w\{2\} bytes from .*ttl=[0-9]" -c)
-  if [ $result -eq $tryCounts ]; then
-    echo 0
-  else
-    echo 1
-  fi
+  tryCounts=3
+  result=$(ping "$1" -c $tryCounts | grep "^\\w\\{2\\} bytes from .*ttl=[0-9]" -c)
 
-  exit 0
+  if [[ "$result" == "$tryCounts" ]]; then
+    exit 0
+  else
+    exit 1
+  fi
 else
   usage
 fi

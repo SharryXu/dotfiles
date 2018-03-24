@@ -24,6 +24,7 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 
 1. Clone this repository to your local folder.
 1. Run `./previous-folder/bin/dotfile -i .` to install all those userful settings and dotfiles.
+:eyes: **Notice:** If you don't want to provide the path of dotfile folder, you can append `export DOTFILES_PATH=<path>` to `~/.profile`.
 
 ## TODOs
 
@@ -33,8 +34,8 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 - [ ] Try to concentrate same package tool installation.
 - [x] Add prompt message to let user manually configure the sync folder in applications like Alfred.
 - [ ] Try to use which command to replace command-exist.
-- [ ] Try to merge function name push-git-repository and check-git-repository to one function.
+- [x] Try to merge function name push-git-repository and check-git-repository to one function.
 - [ ] Add vscode backup like code --list-extensions
 - [x] Try to use homebrew cask to substitute download applications.
-- [ ] Unify shell script's return way, like ```echo 0``` or ```exit 0```.
+- [x] Unify shell script's return way, like ```echo 0``` or ```exit 0```.
 - [ ] Sort and accomplish all todo comments.

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Decide if the input string can be represented as a number.
 # Globals:
@@ -10,22 +10,23 @@
 declare -r digital_pattern="^-?[0-9]+([.][0-9]+)?$"
 
 function usage() {
-  echo -e "usage: $(basename $0) [options] [input_string]\n
+  echo -e "usage: $(basename "$0") [options] [input_string]
+
 [options]:
 -h  Show help information."
+
   exit 1
 }
 
 while getopts "h" option; do
   case $option in
     h)usage;;
+    *)usage;;
   esac
 done
 
 if [[ $# -ge 1 && $1 =~ $digital_pattern ]]; then
-  echo 0
+  exit 0
 else
-  echo 1
+  exit 1
 fi
-
-exit 0

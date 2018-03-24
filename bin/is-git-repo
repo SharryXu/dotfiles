@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check given folder is a git repository or not.
 # Globals:
@@ -11,23 +11,28 @@
 #   IsAlive
 
 function usage() {
-  echo -e "\nusage: $(basename $0) folder_path"
+  echo -e "usage: $(basename "$0") folder_path"
+
   exit 1
 }
 
 if [ $# -eq 1 ]; then
   folder=$(realpath "$1")
+
   if [[ ! -d $folder ]]; then
-    print 3 "The folder is invalid."
+    color-print 3 "The folder is invalid."
     usage
   fi
 
-  cd $folder
+  cd "$folder" || exit 1
+
   if git rev-parse --git-dir 2>/dev/null 1>&2; then
-    cd - 1>/dev/null 2>&1
+    cd - 1>/dev/null || exit 1
+
     exit 0
   else
-    cd - 1>/dev/null 2>&1
+    cd - 1>/dev/null || exit 1
+
     exit 1
   fi
 else

@@ -1,9 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Rewrite all git commits' author info.
 
 function usage() {
-  echo -e "usage: $(basename $0) author_name author_email"
+  echo -e "usage: $(basename "$0") author_name author_email"
+
   exit 1
 }
 
@@ -24,7 +25,6 @@ if [[ $# -eq 2 ]]; then
 else
   usage
 fi
-
 
 #git filter-branch --env-filter '
 #    oldname="(old name)"

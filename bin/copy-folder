@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # TODO: Use rsync to substitute.
 
 # Copy files from one folder to another folder.(If the original file is newer than the target file)
 # Globals:
 #   copy-file
-#   print
+#   color-print
 # Arguments:
 #   Source Folder Path
 #   Target Folder Path
@@ -13,42 +13,41 @@
 #   None
 
 function usage() {
-  echo -e "usage: $(basename $0) source_folder_path target_folder_path"
+  echo -e "usage: $(basename "$0") source_folder_path target_folder_path"
+
   exit 1
 }
 
 if [ $# -eq 2 ]; then
-  sourceFolderPath="$1"
-  targetFolderPath="$2"
+  sourceFolderPath=$(realpath "$1")
+  targetFolderPath=$(realpath "$2")
 
   if [[ ! -d "$sourceFolderPath" ]]; then
-    print 3 "The source folder: $sourceFolderPath is illegal."
+    color-print 3 "The source folder: $sourceFolderPath is illegal."
     exit 2
   fi
 
   if [[ ! -d "$targetFolderPath" ]]; then
-    print 3 "The target folder: $targetFolderPath is illegal."
+    color-print 3 "The target folder: $targetFolderPath is illegal."
     exit 2
   fi
 
   if [[ "$sourceFolderPath" == "$targetFolderPath" ]]; then
-    print 3 "Cannot copy files from $sourceFolderPath to $targetFolderPath.\nBecause there will be a inifinate cycle."
-    exit 3
+    # The source folder cannot be the same as the target folder.
+    # Because there will be a inifinate cycle.
+    exit 0
   fi
 
-  print 1 "Copy files from $sourceFolderPath to $targetFolderPath..."
+  color-print 1 "Copy files from $sourceFolderPath to $targetFolderPath..."
 
   # Add missing or update files.
-  for fileName in `ls -a $sourceFolderPath`; do
-    fullFilePath="$sourceFolderPath/$fileName"
-
-    if [[ "$fileName" != "." && "$fileName" != ".." ]]; then
-	    if [[ -d "$fullFilePath" ]]; then
-		    copy-folder "$fullFilePath" "$targetFolderPath"
-	    else
-        copy-file "$fullFilePath" "$targetFolderPath"
-	    fi
-    fi
+  for fileName in $sourceFolderPath/*
+  do
+	  if [[ -d "$fileName" ]]; then
+		  copy-folder "$fileName" "$targetFolderPath"
+	  else
+      copy-file "$fileName" "$targetFolderPath"
+	  fi
   done
 
   exit 0

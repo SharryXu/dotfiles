@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# Print common results to stdout and error
+# results to stderr
+# Globals:
+#   d_Green
+#   d_Red
+#   d_Yellow
+#   d_Blue
+#   d_NC
+# Arguments:
+#   Status Code (Normal=0, Success=1, Warning=2, Error=3)
+#   Output sentence
+# Returns:
+#   None
+
+declare -r custom_program_folder="$HOME/.bin"
+
+source "$custom_program_folder/default-colors"
+
+function usage() {
+  echo -e "Usage: print <status code> <message>
+
+Status Code:
+0: Normal
+1: Success
+2: Warning
+3: Error"
+
+  exit 1
+}
+
+if [ $# -eq 2 ]
+then
+  if [[ "$1" == 0 ]]
+  then
+    echo -e "${BLUE_COLOR}$2${NO_COLOR}"
+	elif [[ $1 == 1 ]]
+  then
+    echo -e "${GREEN_COLOR}$2${NO_COLOR}"
+  elif [[ $1 == 2 ]]
+  then
+    echo -e "${YELLOW_COLOR}$2${NO_COLOR}"
+  elif [[ $1 == 3 ]]
+  then
+    echo -e "${RED_COLOR}$2${NO_COLOR}"
+  else
+    echo -e "${RED_COLOR}Status code should only among 0, 1, 2 and 3.${NO_COLOR}"
+  fi
+
+  exit 0
+else
+  usage
+fi

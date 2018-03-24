@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+echo "Enter variable name:"
+read -r variable_name
+
+echo "Enter variable value:"
+read -r variable_value
+
+# echo "export $variable_name = $variable_value" >> ~/.bashrc
+echo "$variable_name = $variable_value" >> ~/.profile
