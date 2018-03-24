@@ -24,12 +24,12 @@ if [ $# -eq 2 ]; then
 
   if [[ ! -d "$sourceFolderPath" ]]; then
     color-print 3 "The source folder: $sourceFolderPath is illegal."
-    exit 2
+    exit 1
   fi
 
   if [[ ! -d "$targetFolderPath" ]]; then
     color-print 3 "The target folder: $targetFolderPath is illegal."
-    exit 2
+    exit 1
   fi
 
   if [[ "$sourceFolderPath" == "$targetFolderPath" ]]; then
@@ -41,8 +41,7 @@ if [ $# -eq 2 ]; then
   color-print 1 "Copy files from $sourceFolderPath to $targetFolderPath..."
 
   # Add missing or update files.
-  for fileName in $sourceFolderPath/*
-  do
+  for fileName in "$sourceFolderPath"/*; do
 	  if [[ -d "$fileName" ]]; then
 		  copy-folder "$fileName" "$targetFolderPath"
 	  else

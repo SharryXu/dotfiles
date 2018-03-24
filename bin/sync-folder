@@ -16,24 +16,20 @@ function usage() {
   echo -e "usage: $(basename "$0") [options] source_folder_path target_folder_path
 
 [options]:
--s  Sudo password
 -h  Show help information"
 
   exit 1
 }
 
-sudo_password=''
-
 while getopts "s:h" option; do
   case $option in
-    s)sudo_password=${OPTARG};;
     h|*)usage;;
   esac
 done
 
 shift $((OPTIND-1))
 
-if [[ $# == 2 && -n $sudo_password ]]; then
+if [[ $# == 2 ]]; then
   sourceFolderPath=$(realpath "$1")
   targetFolderPath=$(realpath "$2")
 
@@ -47,7 +43,7 @@ if [[ $# == 2 && -n $sudo_password ]]; then
     exit 2
   fi
 
-  echo "$sudo_password" | sudo -S rsync -avz --delete "$sourceFolderPath/" "$targetFolderPath"
+  rsync -avz --delete "$sourceFolderPath/" "$targetFolderPath"
 
   exit $?
 else

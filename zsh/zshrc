@@ -40,6 +40,7 @@ export ZSH=$HOME/.oh-my-zsh
 
 # Do not enable auto-correct.
 unsetopt correct_all
+
 # set -o vi
 
 ZSH_THEME="sharry"

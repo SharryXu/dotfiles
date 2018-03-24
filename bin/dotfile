@@ -9,11 +9,6 @@
 declare -r error_message_check_parameters="Please check parameters."
 declare -r default_shell=/usr/local/bin/zsh
 
-################################
-# Declare some global variables
-################################
-declare user_password=''
-
 ######################################
 # Declare all used git repositories.
 ######################################
@@ -123,7 +118,7 @@ function install_iTerm2() {
 
   install_homebrew_cask_package 'iterm2'
 
-  sync-git-repo -r $iterm2configuration "$HOME/.iterm2"
+  sync-git-repo -r $iterm2configuration "$HOME"/.iterm2
 
   color-print 1 "Please link those sync folder manually in the GUI."
 }
@@ -153,7 +148,7 @@ function install_npm_package() {
   if [[ $# == 1 ]]; then
     local need_install=true
 
-    for exist_package in $(color-print-npm-packages); do
+    for exist_package in $(print-npm-packages); do
       if [[ $exist_package == "$1" ]]; then
         need_install=false
         break
@@ -253,23 +248,23 @@ function install_ruby_package() {
 #   None
 #######################################
 function choose_appropriate_python_version() {
-  if [[ ($# -ge 1) && ($# -lt 3) && $(command-exist pyenv) && $(is-number "$1") ]]; then
-    local set=1
-    local majorVer=$1
-    local minorVer=$2
+  if command-exist pyenv; then
+    if is-number "$1"; then
+      local majorVer=$1
+      local minorVer=$2
 
-    for version in $(pyenv versions --bare); do
-      if [[ ($(is-number "$minorVer") && "$version" == "$majorVer.$2."*) || (! $(is-number "$minorVer") && "$version" == "$majorVer."*) ]]; then
-        set=0
-        pyenv shell "$version"
-      fi
-    done
-
-    if ! $set; then
+      for version in $(pyenv versions --bare); do
+        if [[ ($(is-number "$minorVer") && "$version" == "$majorVer.$2."*) || (! $(is-number "$minorVer") && "$version" == "$majorVer."*) ]]; then
+          pyenv shell "$version"
+          return
+        fi
+      done
+    else
       color-print 3 "Please provide appropriate python version."
+      exit 1
     fi
   else
-    color-print 3 "$error_message_check_parameters"
+    color-print 3 "Please make sure the pyenv has installed."
     exit 1
   fi
 }
@@ -360,11 +355,11 @@ function setup_macos_settings() {
 function install_custom_commands() {
   color-print 0 "Create custom programs..."
 
-  if [ ! -d "$HOME/.bin" ]; then
-    mkdir "$HOME/.bin"
+  if [ ! -d "$HOME"/.bin ]; then
+    mkdir "$HOME"/.bin
   fi
 
-  sync-folder -s "$user_password" "$SourcePath/bin" "$HOME/.bin"
+  sync-folder "$SourcePath"/bin "$HOME"/.bin
 
   # Make all files executable
   for i in $HOME/.bin/*; do
@@ -383,11 +378,11 @@ function install_custom_commands() {
 #######################################
 function install_global_config() {
   color-print 0 "Install global Config..."
-  sync-folder -s "$user_password" "$SourcePath/config/cppman" "$HOME/.config/cppman"
-  sync-folder -s "$user_password" "$SourcePath/config/fontconfig" "$HOME/.config/fontconfig"
-  sync-folder -s "$user_password" "$SourcePath/config/karabiner" "$HOME/.config/karabiner"
-  copy-file "$SourcePath/config/nvim/init.vim" "$HOME/.config/nvim"
-  sync-folder -s "$user_password" "$SourcePath/config/tmuxinator" "$HOME/.config/tmuxinator"
+  sync-folder "$SourcePath"/config/cppman "$HOME"/.config/cppman
+  sync-folder "$SourcePath"/config/fontconfig "$HOME"/.config/fontconfig
+  sync-folder "$SourcePath"/config/karabiner "$HOME"/.config/karabiner
+  copy-file "$SourcePath"/config/nvim/init.vim "$HOME"/.config/nvim
+  sync-folder "$SourcePath"/config/tmuxinator "$HOME"/.config/tmuxinator
 }
 
 #######################################
@@ -401,7 +396,7 @@ function install_global_config() {
 #######################################
 function backup_custom_commands() {
   color-print 0 "Backup custom programs..."
-  sync-folder -s "$user_password" "$HOME/.bin" "$SourcePath/bin"
+  sync-folder "$HOME/.bin" "$SourcePath/bin"
 
   # Make all files executable
   for i in $SourcePath/bin/*; do
@@ -420,11 +415,11 @@ function backup_custom_commands() {
 #######################################
 function backup_global_config() {
   color-print 0 "Backup global Config..."
-  sync-folder -s "$user_password" "$HOME/.config/cppman" "$SourcePath/config/cppman"
-  sync-folder -s "$user_password" "$HOME/.config/fontconfig" "$SourcePath/config/fontconfig"
-  sync-folder -s "$user_password" "$HOME/.config/karabiner" "$SourcePath/config/karabiner"
-  copy-file "$HOME/.config/nvim/init.vim" "$SourcePath/config/nvim"
-  sync-folder -s "$user_password" "$HOME/.config/tmuxinator" "$SourcePath/config/tmuxinator"
+  sync-folder "$HOME"/.config/cppman "$SourcePath"/config/cppman
+  sync-folder "$HOME"/.config/fontconfig "$SourcePath"/config/fontconfig
+  sync-folder "$HOME"/.config/karabiner "$SourcePath"/config/karabiner
+  copy-file "$HOME"/.config/nvim/init.vim "$SourcePath"/config/nvim
+  sync-folder "$HOME"/.config/tmuxinator "$SourcePath"/config/tmuxinator
 }
 
 ##################################
@@ -439,10 +434,10 @@ function backup_global_config() {
 function install_homebrew() {
   color-print 0 "Check brew..."
   if command-exist 'brew'; then
-    brew update
+    #brew update
     color-print 1 "brew has been successfully updated."
     color-print 0 "Update all brew packages..."
-    brew upgrade
+    #brew upgrade
     color-print 1 "All brew packages have been updated."
   else
     if command-exist 'ruby'; then
@@ -490,25 +485,25 @@ function configure_zsh() {
 
   color-print 0 "Check default shell to zsh..."
   if [[ $SHELL != "$default_shell" ]]; then
-    echo $user_password | sudo -S chsh -s $default_shell
+    sudo chsh -s $default_shell
   fi
 
   color-print 0 "Check oh-My-Zsh..."
-  sync-git-repo -r "$ohmyzsh" "$HOME/.oh-my-zsh/"
-  copy-file "$SourcePath/zsh/.zshrc" "$HOME"
+  sync-git-repo -r "$ohmyzsh" "$HOME"/.oh-my-zsh/
+  copy-file -V "$SourcePath"/zsh/zshrc "$HOME"
 
   color-print 0 "Check custom plugins for Oh-My-Zsh..."
-  sync-git-repo -r "$zshsyntaxhighlighting" "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
-  sync-git-repo -r "$zshcompletions" "$HOME/.oh-my-zsh/custom/plugins/zsh-completions"
-  sync-git-repo -r "$zshautosuggestions" "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+  sync-git-repo -r "$zshsyntaxhighlighting" "$HOME"/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+  sync-git-repo -r "$zshcompletions" "$HOME"/.oh-my-zsh/custom/plugins/zsh-completions
+  sync-git-repo -r "$zshautosuggestions" "$HOME"/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
   color-print 0 "Clean exist completion dump files..."
   rm -rf "$HOME"/.zcompdump*
 
   color-print 0 "Check fzf tool..."
   install_homebrew_package 'fzf'
-  copy-file "$SourcePath"/zsh/.fzf.zsh "$HOME"
-  copy-file "$SourcePath"/bash/.fzf.bash "$HOME"
+  copy-file -V "$SourcePath"/zsh/fzf.zsh "$HOME"
+  copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
 }
 
 ###################################
@@ -527,7 +522,7 @@ function configure_tmux() {
   color-print 0 "Check tmux tool..."
   install_homebrew_package 'tmux'
   install_ruby_package 'tmuxinator'
-  copy-file "$SourcePath"/other/.tmux.conf "$HOME"
+  copy-file -V "$SourcePath"/other/tmux.conf "$HOME"
 
   color-print 0 "Check related tmux plugins..."
   install_homebrew_package 'reattach-to-user-namespace'
@@ -556,7 +551,7 @@ function configure_emacs() {
   install_homebrew_package 'ag'
   install_homebrew_package 'emacs-plus'
   sync-git-repo -r $spacemacs -b develop -s author -t origin "$HOME"/.emacs.d
-  copy-file "$SourcePath"/emacs/.spacemacs "$HOME"
+  copy-file -V "$SourcePath"/emacs/spacemacs "$HOME"
 
   # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
   if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
@@ -585,11 +580,7 @@ function configure_vim() {
   install_homebrew_package 'vim'
   install_homebrew_package 'neovim'
 
-  # Configure SpaceVim
-  if [ ! -d "$HOME"/.Spacevim ]; then
-    curl -sLf https://spacevim.org/install.sh | bash
-  fi
-  copy-file "$SourcePath"/vim/* "$HOME"/.Spacevim.d/
+  copy-file -V "$SourcePath"/vim/vimrc "$HOME"
 }
 
 ###################################
@@ -625,8 +616,8 @@ function configure_git() {
   color-print 0 "Check git..."
   install_homebrew_package 'git'
   install_homebrew_package 'tig'
-  copy-file "$SourcePath"/git/.gitconfig "$HOME"/
-  copy-file "$SourcePath"/git/.gitignore_global "$HOME"/
+  copy-file -V "$SourcePath"/git/gitconfig "$HOME"/
+  copy-file -V "$SourcePath"/git/gitignore_global "$HOME"/
   install_python_package 'gitsome' '3'
 }
 
@@ -687,6 +678,8 @@ function configure_python() {
   install_homebrew_package 'pyenv'
   install_python_versions
 
+  # pip install --upgrade pip
+
   # ln -s $(brew --cellar python) ~/.pyenv/versions
 }
 
@@ -706,7 +699,7 @@ function configure_node() {
 
   install_node_versions
 
-  copy-file "$HOME"/.npmrc "$SourcePath"/other/
+  copy-file -V "$HOME"/npmrc "$SourcePath"/other/
 
   #color-print 0 "Update npm..."
   #npm install npm@latest -g
@@ -809,12 +802,12 @@ function install() {
 
   color-print 0 "Check mongo database..."
   install_homebrew_package 'mongodb'
-  copy-file "$SourcePath/mongodb/.mongorc.js" "$HOME"
+  copy-file -V "$SourcePath/mongodb/mongorc.js" "$HOME"
 
   color-print 0 "Check MySQL database..."
   install_homebrew_package 'mariadb'
   install_homebrew_package 'mycli'
-  copy-file "$SourcePath"/mysql/.my.cnf "$HOME"
+  copy-file -V "$SourcePath"/mysql/my.cnf "$HOME"
 
   color-print 0 "Check Microsoft SQL Server tool..."
   install_python_package 'mssql-cli' '3'
@@ -869,7 +862,7 @@ function install() {
 
   color-print 0 "Check ClangFormat tool..."
   install_homebrew_package 'clang-format'
-  copy-file "$SourcePath"/other/.clang-format "$HOME"
+  copy-file -V "$SourcePath"/other/clang-format "$HOME"
 
   color-print 0 "Check system monitor tool..."
   # install_homebrew_package 'htop'
@@ -894,7 +887,7 @@ function install() {
   install_ruby_package 'travis'
 
   color-print 0 "Check WakaTime tool..."
-  copy-file "$SourcePath"/other/.wakatime.cfg "$HOME"
+  copy-file -V "$SourcePath"/other/wakatime.cfg "$HOME"
 
   install_global_config
 
@@ -919,50 +912,50 @@ function install() {
 #######################################
 function backup() {
   color-print 0 "Backup zsh and bash file..."
-  copy-file "$HOME"/.zshrc "$SourcePath"/zsh/
-  copy-file "$HOME"/.bash_profile "$SourcePath"/bash/
-  copy-file "$HOME"/.bashrc "$SourcePath"/bash/
-  copy-file "$HOME"/.fzf.zsh "$SourcePath"/zsh/
-  copy-file "$HOME"/.fzf.bash "$SourcePath"/bash/
+  copy-file -v "$HOME"/.zshrc "$SourcePath"/zsh/
+  copy-file -v "$HOME"/.bash_profile "$SourcePath"/bash/
+  copy-file -v "$HOME"/.bashrc "$SourcePath"/bash/
+  copy-file -v "$HOME"/.fzf.bash "$SourcePath"/bash/
+  copy-file -v "$HOME"/.fzf.zsh "$SourcePath"/zsh/
 
   color-print 0 "Backup emacs..."
-  copy-file "$HOME"/.spacemacs "$SourcePath"/emacs/
+  copy-file -v "$HOME"/.spacemacs "$SourcePath"/emacs/
 
   color-print 0 "Backup mongo database..."
-  copy-file "$HOME"/.mongorc.js "$SourcePath"/mongodb/
+  copy-file -v "$HOME"/.mongorc.js "$SourcePath"/mongodb/
   # TODO: backup mongo.conf file.
 
   color-print 0 "Backup mysql database..."
-  copy-file "$HOME"/.my.cnf "$SourcePath"/mysql/
+  copy-file -v "$HOME"/.my.cnf "$SourcePath"/mysql/
 
   color-print 0 "Backup clang format information..."
-  copy-file "$HOME"/.clang-format "$SourcePath"/other/
+  copy-file -v "$HOME"/.clang-format "$SourcePath"/other/
 
   color-print 0 "Backup tmux tool's configuration..."
-  copy-file "$HOME"/.tmux.conf "$SourcePath"/other/
+  copy-file -v "$HOME"/.tmux.conf "$SourcePath"/other/
 
   color-print 0 "Backup Vim..."
-  copy-folder "$HOME"/.Spacevim.d "$SourcePath"/vim
+  copy-file -v "$HOME"/.vimrc "$SourcePath"/vim
 
   backup_global_config
 
   color-print 0 "Backup Git Configuration..."
-  copy-file "$HOME"/.gitconfig "$SourcePath"/git/
-  copy-file "$HOME"/.gitignore_global "$SourcePath"/git/
+  copy-file -v "$HOME"/.gitconfig "$SourcePath"/git/
+  copy-file -v "$HOME"/.gitignore_global "$SourcePath"/git/
 
   backup_custom_commands
 
   color-print 0 "Backup WakaTime Config..."
-  copy-file "$HOME/.wakatime.cfg" "$SourcePath"/other/
+  copy-file -v "$HOME/.wakatime.cfg" "$SourcePath"/other/
 
   color-print 0 "Backup npm config..."
-  copy-file "$HOME/.npmrc" "$SourcePath"/other/
+  copy-file -v "$HOME/.npmrc" "$SourcePath"/other/
 
   color-print 0 "Backup vs code settings..."
   copy-file "$HOME/Library/Application Support/Code/User/settings.json" "$SourcePath"/other/
 
   color-print 0 "Make new program effective immediately..."
-  /bin/zsh "$HOME"/.zshrc
+  /usr/local/bin/zsh "$HOME"/.zshrc
 
   # Redirect to the Source folder to show difference
   git --git-dir="$SourcePath"/.git --work-tree="$SourcePath" diff --word-diff
@@ -1019,10 +1012,7 @@ fi
 
 # main program
 # exit the script if any statement returns a non-true return value
-set -e
-
-# Ask user provider root password.
-read -r -p "Please provide password: " -s user_password && echo -e "\\n"
+# set -e
 
 if [[ $Install_Dotfiles == 1 ]]; then
   install

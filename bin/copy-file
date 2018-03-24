@@ -16,39 +16,100 @@
 #   None
 
 function usage() {
-  echo "Usage: $(basename "$0") source_file target_directory"
+  echo "Usage: $(basename "$0") [options] source_file target_directory
+
+[options]:
+-v make hidden files been visible.
+-V make files been invisible.
+-h show help message."
 
   exit 1
 }
 
+function need_create_or_replace() {
+  if $make_file_visible; then
+    if [[ -f "$targetFolderPath/${filename/.}" ]] && diff "$sourceFolderPath/$filename" "$targetFolderPath/${filename/.}" > /dev/null; then
+      return 1;
+    else
+      return 0;
+    fi
+  elif $make_file_invisible; then
+    if [[ -f "$targetFolderPath/.$filename" ]] && diff "$sourceFolderPath/$filename" "$targetFolderPath/.$filename" > /dev/null; then
+      return 1;
+    else
+      return 0;
+    fi
+  else
+    if [[ -f "$targetFolderPath/$filename" ]] && diff "$sourceFolderPath" "$targetFolderPath/$filename" > /dev/null; then
+      return 1;
+    else
+      return 0;
+    fi
+  fi
+}
+
+make_file_visible=false
+make_file_invisible=false
+
+while getopts "vVh" option; do
+  case $option in
+    # Will rewrite the previous visible setting.
+    v)make_file_visible=true
+      make_file_invisible=false;;
+    # Will rewrite the previous visible setting.
+    V)make_file_invisible=true
+      make_file_visible=false;;
+    h)usage;;
+    *)usage;;
+  esac
+done
+
+if [[ $OPTIND -gt 1 ]]; then
+  shift $((OPTIND-1))
+fi
+
 if [ $# -eq 2 ]; then
   sourceFilePath=$(realpath "$1")
+  sourceFolderPath=$(dirname "$1")
   targetFolderPath=$(realpath "$2")
   filename=$(basename "$sourceFilePath")
 
   if [[ ! -f "$sourceFilePath" ]]; then
     color-print 3 "The file: $sourceFilePath is not existed."
     exit 1
-  elif [[ -d "$sourceFilePath" ]]; then
-    color-print 3 "The source file path direct to a folder."
-    exit 3
   fi
 
   if [[ ! -d "$targetFolderPath" ]]; then
-    color-print 3 "The source folder: $targetFolderPath is illegal."
-    exit 2
+    color-print 3 "The target folder: $targetFolderPath is illegal."
+    exit 1
   fi
 
-  if [[ -f "$targetFolderPath/$filename" ]]; then
-    if diff "$sourceFilePath" "$targetFolderPath/$filename" > /dev/null; then
-      color-print 2 "File name $filename don't need to replace."
+  # Only hidden files can be visible.
+  if [[ ${filename:0:1} == "." ]] && $make_file_visible; then
+    make_file_visible=true
+    make_file_invisible=false
+  # Only un-hidden files can be invisible.
+  elif [[ ${filename:0:1} != "." ]] && $make_file_invisible; then
+    make_file_visible=false
+    make_file_invisible=true
+  else
+    make_file_visible=false
+    make_file_invisible=false
+  fi
+
+  if need_create_or_replace; then
+    if $make_file_visible; then
+      cp "$sourceFilePath" "$targetFolderPath/${filename/.}"
+      color-print 1 "File name ${filename/.} has been created or replaced."
+    elif $make_file_invisible; then
+      cp "$sourceFilePath" "$targetFolderPath/.$filename"
+      color-print 1 "File name .$filename has been created or replaced."
     else
       cp "$sourceFilePath" "$targetFolderPath"
-      color-print 1 "File name $filename is replaced."
+      color-print 1 "File name $filename has been created or replaced."
     fi
   else
-    cp "$sourceFilePath" "$targetFolderPath"
-    color-print 1 "File name $filename has been created."
+    color-print 2 "File name $filename don't need to replace."
   fi
 
   exit 0
