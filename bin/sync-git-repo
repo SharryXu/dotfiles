@@ -91,7 +91,7 @@ function commit_exist_changes() {
   if [[ -z "$(git status --porcelain)" ]]; then
     color-print 0 "Current repository is clean."
   else
-    if [[ $(choose-yes-or-no "Do you want to commit those changes?") == true ]]; then
+    if choose-yes-or-no "Do you want to commit those changes?"; then
       color-print 0 "Please provide appropriate message:"
       read -r commitMessage
       if [[ -z $commitMessage ]]; then
@@ -100,7 +100,7 @@ function commit_exist_changes() {
 
       git add . && git commit -m "$commitMessage"
 
-      if [[ $directly_push == true || $(choose-yes-or-no "Do you want to push those changes?") == true ]]; then
+      if $directly_push || choose-yes-or-no "Do you want to push those changes?"; then
         git push -u "$target_name" "$branch" && git push
         if [[ $? == true ]]; then
           color-print 1 "Push changes success."
