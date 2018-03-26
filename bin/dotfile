@@ -35,7 +35,7 @@ declare -r iterm2configuration='git@github.com:SharryXu/iTerm2'
 #   Color-Print
 # Arguments:
 # Returns:
-#   None
+#   Code indicate installed or already existed. (0=installed, 1=existed)
 #############################
 function configure_homebrew_tap() {
   ###########################
@@ -68,8 +68,10 @@ function configure_homebrew_tap() {
     if $need_install; then
       brew tap "$target_tap"
       color-print 1 "$target_tap has been successfully added."
+      return 0
     else
       color-print 2 "$target_tap has already existed."
+      return 1
     fi
   done
 }
@@ -82,7 +84,7 @@ function configure_homebrew_tap() {
 # Arguments:
 #   Cask Package name
 # Returns:
-#   None
+#   Code indicate installed or already existed. (0=installed, 1=existed)
 #######################################
 function install_homebrew_cask_package() {
   if [[ $# == 1 ]]; then
@@ -99,8 +101,10 @@ function install_homebrew_cask_package() {
     if $need_install; then
       brew cask install "$1"
       color-print 1 "$1 has been successfully installed."
+      return 0
     else
       color-print 2 "$1 has already existed."
+      return 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -136,7 +140,7 @@ function install_iTerm2() {
 #   Tool Name/Command Line Name
 #   Command Line Name (Optional)
 # Returns:
-#   None
+#   Code indicate installed or already existed. (0=installed, 1=existed)
 #######################################
 function install_npm_package() {
   if ! command-exist npm; then
@@ -161,8 +165,10 @@ function install_npm_package() {
       color-print 0 "Install latest version for $1..."
       npm install -g "$1@latest"
       color-print 1 "$1 has successfully been installed."
+      return 0
     else
       color-print 2 "$1 has already existed"
+      return 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -180,7 +186,7 @@ function install_npm_package() {
 #   Tool Name
 #   Command Line Name (Optional)
 # Returns:
-#   None
+#   Code indicate installed or already existed. (0=installed, 1=existed)
 #######################################
 function install_homebrew_package() {
   if [[ $# == 1 ]]; then
@@ -196,8 +202,10 @@ function install_homebrew_package() {
     if $need_install; then
       brew install "$1"
       color-print 1 "$1 has successfully been installed."
+      return 0
     else
       color-print 2 "$1 has already existed."
+      return 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -214,7 +222,7 @@ function install_homebrew_package() {
 # Arguments:
 #   Package name
 # Returns:
-#   None
+#   Code indicate installed or already existed. (0=installed, 1=existed)
 #######################################
 function install_ruby_package() {
   if [ $# -eq 1 ]; then
@@ -231,8 +239,10 @@ function install_ruby_package() {
       # TODO: Need root permission to write /Library/Ruby/Gems/2.0.0.
       gem install "$1"
       color-print 1 "Ruby package name $1 has been successfully installed."
+      return 0
     else
       color-print 2 "Ruby package name $1 has already existed."
+      return 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -241,7 +251,7 @@ function install_ruby_package() {
 }
 
 #######################################
-# Swtich shell's python version.
+# Switch shell's python version.
 # Globals:
 #   color-print
 # Arguments:
@@ -282,7 +292,7 @@ function choose_appropriate_python_version() {
 #   Major version (3=pip3, 2=pip2)
 #   Minor version (Optional)
 # Returns:
-#   None
+#   Code indicate installed or already existed. (0=installed, 1=existed)
 #######################################
 function install_python_package() {
   if command-exist 'pyenv'; then
@@ -310,8 +320,10 @@ function install_python_package() {
     if $need_install; then
       "pip$2" install --user "$1"
       color-print 1 "Python package name $1 has been successfully installed."
+      return 0
     else
       color-print 2 "Python package name $1 has already existed."
+      return 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -582,6 +594,14 @@ function configure_emacs() {
 
   install_npm_package 'wakatime'
   install_homebrew_package 'cppcheck'
+  if install_homebrew_package 'chicken'; then
+    chicken-install -s apropos chicken-doc
+    (
+      cd "$(csi -p '(chicken-home)')"
+      curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+    )
+  fi
+
   install_python_package 'importmagic' '3'
   install_python_package 'epc' '3'
 }
@@ -795,6 +815,7 @@ function install_mac_gui_programs() {
   install_homebrew_cask_package 'neteasemusic'
   install_homebrew_cask_package 'wireshark'
   install_homebrew_cask_package 'xmind'
+  install_homebrew_cask_package 'veeer'
   # Is not available
   #install_homebrew_cask_package 'microsoft-azure-storage-explorer'
 }

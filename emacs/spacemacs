@@ -49,6 +49,7 @@ values."
             c-basic-offset 4)
      ivy
      emacs-lisp
+     scheme
      (shell :variables
             shell-apply-ansi-color 't
             shell-default-term-shell "/usr/local/bin/zsh"
@@ -76,13 +77,17 @@ values."
      diredful
      dired-icon
      powerline
+     ;; For clipboard support on osx
      osx-clipboard
      evil-terminal-cursor-changer
      apib-mode
+     ;; For scheme
      geiser
      ac-geiser
+     ;; For python
      anaconda-mode
      flycheck
+     wakatime-mode
      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -365,9 +370,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq evil-insert-state-cursor '((bar . 8) "blue")
         evil-normal-state-cursor '(box "blue"))
 
-  ;; Setup geiser for scheme
-  (setq geiser-chez-binary "/usr/local/Cellar/chezscheme/9.5/bin/chez")
-  (setq geiser-active-implementations '(chez))
+  ;; Setup geiser for chez scheme
+  (setq scheme-program-name "chez")
+  (setq geiser-chez-binary "chez")
+  (setq geiser-active-implementations '(chez chicken))
+  (setq geiser-scheme-implementation '(chez))
   )
 
 (defun dotspacemacs/user-config ()
@@ -381,6 +388,7 @@ you should place your code here."
   (osx-clipboard-mode)
   (global-company-mode)
   ;;(global-flycheck-mode)
+  (global-wakatime-mode)
 
   (add-hook 'c-mode-hook (lambda ()
                            (local-set-key (kbd ";")
@@ -428,7 +436,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (realgud yapfify pyvenv pytest pyenv-mode py-isort pip-requirements osx-clipboard live-py-mode hy-mode evil-terminal-cursor-changer cython-mode company-quickhelp company-anaconda apib-mode anaconda-mode pythonic org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ac-geiser geiser wakatime-mode orgit magit-popup yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
+    (slime-company slime yapfify pyvenv pytest pyenv-mode py-isort pip-requirements osx-clipboard live-py-mode hy-mode evil-terminal-cursor-changer cython-mode company-quickhelp company-anaconda apib-mode anaconda-mode pythonic org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ac-geiser geiser wakatime-mode orgit magit-popup yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
