@@ -101,8 +101,7 @@ function commit_exist_changes() {
       git add . && git commit -m "$commitMessage"
 
       if $directly_push || choose-yes-or-no "Do you want to push those changes?"; then
-        git push -u "$target_name" "$branch" && git push
-        if [[ $? == true ]]; then
+        if git push -u "$target_name" "$branch" && git push; then
           color-print 1 "Push changes success."
         else
           color-print 3 "Push changes failed."

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #
 # This program is used to backup or restore dot files.
 #
@@ -183,6 +184,7 @@ function install_npm_package() {
 function install_homebrew_package() {
   if [[ $# == 1 ]]; then
     shopt -s nocasematch
+
     local need_install=true
     for package in $(brew list); do
       if [[ $package == "$1" ]]; then
@@ -468,6 +470,25 @@ function configure_haskell() {
 }
 
 ###################################
+# Configure bash
+# Globals:
+# Arguments:
+#   install_homebrew_package
+#   color-print
+#   copy-file
+# Returns:
+#   None
+###################################
+function configure_bash() {
+  color-print 0 "Check bash..."
+  install_homebrew_package 'bash'
+
+  copy-file -V "$SourcePath"/bash/bash_profile "$HOME"
+  copy-file -V "$SourcePath"/bash/bashrc "$HOME"
+  copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
+}
+
+###################################
 # Configure zsh and oh-my-zsh
 # Globals:
 # Arguments:
@@ -695,11 +716,12 @@ function configure_node() {
   color-print 0 "Check NodeJS and node package manager..."
 
   sync-git-repo -r $nodemanager "$HOME"/.nvm
+
   source "$HOME"/.nvm/nvm.sh
 
   install_node_versions
 
-  copy-file -V "$HOME"/npmrc "$SourcePath"/other/
+  copy-file -V "$SourcePath"/other/npmrc "$HOME"
 
   #color-print 0 "Update npm..."
   #npm install npm@latest -g
@@ -743,8 +765,7 @@ function install_node_versions() {
       fi
     done
   elif function-exist load-nvm; then
-    load-nvm
-    install_node_versions
+    load-nvm && install_node_versions
   else
     color-print 3 "Please install node version manager first."
     exit 1
@@ -762,7 +783,6 @@ function install_node_versions() {
 function install_mac_gui_programs() {
   install_homebrew_cask_package 'dash'
   install_homebrew_cask_package 'sourcetree'
-  install_homebrew_cask_package 'p4merge'
   install_homebrew_cask_package 'p4merge'
   install_homebrew_cask_package 'karabiner'
   install_homebrew_cask_package 'karabiner-elements'
@@ -788,6 +808,12 @@ function install_mac_gui_programs() {
 #######################################
 function install() {
   install_homebrew
+
+  configure_zsh
+
+  configure_bash
+
+  configure_node
 
   configure_homebrew_tap
 
@@ -845,10 +871,7 @@ function install() {
   color-print 0 "Check bash profile..."
   copy-folder "$SourcePath"/bash "$HOME"
 
-  configure_zsh
-
   install_iTerm2
-  # configure_bash
 
   install_mac_gui_programs
 
@@ -871,7 +894,6 @@ function install() {
   color-print 0 "Check chez-scheme..."
   install_homebrew_package 'chezscheme'
 
-  configure_node
   color-print 0 "Check hexo..."
   # TODO: Need to use 'npm list -g' to determine if packages are existed or not.
   install_npm_package 'hexo-cli'
@@ -1001,8 +1023,7 @@ else
   SourcePath=$1
 fi
 
-SourcePath=$(realpath "$SourcePath" 2>/dev/null)
-if [[ $? == 1 ]]; then
+if ! SourcePath=$(realpath "$SourcePath" 2>/dev/null); then
   color-print 2 "Please provide the source folder path."
   exit 1
 elif [ ! -d "$SourcePath" ] || is-folder-empty "$SourcePath"; then
