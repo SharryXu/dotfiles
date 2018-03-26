@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 #
 # This program is used to backup or restore dot files.
@@ -1030,10 +1031,6 @@ elif [ ! -d "$SourcePath" ] || is-folder-empty "$SourcePath"; then
   color-print 2 "Please check the source folder path."
   exit 1
 fi
-
-# main program
-# exit the script if any statement returns a non-true return value
-# set -e
 
 if [[ $Install_Dotfiles == 1 ]]; then
   install
