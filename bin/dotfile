@@ -434,10 +434,10 @@ function backup_global_config() {
 function install_homebrew() {
   color-print 0 "Check brew..."
   if command-exist 'brew'; then
-    #brew update
+    brew update
     color-print 1 "brew has been successfully updated."
     color-print 0 "Update all brew packages..."
-    #brew upgrade
+    brew upgrade
     color-print 1 "All brew packages have been updated."
   else
     if command-exist 'ruby'; then
