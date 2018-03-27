@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 
 #
 # This program is used to backup or restore dot files.
@@ -341,21 +340,37 @@ function install_python_package() {
 #   None
 #######################################
 function setup_macos_settings() {
-  color-print 0 "Show full file path on the tile in Finder..."
-  defaults write com.apple.finder _FXShowPosixPathInTitle -bool true && killall Finder
+  local default_screenshot_type
+  local default_screenshot_location
+  default_screenshot_type="jpg"
+  default_screenshot_location="$HOME"/Desktop/screenshots
+
+  if [[ $(defaults read com.apple.finder _FXShowPosixPathInTitle) == "0" ]]; then
+    color-print 0 "Show full file path on the tile in Finder..."
+    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true && killall Finder
+  fi
+
   # Adjust the delay time for Dock displaying
-  defaults write com.apple.Dock autohide-delay -float 0
+  if [[ $(defaults read com.apple.dock autohide-delay) != "0" ]]; then
+    defaults write com.apple.Dock autohide-delay -float 0 && killall Dock
+  fi
+
   # Adjust the LaunchPad layout
   # defaults write com.apple.dock springboard-columns -int 8
   # defaults write com.apple.dock springboard-rows -int 7
   # Adjust the transpalent value for LaunchPad
   # defaults write com.apple.dock springboard-blur-radius -int 100
   # defaults write com.apple.dock ResetLaunchPad -bool true
-  # Adjust the default location for screenshots
-  # defaults write com.apple.screencapture location ~/Desktop/screenshots; killall SystemUIServer
-  # Adjust the default screenshot type
-  # defaults write com.apple.screencapture type jpg && killall SystemUIServer
-  killall Dock
+  # Adjust the screenshots
+  if [[ $(defaults read com.apple.screencapture location) != "$default_screenshot_location" ]]; then
+    color-print 0 "Change default screenshot location to $default_screenshot_location..."
+    defaults write com.apple.screencapture location ~/Desktop/screenshots && killall SystemUIServer
+  fi
+
+  if [[ $(defaults read com.apple.screencapture type) != "$default_screenshot_type" ]]; then
+    color-print 0 "Change default screenshot type to $default_screenshot_type..."
+    defaults write com.apple.screencapture type jpg && killall SystemUIServer
+  fi
 }
 
 #######################################
@@ -839,6 +854,9 @@ function install() {
 
   configure_homebrew_tap
 
+  color-print 0 "Setup Mac OS..."
+  setup_macos_settings
+
   color-print 0 "Check Ruby..."
   install_homebrew_package 'ruby'
 
@@ -934,9 +952,6 @@ function install() {
   copy-file -V "$SourcePath"/other/wakatime.cfg "$HOME"
 
   install_global_config
-
-  color-print 0 "Setup Mac OS..."
-  setup_macos_settings
 
   color-print 0 "Enable Zsh settings..."
   /usr/local/bin/zsh "$HOME"/.zshrc
