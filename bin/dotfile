@@ -887,6 +887,9 @@ function install() {
   color-print 0 "Check download accelerate tool..."
   install_homebrew_package 'axel'
 
+  color-print 0 "Check gdb gui tool..."
+  install_python_package 'gdbgui'
+
   color-print 0 "Check cppman tool..."
   install_python_package 'cppman' '3'
 

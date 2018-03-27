@@ -1,10 +1,6 @@
 system_name=$(uname -s)
 
 if [[ $system_name == 'Darwin' ]]; then
-  if [[ -f $HOME/.bin/custom-variables ]]; then
-    source $HOME/.bin/custom-variables
-  fi
-
   export NVM_DIR="$HOME/.nvm"
   export EMACSPATH=/usr/local/Cellar/emacs-plus/25.3/bin
   export PATH=$HOME/.bin:/usr/local/bin:$EMACSPATH:$PATH
@@ -102,3 +98,4 @@ function load-fzf() {
 # Custom parameters
 export true=0
 export false=1
+export DOTFILES_PATH=/Users/sxu204/Desktop/Projects/dotfiles
