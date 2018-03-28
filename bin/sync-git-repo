@@ -134,20 +134,23 @@ function redirect_branch_to() {
 }
 
 function sync_exist_repo() {
-  color-print 1 "Redirect to $local_repo_path" && cd "$local_repo_path" || exit 1
+  color-print 1 "Redirect to $local_repo_path"
+  (
+    cd "$local_repo_path" || exit 1
 
-  local current_branch
-  current_branch="$(current-git-branch)"
+    local current_branch
+    current_branch="$(current-git-branch)"
 
-  commit_exist_changes
+    commit_exist_changes
 
-  update_all_branchs
+    update_all_branchs
 
-  merge_different_remote_for_same_branch
+    merge_different_remote_for_same_branch
 
-  redirect_branch_to "$current_branch"
+    redirect_branch_to "$current_branch"
 
-  color-print 1 "Redirect to original folder" && cd - 1>/dev/null 2>&1 || exit 1
+    color-print 1 "Redirect to original folder"
+  )
 }
 
 if [[ $# == 1 && ! -z $1 ]]; then

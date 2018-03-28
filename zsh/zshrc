@@ -26,10 +26,10 @@ if [[ $system_name == 'Darwin' ]]; then
 
 elif [[ $system_name == 'Linux' ]]; then
   export PATH=$HOME/.bin:/usr/local/bin:$PATH
+
   alias mongod='mongod'
   alias emacs='emacs'
   alias vim='nvim'
-
 fi
 
 export ZSH=$HOME/.oh-my-zsh
@@ -70,10 +70,10 @@ plugins=(
 
 # When not in emacs's terminal, automatically startup tmux.
 if [ -z "$INSIDE_EMACS" ]; then
-ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_AUTOQUIT=false
+  ZSH_TMUX_AUTOSTART=true
+  ZSH_TMUX_AUTOQUIT=false
 else
-ZSH_TMUX_AUTOSTART=false
+  ZSH_TMUX_AUTOSTART=false
 fi
 
 
