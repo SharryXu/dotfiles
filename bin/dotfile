@@ -888,7 +888,7 @@ function install() {
   install_homebrew_package 'axel'
 
   color-print 0 "Check gdb gui tool..."
-  install_python_package 'gdbgui'
+  install_python_package 'gdbgui' '3'
 
   color-print 0 "Check cppman tool..."
   install_python_package 'cppman' '3'
