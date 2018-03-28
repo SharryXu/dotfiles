@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Install custom commands.
+# Globals:
+#   rsync
+# Arguments:
+#   None
+# Returns:
+#   None
+function usage() {
+  echo -e "usage: $(basename "$0") source_folder_path"
+
+  exit 1
+}
+
+function install_custom_commands() {
+  if [ ! -d "$HOME"/.bin ]; then
+    mkdir "$HOME"/.bin
+  fi
+
+  rsync -avz --delete "$1"/bin/ "$HOME"/.bin
+
+  # Make all files executable
+  for i in "$HOME"/.bin/*; do
+    chmod +x "$i"
+  done
+}
+
+if [ $# -eq 1 ]; then
+  install_custom_commands "$1"
+
+  exit 0
+else
+  usage
+fi

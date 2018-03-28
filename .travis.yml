@@ -1,0 +1,16 @@
+os: osx
+language: c
+dist: trusty,
+git:
+  submodules: false
+branches:
+  only:
+  - master
+script:
+- ./bin/dotfile -i .
+notifications:
+  email:
+    recipients:
+    - sharry.r.xu@gmail.com
+    on_success: change
+    on_failure: always

@@ -13,11 +13,11 @@ declare -r default_shell=/usr/local/bin/zsh
 ######################################
 # Declare all used git repositories.
 ######################################
-declare -r ohmyzsh='git@github.com:SharryXu/oh-my-zsh'
+declare -r ohmyzsh='https://github.com/SharryXu/oh-my-zsh'
 declare -r zshsyntaxhighlighting='https://github.com/zsh-users/zsh-syntax-highlighting'
 declare -r zshcompletions='https://github.com/zsh-users/zsh-completions'
 declare -r zshautosuggestions='https://github.com/zsh-users/zsh-autosuggestions'
-declare -r spacemacs='git@github.com:SharryXu/spacemacs'
+declare -r spacemacs='https://github.com/SharryXu/spacemacs'
 declare -r powerlinefonts='https://github.com/powerline/fonts'
 declare -r nodemanager='https://github.com/creationix/nvm'
 declare -r tmuxpluginmanager='https://github.com/tmux-plugins/tpm'
@@ -25,7 +25,7 @@ declare -r tmuxpluginyank='https://github.com/tmux-plugins/tmux-yank'
 declare -r tmuxpluginsensible='https://github.com/tmux-plugins/tmux-sensible'
 declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
 declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefix-highlight'
-declare -r iterm2configuration='git@github.com:SharryXu/iTerm2'
+declare -r iterm2configuration='https://github.com/SharryXu/iTerm2'
 
 #############################
 # Install all homebrew tap
@@ -374,30 +374,6 @@ function setup_macos_settings() {
 }
 
 #######################################
-# Install custom commands.
-# Globals:
-#   copy-folder
-# Arguments:
-#   None
-# Returns:
-#   None
-#######################################
-function install_custom_commands() {
-  color-print 0 "Create custom programs..."
-
-  if [ ! -d "$HOME"/.bin ]; then
-    mkdir "$HOME"/.bin
-  fi
-
-  sync-folder "$SourcePath"/bin "$HOME"/.bin
-
-  # Make all files executable
-  for i in $HOME/.bin/*; do
-    chmod +x "$i"
-  done
-}
-
-#######################################
 # Install global configs.
 # Globals:
 #   sync-folder
@@ -413,25 +389,6 @@ function install_global_config() {
   sync-folder "$SourcePath"/config/karabiner "$HOME"/.config/karabiner
   copy-file "$SourcePath"/config/nvim/init.vim "$HOME"/.config/nvim
   sync-folder "$SourcePath"/config/tmuxinator "$HOME"/.config/tmuxinator
-}
-
-#######################################
-# Backup custom commands.
-# Globals:
-#   copy-folder
-# Arguments:
-#   None
-# Returns:
-#   None
-#######################################
-function backup_custom_commands() {
-  color-print 0 "Backup custom programs..."
-  sync-folder "$HOME/.bin" "$SourcePath/bin"
-
-  # Make all files executable
-  for i in $SourcePath/bin/*; do
-    chmod +x "$i"
-  done
 }
 
 #######################################
@@ -508,12 +465,14 @@ function configure_haskell() {
 #   None
 ###################################
 function configure_bash() {
-  color-print 0 "Check bash..."
-  install_homebrew_package 'bash'
-
   copy-file -V "$SourcePath"/bash/bash_profile "$HOME"
   copy-file -V "$SourcePath"/bash/bashrc "$HOME"
   copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
+
+  /bin/bash "$HOME"/.bashrc
+
+  color-print 0 "Check bash..."
+  install_homebrew_package 'bash'
 }
 
 ###################################
@@ -553,6 +512,8 @@ function configure_zsh() {
   install_homebrew_package 'fzf'
   copy-file -V "$SourcePath"/zsh/fzf.zsh "$HOME"
   copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
+
+  /usr/local/bin/zsh "$HOME"/.zshrc
 }
 
 ###################################
@@ -612,7 +573,7 @@ function configure_emacs() {
   if install_homebrew_package 'chicken'; then
     chicken-install -s apropos chicken-doc
     (
-      cd "$(csi -p '(chicken-home)')"
+      cd "$(csi -p '(chicken-home)')" || exit 1
       curl https://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
     )
   fi
@@ -650,8 +611,8 @@ function configure_vim() {
 #   None
 ###################################
 function install_fonts() {
-  color-print 0 "Check Nerd fonts..."
-  install_homebrew_cask_package 'font-hack-nerd-font'
+  #color-print 0 "Check Nerd fonts..."
+  #install_homebrew_cask_package 'font-hack-nerd-font'
 
   color-print 0 "Check Powerline fonts..."
   sync-git-repo -r $powerlinefonts "$HOME"/.fonts-powerline
@@ -844,27 +805,35 @@ function install_mac_gui_programs() {
 #   None
 #######################################
 function install() {
+  "$SourcePath"/bin/install-custom-commands "$SourcePath"
+
   install_homebrew
+
+  configure_bash
 
   configure_zsh
 
-  configure_bash
+  configure_tmux
 
   configure_node
 
   configure_homebrew_tap
-
-  color-print 0 "Setup Mac OS..."
-  setup_macos_settings
-
-  color-print 0 "Check Ruby..."
-  install_homebrew_package 'ruby'
 
   configure_python
 
   configure_git
 
   configure_haskell
+
+  configure_emacs
+
+  configure_vim
+
+  color-print 0 "Setup Mac OS..."
+  setup_macos_settings
+
+  color-print 0 "Check Ruby..."
+  install_homebrew_package 'ruby'
 
   color-print 0 "Check mongo database..."
   install_homebrew_package 'mongodb'
@@ -918,12 +887,6 @@ function install() {
 
   install_mac_gui_programs
 
-  configure_tmux
-
-  configure_emacs
-
-  configure_vim
-
   install_fonts
 
   color-print 0 "Check ClangFormat tool..."
@@ -956,11 +919,6 @@ function install() {
 
   install_global_config
 
-  color-print 0 "Enable Zsh settings..."
-  /usr/local/bin/zsh "$HOME"/.zshrc
-
-  install_custom_commands
-
   color-print 1 "Done."
 }
 
@@ -973,6 +931,8 @@ function install() {
 #   None
 #######################################
 function backup() {
+  "$SourcePath"/bin/backup-custom-commands "$SourcePath"
+
   color-print 0 "Backup zsh and bash file..."
   copy-file -v "$HOME"/.zshrc "$SourcePath"/zsh/
   copy-file -v "$HOME"/.bash_profile "$SourcePath"/bash/
@@ -1005,8 +965,6 @@ function backup() {
   copy-file -v "$HOME"/.gitconfig "$SourcePath"/git/
   copy-file -v "$HOME"/.gitignore_global "$SourcePath"/git/
 
-  backup_custom_commands
-
   color-print 0 "Backup WakaTime Config..."
   copy-file -v "$HOME/.wakatime.cfg" "$SourcePath"/other/
 
@@ -1016,15 +974,30 @@ function backup() {
   color-print 0 "Backup vs code settings..."
   copy-file "$HOME/Library/Application Support/Code/User/settings.json" "$SourcePath"/other/
 
-  color-print 0 "Make new program effective immediately..."
-  /usr/local/bin/zsh "$HOME"/.zshrc
-
   # Redirect to the Source folder to show difference
   git --git-dir="$SourcePath"/.git --work-tree="$SourcePath" diff --word-diff
 
   sync-git-repo "$SourcePath"
 
   color-print 1 "Done."
+}
+
+#######################################
+# Check source path is valid or not.
+# Globals:
+# Arguments:
+#   realpath
+#   color-print
+#   is-folder-empty
+# Returns:
+#   Status code represent valid or not.
+#######################################
+function check_source_path() {
+  if ! SourcePath=$(realpath "$SourcePath" 2>/dev/null) || [ ! -d "$SourcePath" ]; then
+    return 1
+  else
+    return 0
+  fi
 }
 
 function usage () {
@@ -1063,21 +1036,21 @@ else
   SourcePath=$1
 fi
 
-if ! SourcePath=$(realpath "$SourcePath" 2>/dev/null); then
-  color-print 2 "Please provide the source folder path."
-  exit 1
-elif [ ! -d "$SourcePath" ] || is-folder-empty "$SourcePath"; then
-  color-print 2 "Please check the source folder path."
-  exit 1
-fi
+PATH="$SourcePath"/bin:$PATH
 
 if [[ $Install_Dotfiles == 1 ]]; then
-  install
+  if check_source_path; then
+    install
+  fi
 elif [[ $Backup_Dotfiles == 1 ]]; then
-  backup
+  if check_source_path; then
+    backup
+  fi
 elif [[ $InstallAndBackup_Dotfiles == 1 ]]; then
-  backup
-  install
+  if check_source_path; then
+    backup
+    install
+  fi
 elif [[ $Print_Structure == 1 ]]; then
   tree -C "$SourcePath"
 else

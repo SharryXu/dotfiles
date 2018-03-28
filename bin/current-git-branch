@@ -21,8 +21,6 @@ function print_branch() {
   branch_name=$(git symbolic-ref --short HEAD 2>/dev/null)
 
   if [[ -z "$branch_name" ]]; then
-    color-print 3 "Not on any branch."
-
     return 1;
   else
     # Cannot colour this output!!!
@@ -32,6 +30,15 @@ function print_branch() {
   fi
 }
 
+while getopts "h" option; do
+  case $option in
+    h)usage;;
+    *)usage;;
+  esac
+done
+
+shift $((OPTIND-1))
+
 if [[ $# -eq 1 ]]; then
   folder_path=$(realpath "$1")
 else
@@ -39,17 +46,15 @@ else
 fi
 
 if is-git-repo "$folder_path"; then
+  (
   cd "$folder_path" || exit 1
 
   if print_branch; then
-    cd - 1>/dev/null || exit 1
     exit 0
   else
-    cd - 1>/dev/null || exit 1
     exit 1
   fi
+  )
 else
-  color-print 3 "$folder_path is not a valid git repository."
-
   exit 1
 fi

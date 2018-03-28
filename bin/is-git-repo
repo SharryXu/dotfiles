@@ -19,22 +19,19 @@ function usage() {
 if [ $# -eq 1 ]; then
   folder=$(realpath "$1")
 
-  if [[ ! -d $folder ]]; then
-    color-print 3 "The folder is invalid."
-    usage
+  if [ ! -d "$folder" ]; then
+    exit 1
   fi
 
+  (
   cd "$folder" || exit 1
 
   if git rev-parse --git-dir 2>/dev/null 1>&2; then
-    cd - 1>/dev/null || exit 1
-
     exit 0
   else
-    cd - 1>/dev/null || exit 1
-
     exit 1
   fi
+  )
 else
   usage
 fi
