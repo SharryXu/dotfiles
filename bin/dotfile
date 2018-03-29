@@ -910,7 +910,7 @@ function install() {
   color-print 0 "Check WakaTime tool..."
   copy-file -V "$SourcePath"/other/wakatime.cfg "$HOME"
 
-  if $INITIALIZE_DOTFILE; then
+  if ! $INITIALIZE_DOTFILE; then
     install_global_config
   fi
 
