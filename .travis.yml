@@ -6,8 +6,10 @@ git:
 branches:
   only:
   - master
+before_install:
+- chmod +x ./install.sh
 script:
-- ./bin/dotfile -i .
+- ./install.sh
 notifications:
   email:
     recipients:

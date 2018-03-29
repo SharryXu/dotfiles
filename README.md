@@ -40,3 +40,7 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 - [x] Try to use homebrew cask to substitute download applications.
 - [x] Unify shell script's return way, like ```echo 0``` or ```exit 0```.
 - [ ] Sort and accomplish all todo comments.
+
+## Build Status
+
+![Build Status](https://travis-ci.org/SharryXu/dotfiles.svg?branch=master)
