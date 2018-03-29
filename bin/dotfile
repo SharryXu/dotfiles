@@ -863,8 +863,8 @@ function install() {
   color-print 0 "Check icdiff tool..."
   install_homebrew_package 'icdiff'
 
-  color-print 0 "Check github language analysis tool..."
-  install_ruby_package 'github-linguist'
+  #color-print 0 "Check github language analysis tool..."
+  #install_ruby_package 'github-linguist'
 
   color-print 0 "Check python format tool..."
   install_python_package 'yapf' '3'
@@ -899,12 +899,7 @@ function install() {
   install_homebrew_package 'chezscheme'
 
   color-print 0 "Check hexo..."
-  # TODO: Need to use 'npm list -g' to determine if packages are existed or not.
   install_npm_package 'hexo-cli'
-
-  color-print 0 "Check API BluePrint..."
-  install_npm_package 'drakov'
-  install_npm_package 'aglio'
 
   color-print 0 "Check Javascript analyzer..."
   install_npm_package 'tern'
@@ -915,7 +910,9 @@ function install() {
   color-print 0 "Check WakaTime tool..."
   copy-file -V "$SourcePath"/other/wakatime.cfg "$HOME"
 
-  install_global_config
+  if $INITIALIZE_DOTFILE; then
+    install_global_config
+  fi
 
   color-print 1 "Done."
 }

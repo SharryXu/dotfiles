@@ -35,6 +35,8 @@ function main() {
   local_folder="$(realpath .)/dotfiles"
   git clone --depth 1 https://github.com/SharryXu/dotfiles "$local_folder"
 
+  INITIALIZE_DOTFILE=true
+
   # Install custom commands
   chmod +x "$local_folder"/bin/install-custom-commands && "$local_folder"/bin/install-custom-commands "$local_folder"
 

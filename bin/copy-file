@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: Remember to deal with lastest slash character.
-
 # File copy (If the original file is newer than the target file)
 # Globals:
 #   realpath

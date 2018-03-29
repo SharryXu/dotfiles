@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: Use rsync to substitute.
-
 # Copy files from one folder to another folder.(If the original file is newer than the target file)
 # Globals:
 #   copy-file

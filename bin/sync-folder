@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: Add a parameter to let customer choose a specific sync algorithm.
-
 # Sync folder
 # Globals:
 #   rsync
