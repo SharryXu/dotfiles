@@ -811,9 +811,12 @@ function install() {
 
   configure_bash
 
-  configure_zsh
+  color-print 0 "Check Ruby..."
+  install_homebrew_package 'ruby'
 
   configure_tmux
+
+  configure_zsh
 
   configure_node
 
@@ -831,9 +834,6 @@ function install() {
 
   color-print 0 "Setup Mac OS..."
   setup_macos_settings
-
-  color-print 0 "Check Ruby..."
-  install_homebrew_package 'ruby'
 
   color-print 0 "Check mongo database..."
   install_homebrew_package 'mongodb'

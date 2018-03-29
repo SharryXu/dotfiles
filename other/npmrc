@@ -1,4 +1,4 @@
 registry=https://registry.npm.taobao.org/
 user=0
 unsafe-perm=true
-prefix=/Users/sxu204/.nvm/versions/node/v9.4.0
+prefix="$HOME"/.nvm/versions/node/v9.4.0

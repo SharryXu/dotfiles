@@ -154,7 +154,12 @@ function sync_exist_repo() {
 }
 
 if [[ $# == 1 && ! -z $1 ]]; then
-  local_repo_path=$(realpath "$1")
+  # Absolute path
+  if [[ "$1" == /* ]]; then
+    local_repo_path="$1"
+  else
+    local_repo_path=$(realpath "$1")
+  fi
 
   if is-git-repo "$local_repo_path"; then
     sync_exist_repo

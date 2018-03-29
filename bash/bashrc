@@ -13,7 +13,7 @@ function load-nvm() {
 }
 
 function load-travis() {
-  [ -f /Users/sxu204/.travis/travis.sh ] && source /Users/sxu204/.travis/travis.sh
+  [ -f "$HOME"/.travis/travis.sh ] && source "$HOME"/.travis/travis.sh
 }
 
 function load-fzf() {
@@ -23,4 +23,4 @@ function load-fzf() {
 # Custom parameters
 export true=0
 export false=1
-export DOTFILES_PATH=/Users/sxu204/Desktop/Projects/dotfiles
+export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles
