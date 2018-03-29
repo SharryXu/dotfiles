@@ -24,6 +24,7 @@ sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install
 
 1. Clone this repository to your local folder.
 1. Run `./previous-folder/bin/dotfile -i .` to install all those userful settings and dotfiles.
+1. Restart the terminal and enjoy!
 
 :eyes: **Notice:** If you don't want to provide the path of dotfile folder, you can append `export DOTFILES_PATH=<path>` to `~/.bashrc` and `~/.zshrc` or edit the value if the property already exist.
 

@@ -512,8 +512,6 @@ function configure_zsh() {
   install_homebrew_package 'fzf'
   copy-file -V "$SourcePath"/zsh/fzf.zsh "$HOME"
   copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
-
-  /usr/local/bin/zsh "$HOME"/.zshrc
 }
 
 ###################################
