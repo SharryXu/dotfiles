@@ -80,7 +80,7 @@ done
 shift $((OPTIND-1))
 
 function update_all_branchs() {
-  for file in "$local_repo_path"/.git/refs/heads/*; do
+  for file in .git/refs/heads/*; do
     local current_head="${file##*/}"
     color-print 0 "Pulling latest code for $current_head branch..."
     git checkout "$current_head" && git pull "$target_name" "$current_head"
