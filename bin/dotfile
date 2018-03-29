@@ -13,11 +13,19 @@ declare -r default_shell=/usr/local/bin/zsh
 ######################################
 # Declare all used git repositories.
 ######################################
-declare -r ohmyzsh='https://github.com/SharryXu/oh-my-zsh'
+if [[ $(whoami) == "sxu204" ]]; then
+  declare -r ohmyzsh='git@github.com:SharryXu/oh-my-zsh'
+  declare -r spacemacs='git@github.com:SharryXu/spacemacs'
+  declare -r iterm2configuration='git@github.com:SharryXu/iTerm2'
+else
+  declare -r ohmyzsh='https://github.com/SharryXu/oh-my-zsh'
+  declare -r spacemacs='https://github.com/SharryXu/spacemacs'
+  declare -r iterm2configuration='https://github.com/SharryXu/iTerm2'
+fi
+
 declare -r zshsyntaxhighlighting='https://github.com/zsh-users/zsh-syntax-highlighting'
 declare -r zshcompletions='https://github.com/zsh-users/zsh-completions'
 declare -r zshautosuggestions='https://github.com/zsh-users/zsh-autosuggestions'
-declare -r spacemacs='https://github.com/SharryXu/spacemacs'
 declare -r powerlinefonts='https://github.com/powerline/fonts'
 declare -r nodemanager='https://github.com/creationix/nvm'
 declare -r tmuxpluginmanager='https://github.com/tmux-plugins/tpm'
@@ -25,7 +33,6 @@ declare -r tmuxpluginyank='https://github.com/tmux-plugins/tmux-yank'
 declare -r tmuxpluginsensible='https://github.com/tmux-plugins/tmux-sensible'
 declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
 declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefix-highlight'
-declare -r iterm2configuration='https://github.com/SharryXu/iTerm2'
 
 #############################
 # Install all homebrew tap
