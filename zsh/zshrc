@@ -1,15 +1,33 @@
 system_name=$(uname -s)
 
+function load-python() {
+  if command-exist pyenv; then
+    eval "$(pyenv init -)"
+    pyenv shell 3.5.4
+  fi
+}
+
+function load-nvm() {
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+  nvm use default 1>/dev/null 2>&1
+}
+
+function load-travis() {
+  [ -f "$HOME"/.travis/travis.sh ] && source "$HOME"/.travis/travis.sh
+}
+
+function load-fzf() {
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+}
+
 if [[ $system_name == 'Darwin' ]]; then
   export NVM_DIR="$HOME/.nvm"
   export EMACSPATH=/usr/local/Cellar/emacs-plus/25.3/bin
   export PATH=$HOME/.bin:/usr/local/bin:$EMACSPATH:$PATH
 
   # Configure pyenv
-  if [[ $(command-exist pyenv) == 0 ]]; then
-    eval "$(pyenv init -)"
-    pyenv shell 3.5.4
-  fi
+	load-python
 
   # Config homebrew
   export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
@@ -79,20 +97,6 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 autoload -U compinit && compinit
-
-function load-nvm() {
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-  nvm use default 1>/dev/null 2>&1
-}
-
-function load-travis() {
-  [ -f "$HOME"/.travis/travis.sh ] && source "$HOME"/.travis/travis.sh
-}
-
-function load-fzf() {
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-}
 
 # Custom parameters
 export true=0

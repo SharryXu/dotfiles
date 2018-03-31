@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export NVM_DIR="$HOME/.nvm"
-export PATH="/usr/local/bin:$PATH:$HOME/.rvm/bin"
-
-eval "$(pyenv init -)"
+function load-python() {
+  if command-exist pyenv; then
+    eval "$(pyenv init -)"
+    pyenv shell 3.5.4
+  fi
+}
 
 function load-nvm() {
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -19,6 +20,12 @@ function load-travis() {
 function load-fzf() {
   [ -f ~/.fzf.bash ] && source "$HOME"/.fzf.bash
 }
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export NVM_DIR="$HOME/.nvm"
+export PATH="/usr/local/bin:$PATH:$HOME/.rvm/bin"
+
+load-python
 
 # Custom parameters
 export true=0
