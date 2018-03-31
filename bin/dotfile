@@ -797,6 +797,7 @@ function install_mac_gui_programs() {
   install_homebrew_cask_package 'wireshark'
   install_homebrew_cask_package 'xmind'
   install_homebrew_cask_package 'veeer'
+  install_homebrew_cask_package 'cheatsheet'
   # Is not available
   #install_homebrew_cask_package 'microsoft-azure-storage-explorer'
 }
