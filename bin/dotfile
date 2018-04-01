@@ -47,6 +47,7 @@ function install_homebrew_tap() {
   if [[ $# == 1 ]]; then
     local exist_homebrew_tap_list
     local target_tap
+    local need_install=true
     exist_homebrew_tap_list=$(brew tap)
     target_tap="$1"
 
