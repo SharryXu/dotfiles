@@ -84,6 +84,7 @@ plugins=(
   zsh-syntax-highlighting
   #  zsh-autosuggestions
   zsh-completions
+  autojump
 )
 
 # When not in emacs's terminal, automatically startup tmux.

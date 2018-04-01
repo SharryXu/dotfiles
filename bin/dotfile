@@ -602,8 +602,6 @@ function configure_vim() {
   color-print 0 "Check Vim..."
   install_homebrew_package 'vim'
   install_homebrew_package 'neovim'
-
-  copy-file -V "$SourcePath"/vim/vimrc "$HOME"
 }
 
 ###################################
@@ -958,9 +956,6 @@ function backup() {
 
   color-print 0 "Backup tmux tool's configuration..."
   copy-file -v "$HOME"/.tmux.conf "$SourcePath"/other/
-
-  color-print 0 "Backup Vim..."
-  copy-file -v "$HOME"/.vimrc "$SourcePath"/vim
 
   backup_global_config
 
