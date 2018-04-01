@@ -34,15 +34,15 @@ declare -r tmuxpluginsensible='https://github.com/tmux-plugins/tmux-sensible'
 declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
 declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefix-highlight'
 
-#############################
+#########################################################################
 # Install all homebrew tap
 # Globals:
 #   Homebrew
 #   Color-Print
 # Arguments:
 # Returns:
-#   Code indicate installed or already existed. (0=installed, 1=existed)
-#############################
+#   None
+#########################################################################
 function configure_homebrew_tap() {
   ###########################
   # homebrew tap list
@@ -74,15 +74,13 @@ function configure_homebrew_tap() {
     if $need_install; then
       brew tap "$target_tap"
       color-print 1 "$target_tap has been successfully added."
-      return 0
     else
       color-print 2 "$target_tap has already existed."
-      return 1
     fi
   done
 }
 
-#######################################
+###################################################################################
 # Using homebrew tool to install gui packages.
 # Globals:
 #   homebrew
@@ -90,8 +88,8 @@ function configure_homebrew_tap() {
 # Arguments:
 #   Cask Package name
 # Returns:
-#   Code indicate installed or already existed. (0=installed, 1=existed)
-#######################################
+#   None
+###################################################################################
 function install_homebrew_cask_package() {
   if [[ $# == 1 ]]; then
     color-print 0 "Check mac GUI application name $1..."
@@ -107,10 +105,8 @@ function install_homebrew_cask_package() {
     if $need_install; then
       brew cask install "$1"
       color-print 1 "$1 has been successfully installed."
-      return 0
     else
       color-print 2 "$1 has already existed."
-      return 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -136,7 +132,7 @@ function install_iTerm2() {
 }
 
 
-######################################
+##################################################################################
 # Using npm tool to install packages.
 # Globals:
 #   command-exist
@@ -146,35 +142,35 @@ function install_iTerm2() {
 #   Tool Name/Command Line Name
 #   Command Line Name (Optional)
 # Returns:
-#   Code indicate installed or already existed. (0=installed, 1=existed)
-#######################################
+#   None
+###################################################################################
 function install_npm_package() {
   if ! command-exist npm; then
     load-nvm
   fi
 
-  #TODO: Converge all npm packages in one place.
   # Warning: Most npm packages need python2.
-  choose_appropriate_python_version '2'
+  if choose_appropriate_python_version '2'; then
+    if [[ $# == 1 ]]; then
+      local need_install=true
 
-  if [[ $# == 1 ]]; then
-    local need_install=true
+      for exist_package in $(print-npm-packages); do
+        if [[ $exist_package == "$1" ]]; then
+          need_install=false
+          break
+        fi
+      done
 
-    for exist_package in $(print-npm-packages); do
-      if [[ $exist_package == "$1" ]]; then
-        need_install=false
-        break
+      if $need_install; then
+        color-print 0 "Install latest version for $1..."
+        npm install -g "$1@latest"
+        color-print 1 "$1 has successfully been installed."
+      else
+        color-print 2 "$1 has already existed"
       fi
-    done
-
-    if $need_install; then
-      color-print 0 "Install latest version for $1..."
-      npm install -g "$1@latest"
-      color-print 1 "$1 has successfully been installed."
-      return 0
     else
-      color-print 2 "$1 has already existed"
-      return 1
+      color-print 3 "Python$2 has not installed."
+      exit 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -182,7 +178,42 @@ function install_npm_package() {
   fi
 }
 
-#######################################
+##################################################
+# Specific homebrew existed or not.
+# Globals:
+#   brew
+#   color-print
+# Arguments:
+#   Tool Name
+#   Command Line Name (Optional)
+# Returns:
+#   Code indicate exist or not. (0=exist, 1=no)
+##################################################
+function is_homebrew_package_exist() {
+  if [[ $# == 1 ]]; then
+    shopt -s nocasematch
+
+    local existed=false
+    for package in $(brew list); do
+      if [[ $package == "$1" ]]; then
+        existed=true
+        break
+      fi
+    done
+
+    if $existed; then
+      return 0;
+    else
+      return 1;
+    fi
+  else
+    color-print 3 "$error_message_check_parameters"
+    exit 1
+  fi
+}
+
+
+###################################################################################
 # Using homebrew to install tool.
 # Globals:
 #   brew
@@ -192,26 +223,15 @@ function install_npm_package() {
 #   Tool Name
 #   Command Line Name (Optional)
 # Returns:
-#   Code indicate installed or already existed. (0=installed, 1=existed)
-#######################################
+#   None
+###################################################################################
 function install_homebrew_package() {
   if [[ $# == 1 ]]; then
-    shopt -s nocasematch
-
-    local need_install=true
-    for package in $(brew list); do
-      if [[ $package == "$1" ]]; then
-        need_install=false
-      fi
-    done
-
-    if $need_install; then
+    if is_homebrew_package_exist "$1"; then
+      color-print 2 "$1 has already existed."
+    else
       brew install "$1"
       color-print 1 "$1 has successfully been installed."
-      return 0
-    else
-      color-print 2 "$1 has already existed."
-      return 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -228,7 +248,7 @@ function install_homebrew_package() {
 # Arguments:
 #   Package name
 # Returns:
-#   Code indicate installed or already existed. (0=installed, 1=existed)
+#   None
 #######################################
 function install_ruby_package() {
   if [ $# -eq 1 ]; then
@@ -242,13 +262,10 @@ function install_ruby_package() {
     done
 
     if $need_install; then
-      # TODO: Need root permission to write /Library/Ruby/Gems/2.0.0.
       gem install "$1"
       color-print 1 "Ruby package name $1 has been successfully installed."
-      return 0
     else
       color-print 2 "Ruby package name $1 has already existed."
-      return 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -264,7 +281,7 @@ function install_ruby_package() {
 #   Major version.
 #   Minor version. (Optional)
 # Returns:
-#   None
+#   StatusCode. (0=exist, 1=no)
 #######################################
 function choose_appropriate_python_version() {
   if command-exist pyenv; then
@@ -275,9 +292,11 @@ function choose_appropriate_python_version() {
       for version in $(pyenv versions --bare); do
         if [[ ($(is-number "$minorVer") && "$version" == "$majorVer.$2."*) || (! $(is-number "$minorVer") && "$version" == "$majorVer."*) ]]; then
           pyenv shell "$version"
-          return
+          return 0
         fi
       done
+
+      return 1
     else
       color-print 3 "Please provide appropriate python version."
       exit 1
@@ -298,7 +317,7 @@ function choose_appropriate_python_version() {
 #   Major version (3=pip3, 2=pip2)
 #   Minor version (Optional)
 # Returns:
-#   Code indicate installed or already existed. (0=installed, 1=existed)
+#   None
 #######################################
 function install_python_package() {
   if command-exist 'pyenv'; then
@@ -310,26 +329,27 @@ function install_python_package() {
   fi
 
   if [[ $# -ge 2 ]]; then
-    choose_appropriate_python_version "$2" "$3"
+    if choose_appropriate_python_version "$2" "$3"; then
+      shopt -s nocasematch
 
-    shopt -s nocasematch
+      local need_install=true
 
-    local need_install=true
+      for package in $("pip$2" list --format=columns | sed -n '3,$p'); do
+        if [[ "$package" == *"$1" ]]; then
+          need_install=false
+          break
+        fi
+      done
 
-    for package in $("pip$2" list --format=columns | sed -n '3,$p'); do
-      if [[ "$package" == *"$1" ]]; then
-        need_install=false
-        break
+      if $need_install; then
+        "pip$2" install --user "$1"
+        color-print 1 "Python package name $1 has been successfully installed."
+      else
+        color-print 2 "Python package name $1 has already existed."
       fi
-    done
-
-    if $need_install; then
-      "pip$2" install --user "$1"
-      color-print 1 "Python package name $1 has been successfully installed."
-      return 0
     else
-      color-print 2 "Python package name $1 has already existed."
-      return 1
+      color-print 3 "Python$2 has not installed."
+      exit 1
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -575,7 +595,8 @@ function configure_emacs() {
 
   install_npm_package 'wakatime'
   install_homebrew_package 'cppcheck'
-  if install_homebrew_package 'chicken'; then
+  if ! is_homebrew_package_exist 'chicken'; then
+    install_homebrew_package 'chicken'
     chicken-install -s apropos chicken-doc
     (
       cd "$(csi -p '(chicken-home)')" || exit 1
