@@ -35,7 +35,7 @@ declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
 declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefix-highlight'
 
 #########################################################################
-# Install all homebrew tap
+# Install homebrew tap
 # Globals:
 #   Homebrew
 #   Color-Print
@@ -43,26 +43,13 @@ declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefi
 # Returns:
 #   None
 #########################################################################
-function configure_homebrew_tap() {
-  ###########################
-  # homebrew tap list
-  ###########################
-  local target_homebrew_tap_list=(
-    'caskroom/cask'
-    'caskroom/fonts'
-    'd12frosted/emacs-plus'
-    'homebrew/core'
-    'homebrew/php'
-    'homebrew/services'
-    'omnisharp/omnisharp-roslyn'
-  )
+function install_homebrew_tap() {
+  if [[ $# == 1 ]]; then
+    local exist_homebrew_tap_list
+    local target_tap
+    exist_homebrew_tap_list=$(brew tap)
+    target_tap="$1"
 
-  local exist_homebrew_tap_list
-  exist_homebrew_tap_list=$(brew tap)
-  local need_install=true
-
-  for ((i = 0; i < ${#target_homebrew_tap_list[@]}; i++)); do
-    target_tap=${target_homebrew_tap_list[i]}
     color-print 0 "Check homebrew tap $target_tap..."
     for exist_tap in $exist_homebrew_tap_list; do
       if [[ "$exist_tap" == "$target_tap" ]]; then
@@ -77,6 +64,37 @@ function configure_homebrew_tap() {
     else
       color-print 2 "$target_tap has already existed."
     fi
+  else
+    color-print 3 "$error_message_check_parameters"
+    exit 1
+  fi
+}
+
+#########################################################################
+# Install all homebrew tap
+# Globals:
+#   Homebrew
+#   Color-Print
+# Arguments:
+# Returns:
+#   None
+#########################################################################
+function configure_all_homebrew_tap() {
+  ###########################
+  # homebrew tap list
+  ###########################
+  local target_homebrew_tap_list=(
+    'caskroom/cask'
+    'caskroom/fonts'
+    'd12frosted/emacs-plus'
+    'homebrew/core'
+    'homebrew/php'
+    'homebrew/services'
+    'omnisharp/omnisharp-roslyn'
+  )
+
+  for ((i = 0; i < ${#target_homebrew_tap_list[@]}; i++)); do
+    install_homebrew_tap "${target_homebrew_tap_list[i]}"
   done
 }
 
@@ -845,7 +863,7 @@ function install() {
 
   configure_node
 
-  configure_homebrew_tap
+  configure_all_homebrew_tap
 
   configure_python
 

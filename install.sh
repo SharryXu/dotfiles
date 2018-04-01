@@ -11,8 +11,8 @@ function main() {
   echo ' |_____/ \_____/   |_|   |_|     |_| |_____| |_____| /_____/  '
   echo ''
   echo 'If you have any question, feel free to email: sharry.r.xu@gmail.com.'
-
-  echo -e '\nInstalling dotfiles to current folder...\n'
+  echo ''
+  echo "Installing dotfiles to $(pwd)..."
 
   hash git >/dev/null 2>&1 || {
     echo "Please install git."
@@ -27,10 +27,18 @@ function main() {
   # Install custom commands
   chmod +x "$local_folder"/bin/install-custom-commands && "$local_folder"/bin/install-custom-commands "$local_folder"
 
-  if "$local_folder/bin/dotfile" -i "$local_folder"; then
-		exit 0
+  if $TRAVIS; then
+		if /bin/bash -x "$local_folder/bin/dotfile" -i "$local_folder"; then
+			exit 0
+		else
+			exit 1
+		fi
   else
-		exit 1
+		if "$local_folder/bin/dotfile" -i "$local_folder"; then
+		  exit 0
+    else
+		  exit 1
+    fi
   fi
 }
 
