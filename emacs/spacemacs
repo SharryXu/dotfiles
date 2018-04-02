@@ -89,6 +89,8 @@ values."
      evil-smartparens
      flycheck
      wakatime-mode
+     multiple-cursors
+     git-gutter
      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -376,6 +378,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;(setq geiser-chez-binary "chez")
   (setq geiser-active-implementations '(chicken chez))
   (setq geiser-scheme-implementation '(chicken))
+
+  ;; Setup multiple cursors
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
   )
 
 (defun dotspacemacs/user-config ()
@@ -399,9 +407,11 @@ you should place your code here."
                                           'sharry/format-c-c++-code-type-brace)))
   (add-hook 'c-mode-hook 'sharry/disable-c-toggle-auto-newline)
   (add-hook 'c-mode-hook 'flycheck-mode)
+  (add-hook 'c-mode-hook 'git-gutter-mode)
 
   (add-hook 'sh-mode-hook (lambda ()
                             (flycheck-mode 1)))
+  (add-hook 'sh-mode-hook 'git-gutter-mode)
 
   (add-hook 'geiser-mode-hook (lambda ()
                                 (local-set-key (kbd "<f5>")
