@@ -90,7 +90,6 @@ values."
      flycheck
      wakatime-mode
      multiple-cursors
-     git-gutter
      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -376,8 +375,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Setup geiser for chez scheme
   (setq scheme-program-name "sci")
   ;;(setq geiser-chez-binary "chez")
-  (setq geiser-active-implementations '(chicken chez))
+  (setq geiser-active-implementations '(chicken))
   (setq geiser-scheme-implementation '(chicken))
+  (setq geiser-repl-use-other-window nil)
+  (setq geiser-repl-query-on-kill-p nil)
+  (setq geiser-debug--display-after nil)
 
   ;; Setup multiple cursors
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -407,11 +409,9 @@ you should place your code here."
                                           'sharry/format-c-c++-code-type-brace)))
   (add-hook 'c-mode-hook 'sharry/disable-c-toggle-auto-newline)
   (add-hook 'c-mode-hook 'flycheck-mode)
-  (add-hook 'c-mode-hook 'git-gutter-mode)
 
   (add-hook 'sh-mode-hook (lambda ()
                             (flycheck-mode 1)))
-  (add-hook 'sh-mode-hook 'git-gutter-mode)
 
   (add-hook 'geiser-mode-hook (lambda ()
                                 (local-set-key (kbd "<f5>")
@@ -444,21 +444,21 @@ you should place your code here."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (impatient-mode helm-gtags ggtags counsel-gtags add-node-modules-path yapfify pyvenv pytest pyenv-mode py-isort pip-requirements osx-clipboard live-py-mode hy-mode evil-terminal-cursor-changer cython-mode company-quickhelp company-anaconda apib-mode anaconda-mode pythonic org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ac-geiser geiser wakatime-mode orgit magit-popup yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     (quote
+      (impatient-mode helm-gtags ggtags counsel-gtags add-node-modules-path yapfify pyvenv pytest pyenv-mode py-isort pip-requirements osx-clipboard live-py-mode hy-mode evil-terminal-cursor-changer cython-mode company-quickhelp company-anaconda apib-mode anaconda-mode pythonic org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ac-geiser geiser wakatime-mode orgit magit-popup yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
 
 (defun sharry/format-code (begin-position end-position)
   "Use spaces to substitute tabs, deleteing unnecessary whitespaces and indent all lines."
@@ -503,6 +503,6 @@ This function is called at the very end of Spacemacs initialization."
                              end-position)))))
 
 (defun sharry/compile-and-run-scheme ()
-  "Format by clang-format when enter ';'."
+  "Quickly run."
   (interactive)
-  (geiser-eval-buffer))
+  (geiser-eval-region (point-min) (line-end-position)))
