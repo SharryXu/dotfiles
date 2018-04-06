@@ -603,6 +603,7 @@ function configure_emacs() {
   # config emacs (substitute the default emacs installed by Mac OS)
   color-print 0 "Check emacs..."
   install_homebrew_package 'ag'
+  install_homebrew_package 'cmake'
   install_homebrew_package 'emacs-plus'
   sync-git-repo -r $spacemacs -b develop -s author -t origin "$HOME"/.emacs.d
   copy-file -V "$SourcePath"/emacs/spacemacs "$HOME"
