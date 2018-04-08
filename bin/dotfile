@@ -175,7 +175,7 @@ function install_npm_package() {
     if [[ $# == 1 ]]; then
       local need_install=true
 
-      for exist_package in $(print-npm-packages); do
+      for exist_package in $(npm list --global --depth 0 | awk '{print $2}'); do
         if [[ $exist_package == "$1" ]]; then
           need_install=false
           break
