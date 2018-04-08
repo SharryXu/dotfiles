@@ -28,7 +28,7 @@ function main() {
   chmod +x "$local_folder"/bin/install-custom-commands && "$local_folder"/bin/install-custom-commands "$local_folder"
 
   if $TRAVIS; then
-		if /bin/bash -x "$local_folder/bin/dotfile" -i "$local_folder"; then
+		if /bin/bash -x "$local_folder/bin/dotfile" -n -i "$local_folder"; then
 			exit 0
 		else
 			exit 1

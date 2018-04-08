@@ -351,9 +351,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
           ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
           ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
 
-  ;; Set file configuration
-  ;;(setq exec-path-from-shell-check-startup-files nil)
-
   ;; Set auto-save time
   (setq auto-save-interval 100
         auto-save-timeout 20)
@@ -369,8 +366,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; evil-motion-state-cursor
   ;; evil-replace-state-cursor
   ;; evil-operator-state-cursor
-  (setq evil-insert-state-cursor '((bar . 8) "blue")
-        evil-normal-state-cursor '(box "blue"))
+  (unless (window-system)
+    (setq evil-insert-state-cursor '((bar . 8) "blue")
+          evil-normal-state-cursor '(box "blue")))
 
   ;; Setup geiser for chez scheme
   (setq scheme-program-name "sci")
@@ -383,8 +381,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq ycmd-server-command (list "python" (file-truename "~/.ycmd/ycmd")))
   (setq ycmd-global-config (file-truename "~/.ycmd/cpp/ycm/.ycm_extra_conf.py"))
   (setq ycmd-force-semantic-completion t)
-
-  (setq exec-path-from-shell-debug nil)
   )
 
 (defun dotspacemacs/user-config ()
@@ -533,7 +529,7 @@ This function is called at the very end of Spacemacs initialization."
               '(
                 (left . 30)
                 (top . (+ 30 systems-tool-bar-height))
-                (width . 230) ; chars
+                (width . 200) ; chars
                 (height . 60) ; lines))
                 ))
         (evil-terminal-cursor-changer-activate)))))

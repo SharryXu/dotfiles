@@ -631,7 +631,7 @@ function configure_emacs() {
   install_python_package 'epc' '3'
 
   color-print 0 "Check ycmd..."
-  sync-git-repo -r $youcompleteme "$HOME"/.ycmd
+  sync-git-repo -m -r $youcompleteme "$HOME"/.ycmd
   "$HOME"/.ycmd/build.py --clang-completer --system-libclang
 
   sync-git-repo -r $clangcomplete "$HOME"/.clang-complete
@@ -822,6 +822,27 @@ function install_node_versions() {
   fi
 }
 
+#######################################
+# Install xcode and tool chain on mac.
+# Globals:
+# Arguments:
+#   color-print
+#   install_homebrew_cask_package
+# Returns:
+#   None
+#######################################
+function install_xcode_on_mac() {
+  if command-exist 'xcode'; then
+    if $New_system; then
+      xcode-select --install
+    fi
+  else
+    install_homebrew_cask_package "xcode"
+
+    xcode-select --install
+  fi
+}
+
 ###################################
 # Install mac GUI applications.
 # Globals:
@@ -875,6 +896,8 @@ function install() {
   configure_node
 
   configure_all_homebrew_tap
+
+  install_xcode_on_mac
 
   configure_python
 
@@ -1055,11 +1078,12 @@ function usage () {
   echo -e "usage: $(basename "$0") [options] [source_folder_path]
 
 [options]:
--i  Install dot files to this machine.
--b  Backup dot files.
--a  Integrate backup and install.
--p  Color-Print source folder's structure.
--h  Show help information."
+-i  install dot files to this machine.
+-b  backup dot files.
+-a  integrate backup and then install.
+-p  print source folder's structure.
+-n  indicate this machine has a new OS.
+-h  show help information."
 
   exit 1
 }
@@ -1068,13 +1092,15 @@ Install_Dotfiles=0
 Backup_Dotfiles=0
 InstallAndBackup_Dotfiles=0
 Print_Structure=0
+New_system=0
 
-while getopts "abiph" option; do
+while getopts "abipnh" option; do
   case $option in
     a)InstallAndBackup_Dotfiles=1;;
     b)Backup_Dotfiles=1;;
     i)Install_Dotfiles=1;;
     p)Print_Structure=1;;
+    n)New_system=1;;
     h|*)usage;;
   esac
 done
@@ -1089,7 +1115,7 @@ fi
 
 PATH="$SourcePath"/bin:$PATH
 
-set -e
+# set -e
 
 if [[ $Install_Dotfiles == 1 ]]; then
   if check_source_path; then
