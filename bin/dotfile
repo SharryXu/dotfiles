@@ -617,7 +617,9 @@ function configure_emacs() {
   fi
 
   install_npm_package 'wakatime'
+  install_npm_package 'ymd'
   install_homebrew_package 'cppcheck'
+  install_homebrew_package 'markdown'
   if ! is_homebrew_package_exist 'chicken'; then
     install_homebrew_package 'chicken'
     chicken-install -s apropos chicken-doc
@@ -991,6 +993,9 @@ function install() {
   copy-file -V "$SourcePath"/other/wakatime.cfg "$HOME"
 
   install_global_config
+
+  color-print 0 "Choose python2 as default shell python..."
+  choose_appropriate_python_version '2'
 
   color-print 1 "Done."
 }
