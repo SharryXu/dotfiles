@@ -1,3 +1,38 @@
 #!/bin/bash
 
-source "$HOME"/.bashrc
+function load-python() {
+  if command-exist pyenv; then
+    eval "$(pyenv init -)"
+    pyenv shell 2.7.14
+  fi
+}
+
+function load-nvm() {
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+  nvm use default 1>/dev/null 2>&1
+}
+
+function load-travis() {
+  [ -f "$HOME"/.travis/travis.sh ] && source "$HOME"/.travis/travis.sh
+}
+
+function load-fzf() {
+  [ -f ~/.fzf.bash ] && source "$HOME"/.fzf.bash
+}
+
+load-python
+
+alias vim='nvim'
+
+export NVM_DIR="$HOME"/.nvm
+export LLVM_PATH=/usr/local/opt/llvm/bin
+export PYTHON_CONFIGURE_OPTS="--enable-framework"
+export CUSTOM_BIN="$HOME"/.bin
+export PACKAGE_BIN=/usr/local/bin
+export PATH=$CUSTOM_BIN:$PACKAGE_BIN:$LLVM_PATH:$PATH:$NVM_DIR
+
+# Custom parameters
+export true=0
+export false=1
+export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles

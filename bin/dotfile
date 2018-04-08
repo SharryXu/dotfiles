@@ -33,6 +33,8 @@ declare -r tmuxpluginyank='https://github.com/tmux-plugins/tmux-yank'
 declare -r tmuxpluginsensible='https://github.com/tmux-plugins/tmux-sensible'
 declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
 declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefix-highlight'
+declare -r youcompleteme='https://github.com/Valloric/ycmd.git'
+declare -r clangcomplete='https://github.com/Rip-Rip/clang_complete.git'
 
 #########################################################################
 # Install homebrew tap
@@ -545,6 +547,7 @@ function configure_zsh() {
   color-print 0 "Check oh-My-Zsh..."
   sync-git-repo -r "$ohmyzsh" "$HOME"/.oh-my-zsh/
   copy-file -V "$SourcePath"/zsh/zshrc "$HOME"
+  copy-file -V "$SourcePath"/zsh/zshenv "$HOME"
 
   color-print 0 "Check custom plugins for Oh-My-Zsh..."
   sync-git-repo -r "$zshsyntaxhighlighting" "$HOME"/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
@@ -626,6 +629,12 @@ function configure_emacs() {
 
   install_python_package 'importmagic' '3'
   install_python_package 'epc' '3'
+
+  color-print 0 "Check ycmd..."
+  sync-git-repo -r $youcompleteme "$HOME"/.ycmd
+  "$HOME"/.ycmd/build.py --clang-completer --system-libclang
+
+  sync-git-repo -r $clangcomplete "$HOME"/.clang-complete
 }
 
 ###################################
@@ -937,6 +946,7 @@ function install() {
   color-print 0 "Check ClangFormat tool..."
   install_homebrew_package 'clang-format'
   copy-file -V "$SourcePath"/other/clang-format "$HOME"
+  copy-file -V "$SourcePath"/other/clang_complete "$HOME"
 
   color-print 0 "Check system monitor tool..."
   # install_homebrew_package 'htop'
@@ -977,6 +987,7 @@ function backup() {
 
   color-print 0 "Backup zsh and bash file..."
   copy-file -v "$HOME"/.zshrc "$SourcePath"/zsh/
+  copy-file -v "$HOME"/.zshenv "$SourcePath"/zsh/
   copy-file -v "$HOME"/.bash_profile "$SourcePath"/bash/
   copy-file -v "$HOME"/.bashrc "$SourcePath"/bash/
   copy-file -v "$HOME"/.fzf.bash "$SourcePath"/bash/
@@ -992,8 +1003,9 @@ function backup() {
   color-print 0 "Backup mysql database..."
   copy-file -v "$HOME"/.my.cnf "$SourcePath"/mysql/
 
-  color-print 0 "Backup clang format information..."
+  color-print 0 "Backup clang related settings..."
   copy-file -v "$HOME"/.clang-format "$SourcePath"/other/
+  copy-file -v "$HOME"/.clang_complete "$SourcePath"/other/
 
   color-print 0 "Backup tmux tool's configuration..."
   copy-file -v "$HOME"/.tmux.conf "$SourcePath"/other/

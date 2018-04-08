@@ -25,10 +25,12 @@ function usage() {
 [options]:
 -r  remote repository path
     For example: https://github.com/SharryXu/dotfiles
--b  branch. Default value is master.
--s  source name. Default value is origin.
--t  target name. Default value is origin.
+-b  branch. Default is master.
+-s  source name. Default is origin.
+-t  target name. Default is origin.
 -f  directly push unstaged changes.
+-m  update/init submodules or not.
+-d  depth parameter for git clone. Default is 30.
 -h  help information.
 
 Warning: For now, we assume the branch name in source and target are the same."
@@ -41,8 +43,10 @@ target_name="origin"
 local_repo_path=""
 remote_repo_path=""
 directly_push=false
+depth=30
+update_submodules=false
 
-while getopts "r:b:s:t:hf" option; do
+while getopts "r:b:s:t:hfd:m" option; do
   case $option in
     r) remote_repo_path=${OPTARG}
        if [[ "$remote_repo_path" != "git@"* && "$remote_repo_path" != "https"* ]]; then
@@ -70,10 +74,16 @@ while getopts "r:b:s:t:hf" option; do
        ;;
     f) directly_push=true
        ;;
-    h) usage
+    d) if ! is-number "${OPTARG}"; then
+         color-print 3 "The depth parameter must be a number which is bigger than 0."
+         exit 1
+       fi
+       depth=${OPTARG}
        ;;
-    *) usage
+    m) update_submodules=true
        ;;
+    h|*) usage
+         ;;
   esac
 done
 
@@ -133,6 +143,13 @@ function redirect_branch_to() {
   git checkout "$1"
 }
 
+
+function init_or_update_submodules() {
+  color-print 0 "Initiate or update submodules"
+
+  git submodule update --init --recursive
+}
+
 function sync_exist_repo() {
   color-print 1 "Redirect to $local_repo_path"
   (
@@ -142,6 +159,10 @@ function sync_exist_repo() {
     current_branch="$(current-git-branch)"
 
     commit_exist_changes
+
+    if $update_submodules; then
+      init_or_update_submodules
+    fi
 
     update_all_branchs
 
@@ -164,7 +185,15 @@ if [[ $# == 1 && ! -z $1 ]]; then
   if is-git-repo "$local_repo_path"; then
     sync_exist_repo
   elif [[ ! -z $remote_repo_path ]]; then
-    git clone "$remote_repo_path" "$local_repo_path"
+    git clone --depth="$depth" "$remote_repo_path" "$local_repo_path"
+
+    if $update_submodules; then
+      (
+        cd "$local_repo_path" || exit 1
+
+        init_or_update_submodules
+      )
+    fi
   else
     color-print 3 "Please provide valid local or remote git repository."
     exit 1

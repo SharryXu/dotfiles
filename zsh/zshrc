@@ -1,9 +1,11 @@
+#!/usr/bin/env zsh
+
 system_name=$(uname -s)
 
 function load-python() {
   if command-exist pyenv; then
     eval "$(pyenv init -)"
-    pyenv shell 3.5.4
+    pyenv shell 2.7.14
   fi
 }
 
@@ -22,30 +24,15 @@ function load-fzf() {
 }
 
 if [[ $system_name == 'Darwin' ]]; then
-  export NVM_DIR="$HOME/.nvm"
-  export EMACS_PATH=/usr/local/Cellar/emacs-plus/25.3/bin
-  export LLVM_PATH=/usr/local/opt/llvm/bin
-  export PYTHON_CONFIGURE_OPTS="--enable-framework"
-  export PATH=$HOME/.bin:/usr/local/bin:$EMACS_PATH:$LLVM_PATH:$PATH
-
-  # Configure pyenv
-  load-python
-
   # Config homebrew
   export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
   export HOMEBREW_NO_AUTO_UPDATE=true
 
-  # Clang aliases
-  alias clo='clang -o a.out '
-  # Mongo aliases
   alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
-  # Emacs without GUI
   alias emacs-term='emacs -nw'
-  # Vim aliases
   alias vim='nvim'
 
 elif [[ $system_name == 'Linux' ]]; then
-  export PATH=$HOME/.bin:/usr/local/bin:$PATH
 
   alias mongod='mongod'
   alias emacs='emacs'
@@ -73,16 +60,10 @@ HISTSIZE=1000
 SAVEHIST=1000
 ZSH_THEME_GIT_PROMPT_CACHE="false"
 
-export UPDATE_ZSH_DAYS=1
-export LANG=en_US.UTF-8
-export EDITOR='nvim'
-export SSH_KEY_PATH="~/.ssh/rsa_id"
-
 plugins=(
   git
   git-prompt
   tmux
-  iterm2
   zsh-syntax-highlighting
   #  zsh-autosuggestions
   zsh-completions
@@ -91,7 +72,7 @@ plugins=(
 
 # When not in emacs's terminal, automatically startup tmux.
 if [ -z "$INSIDE_EMACS" ]; then
-  ZSH_TMUX_AUTOSTART=true
+  ZSH_TMUX_AUTOSTART=false
   ZSH_TMUX_AUTOQUIT=false
 else
   ZSH_TMUX_AUTOSTART=false
@@ -99,9 +80,4 @@ fi
 
 source $ZSH/oh-my-zsh.sh
 
-autoload -U compinit && compinit
-
-# Custom parameters
-export true=0
-export false=1
-export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles
+load-python

@@ -1,0 +1,6 @@
+-Wall
+-Wextra
+-pthread
+-Ibuild
+-I/usr/include
+-I/usr/local/opt/llvm/include
