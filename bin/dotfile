@@ -1104,7 +1104,7 @@ fi
 
 PATH="$SourcePath"/bin:$PATH
 
-set -e
+# set -e
 
 if [[ $Install_Dotfiles == 1 ]]; then
   if check_source_path; then
