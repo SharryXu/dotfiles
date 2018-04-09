@@ -174,8 +174,9 @@ function install_npm_package() {
   if choose_appropriate_python_version '2'; then
     if [[ $# == 1 ]]; then
       local need_install=true
+      local package_list=$(npm list --global --depth 0 | awk '{ FS="[ @]" }{ print $2 }')
 
-      for exist_package in $(npm list --global --depth 0 | awk '{print $2}'); do
+      for exist_package in $package_list; do
         if [[ $exist_package == "$1" ]]; then
           need_install=false
           break
@@ -634,6 +635,7 @@ function configure_emacs() {
 
   color-print 0 "Check ycmd..."
   sync-git-repo -m -r $youcompleteme "$HOME"/.ycmd
+  choose_appropriate_python_version '2'
   "$HOME"/.ycmd/build.py --clang-completer --system-libclang
 
   sync-git-repo -r $clangcomplete "$HOME"/.clang-complete
@@ -824,27 +826,6 @@ function install_node_versions() {
   fi
 }
 
-#######################################
-# Install xcode and tool chain on mac.
-# Globals:
-# Arguments:
-#   color-print
-#   install_homebrew_cask_package
-# Returns:
-#   None
-#######################################
-function install_xcode_on_mac() {
-  if command-exist 'xcode'; then
-    if $New_system; then
-      xcode-select --install
-    fi
-  else
-    install_homebrew_cask_package "xcode"
-
-    xcode-select --install
-  fi
-}
-
 ###################################
 # Install mac GUI applications.
 # Globals:
@@ -899,7 +880,12 @@ function install() {
 
   configure_all_homebrew_tap
 
-  install_xcode_on_mac
+  color-print 0 "Check xcode tool chain..."
+  if ! xcode-select -p 1>/dev/null 2>&1; then
+    xcode-select --install
+  else
+    color-print 2 "xcode tool chain has already been installed."
+  fi
 
   configure_python
 
@@ -1118,7 +1104,7 @@ fi
 
 PATH="$SourcePath"/bin:$PATH
 
-# set -e
+set -e
 
 if [[ $Install_Dotfiles == 1 ]]; then
   if check_source_path; then

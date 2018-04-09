@@ -74,7 +74,6 @@ plugins=(
 if [ -z "$INSIDE_EMACS" ]; then
   ZSH_TMUX_AUTOSTART=false
   ZSH_TMUX_AUTOQUIT=false
-  load-nvm
 else
   ZSH_TMUX_AUTOSTART=false
 fi
@@ -82,3 +81,4 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 load-python
+load-nvm

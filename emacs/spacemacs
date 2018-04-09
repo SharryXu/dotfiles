@@ -390,6 +390,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   ;; I've already set all variables in the right place.
   (setq exec-path-from-shell-check-startup-files nil)
+
+  ;; Avoid download emoji png files under the .emacs.d folder.
+  (setq emojify-emojis-dir (file-truename "~/.emojis"))
   )
 
 (defun dotspacemacs/user-config ()
