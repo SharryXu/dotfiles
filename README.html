@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README.html</title>
+
+</head>
+
+<body>
+
+<h1>Dotfiles <img src="https://travis-ci.org/SharryXu/dotfiles.svg?branch=master" alt="Build Status" title="" /></h1>
+
+<p>This repository contains some user settings and dotfiles.</p>
+
+<h1>Usage</h1>
+
+<h2>Basic installation</h2>
+
+<ol>
+<li>You can install this via the commandline with either <code>curl</code> or <code>wget</code>.</li>
+</ol>
+
+<h3>via curl</h3>
+
+<p><code>shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/SharryXu/dotfiles/master/install.sh)"
+</code></p>
+
+<h3>via wget</h3>
+
+<p><code>shell
+sh -c "$(wget https://raw.githubusercontent.com/SharryXu/dotfiles/master/install.sh -O -)"
+</code></p>
+
+<h2>Manually installation</h2>
+
+<ol>
+<li>Clone this repository to your local folder.</li>
+<li>Run <code>./previous-folder/bin/dotfile -i .</code> to install all those userful settings and dotfiles.</li>
+<li>Restart the terminal and enjoy!</li>
+</ol>
+
+<p>:eyes: <strong>Notice:</strong> If you don't want to provide the path of dotfile folder, you can append <code>export DOTFILES_PATH=&lt;path&gt;</code> to <code>~/.bashrc</code> and <code>~/.zshrc</code> or edit the value if the property already exist.</p>
+
+<h2>TODOs</h2>
+
+<ul>
+<li>[ ] Try to seperate all backup methods.</li>
+<li>[ ] Try to concentrate same package tool installation.</li>
+<li>[ ] Add vscode backup like code --list-extensions</li>
+</ul>
+
+</body>
+</html>
