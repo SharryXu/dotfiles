@@ -31,8 +31,6 @@ export PYTHON_CONFIGURE_OPTS="--enable-framework"
 export CUSTOM_BIN="$HOME"/.bin
 export PACKAGE_BIN=/usr/local/bin
 export PATH=$CUSTOM_BIN:$PACKAGE_BIN:$LLVM_PATH:$PATH:$NVM_DIR
-
-# Custom parameters
 export true=0
 export false=1
 export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles

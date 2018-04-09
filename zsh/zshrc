@@ -34,8 +34,6 @@ if [[ $system_name == 'Darwin' ]]; then
 
 elif [[ $system_name == 'Linux' ]]; then
 
-  alias mongod='mongod'
-  alias emacs='emacs'
   alias vim='nvim'
 fi
 
@@ -71,14 +69,15 @@ plugins=(
 )
 
 # When not in emacs's terminal, automatically startup tmux.
+# Only when emacs is totally startup, this variable is set.
 if [ -z "$INSIDE_EMACS" ]; then
-  ZSH_TMUX_AUTOSTART=false
+  ZSH_TMUX_AUTOSTART=true
   ZSH_TMUX_AUTOQUIT=false
 else
   ZSH_TMUX_AUTOSTART=false
+  ZSH_TMUX_AUTOQUIT=false
 fi
 
 source $ZSH/oh-my-zsh.sh
 
 load-python
-load-nvm
