@@ -156,7 +156,6 @@ function install_iTerm2() {
 ##################################################################################
 # Using npm tool to install packages.
 # Globals:
-#   command-exist
 #   npm
 #   color-print
 # Arguments:
@@ -166,7 +165,7 @@ function install_iTerm2() {
 #   None
 ###################################################################################
 function install_npm_package() {
-  if ! command-exist npm; then
+  if ! which npm 1>/dev/null 2>&1; then
     load-nvm
   fi
 
@@ -174,7 +173,8 @@ function install_npm_package() {
   if choose_appropriate_python_version '2'; then
     if [[ $# == 1 ]]; then
       local need_install=true
-      local package_list=$(npm list --global --depth 0 | awk '{ FS="[ @]" }{ print $2 }')
+      local package_list
+      package_list=$(npm list --global --depth 0 | awk '{ FS="[ @]" }{ print $2 }')
 
       for exist_package in $package_list; do
         if [[ $exist_package == "$1" ]]; then
@@ -239,7 +239,6 @@ function is_homebrew_package_exist() {
 # Using homebrew to install tool.
 # Globals:
 #   brew
-#   command-exist
 #   color-print
 # Arguments:
 #   Tool Name
@@ -306,7 +305,7 @@ function install_ruby_package() {
 #   StatusCode. (0=exist, 1=no)
 #######################################
 function choose_appropriate_python_version() {
-  if command-exist pyenv; then
+  if which pyenv 1>/dev/null 2>&1; then
     if is-number "$1"; then
       local majorVer=$1
       local minorVer=$2
@@ -342,7 +341,7 @@ function choose_appropriate_python_version() {
 #   None
 #######################################
 function install_python_package() {
-  if command-exist 'pyenv'; then
+  if which pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
   else
     color-print 3 "The program name pyenv is not existed."
@@ -462,21 +461,20 @@ function backup_global_config() {
 # Install homebrew
 # Globals:
 # Arguments:
-#   command-exist
 #   color-print
 # Returns:
 #   None
 ##################################
 function install_homebrew() {
   color-print 0 "Check brew..."
-  if command-exist 'brew'; then
+  if which brew 1>/dev/null 2>&1; then
     brew update
     color-print 1 "brew has been successfully updated."
     color-print 0 "Update all brew packages..."
     brew upgrade
     color-print 1 "All brew packages have been updated."
   else
-    if command-exist 'ruby'; then
+    if which ruby 1>/dev/null 2>&1; then
       color-print 3 "Please install Ruby first."
       exit 1
     else
@@ -498,7 +496,7 @@ function install_homebrew() {
 function configure_haskell() {
   color-print 0 "Check Haskell environment..."
 
-  if ! command-exist stack; then
+  if ! which stack 1>/dev/null 2>&1; then
     curl -sSL https://get.haskellstack.org/ | sh
   fi
 }
@@ -706,7 +704,7 @@ function configure_git() {
 #   None
 ###################################
 function install_python_versions() {
-  if command-exist pyenv; then
+  if which pyenv 1>/dev/null 2>&1; then
     local target_python_versions=(
       '2.7.14'
       '3.5.4'

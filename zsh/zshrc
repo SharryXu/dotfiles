@@ -3,7 +3,7 @@
 system_name=$(uname -s)
 
 function load-python() {
-  if command-exist pyenv; then
+  if which pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
     pyenv shell 2.7.14
   fi
