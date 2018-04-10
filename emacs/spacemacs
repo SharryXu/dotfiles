@@ -528,7 +528,7 @@ This function is called at the very end of Spacemacs initialization."
   (local-set-key (kbd "}")
                  'sharry/format-c-c++-code-type-brace)
   (sharry/disable-c-toggle-auto-newline)
-  (add-to-list 'company-c-headers-path-system "/usr/include/c++/4.2.1/")
+  (semantic-mode 1)
   (flycheck-mode 1))
 
 (defun sharry/set-window-size-and-position ()

@@ -53,19 +53,21 @@ DISABLE_AUTO_TITLE="false"
 ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="false"
-# HIST_STAMPS="mm/dd/yyyy"
+#HIST_STAMPS="mm/dd/yyyy"
 HISTSIZE=1000
 SAVEHIST=1000
-ZSH_THEME_GIT_PROMPT_CACHE="false"
+#ZSH_THEME_GIT_PROMPT_CACHE="false"
 
 plugins=(
-  git
+#  git
   git-prompt
   tmux
   zsh-syntax-highlighting
-  #  zsh-autosuggestions
+  zsh-autosuggestions
   zsh-completions
   autojump
+  osx
+  emoji
 )
 
 # When not in emacs's terminal, automatically startup tmux.
