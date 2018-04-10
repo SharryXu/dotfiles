@@ -1,6 +1,6 @@
--Wall
--Wextra
--pthread
--Ibuild
+-DDEBUG
 -I/usr/include
--I/usr/local/opt/llvm/include
+-I/usr/local/opt/llvm@6/include/c++
+-I/usr/local/opt/llvm@6/include/clang-c
+-I/usr/local/opt/llvm@6/include/llvm
+-I/usr/local/opt/llvm@6/include/llvm-c
