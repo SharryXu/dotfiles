@@ -61,7 +61,7 @@ values."
      scheme
      (shell :variables
             shell-apply-ansi-color 't
-            shell-default-term-shell "/usr/local/bin/zsh"
+            shell-default-term-shell (getenv "SHELL")
             shell-default-position 'bottom
             shell-default-height 30
             indent-tabs-mode nil

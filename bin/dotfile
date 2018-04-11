@@ -9,11 +9,28 @@
 ###################################
 declare -r error_message_check_parameters="Please check parameters."
 declare -r default_shell=/usr/local/bin/zsh
+declare -r author_name="sxu204"
+
+#########################################################################
+# Decide whether this computer is belong to the author or not.
+# Globals:
+#   whoami
+# Arguments:
+# Returns:
+#   Status Code. (0=Yes, 1=No)
+#########################################################################
+function is_author_self() {
+  if [[ $(whoami) == "$author_name" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
 
 ######################################
 # Declare all used git repositories.
 ######################################
-if [[ $(whoami) == "sxu204" ]]; then
+if is_author_self; then
   declare -r ohmyzsh='git@github.com:SharryXu/oh-my-zsh'
   declare -r spacemacs='git@github.com:SharryXu/spacemacs'
   declare -r iterm2configuration='git@github.com:SharryXu/iTerm2'
@@ -608,7 +625,11 @@ function configure_emacs() {
   install_homebrew_package 'cmake'
   install_homebrew_package 'emacs-plus'
   sync-git-repo -r $spacemacs -b develop -s author -t origin "$HOME"/.emacs.d
-  copy-file -V "$SourcePath"/emacs/spacemacs "$HOME"
+
+  # In other case, user might wanna a clean emacs environment.
+  if is_author_self; then
+    copy-file -V "$SourcePath"/emacs/spacemacs "$HOME"
+  fi
 
   # Remove this file to avoid the strange characters in the Spacemacs' terminal mode.
   if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
