@@ -633,8 +633,10 @@ function configure_emacs() {
 
   color-print 0 "Check ycmd..."
   sync-git-repo -m -r $youcompleteme "$HOME"/.ycmd
-  choose_appropriate_python_version '2'
-  "$HOME"/.ycmd/build.py --clang-completer --system-libclang
+  if $New_system; then
+    choose_appropriate_python_version '2'
+    "$HOME"/.ycmd/build.py --clang-completer --system-libclang
+  fi
 
   sync-git-repo -r $clangcomplete "$HOME"/.clang-complete
 }
