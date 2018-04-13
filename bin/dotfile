@@ -100,9 +100,6 @@ function install_homebrew_tap() {
 #   None
 #########################################################################
 function configure_all_homebrew_tap() {
-  ###########################
-  # homebrew tap list
-  ###########################
   local target_homebrew_tap_list=(
     'caskroom/cask'
     'caskroom/fonts'
@@ -169,6 +166,66 @@ function install_iTerm2() {
   color-print 1 "Please link those sync folder manually in the GUI."
 }
 
+#########################################
+# Install visual studio code extension.
+# Arguments:
+#   Command Line Name (Optional)
+# Returns:
+#   None
+#########################################
+function install_vscode_extension() {
+  if [[ $# == 1 ]]; then
+    local exist_extension_list
+    local target_extension
+    local need_install=true
+    exist_extension_list=$(code --list-extensions)
+    target_extension="$1"
+
+    color-print 0 "Check visual studio code extension name $target_extension..."
+    for exist_extension in $exist_extension_list; do
+      if [[ "$exist_extension" == "$target_extension" ]]; then
+        need_install=false
+        break
+      fi
+    done
+
+    if $need_install; then
+      code --install-extension "$target_extension"
+      color-print 1 "$target_extension has been successfully installed."
+    else
+      color-print 2 "$target_extension has already existed."
+    fi
+  else
+    color-print 3 "$error_message_check_parameters"
+    exit 1
+  fi
+}
+
+######################################
+# Configure visual studio code
+# Returns:
+#   None
+#######################################
+function install_vscode() {
+  color-print 0 "Install visual studio code..."
+
+  install_homebrew_cask_package 'visual-studio-code'
+
+  copy-file "$SourcePath"/vscode/settings.json "$HOME"/Library/Application\ Support/Code/User/
+
+  if [ -f "$SourcePath"/vscode/vs-extensions ]; then
+    if which code 1>/dev/null 2>&1; then
+      local extension_list
+      extension_list=$(awk '{print $1}' "$SourcePath"/vscode/vs-extensions)
+
+      for extension in $extension_list; do
+        install_vscode_extension "$extension"
+      done
+    else
+      color-print 3 "Visual studio code is not installed."
+    fi
+  fi
+}
 
 ##################################################################################
 # Using npm tool to install packages.
@@ -577,6 +634,8 @@ function configure_zsh() {
   install_homebrew_package 'fzf'
   copy-file -V "$SourcePath"/zsh/fzf.zsh "$HOME"
   copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
+
+  install_homebrew_package 'autojump'
 }
 
 ###################################
@@ -856,23 +915,35 @@ function install_node_versions() {
 #   None
 ###################################
 function install_mac_gui_programs() {
-  install_homebrew_cask_package 'dash'
-  install_homebrew_cask_package 'sourcetree'
-  install_homebrew_cask_package 'p4merge'
-  install_homebrew_cask_package 'karabiner'
-  install_homebrew_cask_package 'karabiner-elements'
-  install_homebrew_cask_package 'docker'
-  install_homebrew_cask_package 'kindle'
-  install_homebrew_cask_package 'mysqlworkbench'
-  install_homebrew_cask_package 'gitter'
-  install_homebrew_cask_package 'postman'
-  install_homebrew_cask_package 'neteasemusic'
-  install_homebrew_cask_package 'wireshark'
-  install_homebrew_cask_package 'xmind'
-  install_homebrew_cask_package 'veeer'
-  install_homebrew_cask_package 'cheatsheet'
-  # Is not available
-  #install_homebrew_cask_package 'microsoft-azure-storage-explorer'
+  color-print 0 "Upgrade all existed GUI programs..."
+  brew cask upgrade
+
+  local gui_programs=(
+    'adobe-acrobat-reader'
+    'dash'
+    'sourcetree'
+    'p4merge'
+    'karabiner'
+    'karabiner-elements'
+    'docker'
+    'kindle'
+    'mysqlworkbench'
+    'gitter'
+    'postman'
+    'neteasemusic'
+    'wireshark'
+    'xmind'
+    'veeer'
+    'cheatsheet'
+    'microsoft-azure-storage-explorer'
+    'appcleaner'
+    'intellij-idea-ce'
+    # 'alfred'
+  )
+
+  for ((i = 0; i < ${#gui_programs[@]}; i++)); do
+    install_homebrew_cask_package "${gui_programs[i]}"
+  done
 }
 
 #######################################
@@ -973,6 +1044,8 @@ function install() {
 
   install_mac_gui_programs
 
+  install_vscode
+
   install_fonts
 
   color-print 0 "Check ClangFormat tool..."
@@ -1056,7 +1129,10 @@ function backup() {
   copy-file -v "$HOME/.npmrc" "$SourcePath"/other/
 
   color-print 0 "Backup vs code settings..."
-  copy-file "$HOME/Library/Application Support/Code/User/settings.json" "$SourcePath"/other/
+  copy-file "$HOME/Library/Application Support/Code/User/settings.json" "$SourcePath"/vscode/
+  if which code 1>/dev/null 2>&1; then
+    code --list-extensions > "$SourcePath"/vscode/vs-extensions
+  fi
 
   # Redirect to the Source folder to show difference
   git --git-dir="$SourcePath"/.git --work-tree="$SourcePath" diff --word-diff

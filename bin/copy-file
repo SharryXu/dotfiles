@@ -70,7 +70,7 @@ if [ $# -eq 2 ]; then
   targetFolderPath=$(realpath "$2")
   filename=$(basename "$sourceFilePath")
 
-  if [[ ! -f "$sourceFilePath" ]]; then
+  if [[ ! -f "$1" ]]; then
     color-print 3 "The file: $sourceFilePath is not existed."
     exit 1
   fi
