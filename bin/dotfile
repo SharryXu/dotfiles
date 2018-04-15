@@ -713,7 +713,7 @@ function configure_emacs() {
 
   color-print 0 "Check ycmd..."
   sync-git-repo -m -r $youcompleteme "$HOME"/.ycmd
-  if $New_system; then
+  if $New_System; then
     choose_appropriate_python_version '2'
     "$HOME"/.ycmd/build.py --clang-completer --system-libclang
   fi
@@ -946,6 +946,50 @@ function install_mac_gui_programs() {
   done
 }
 
+#############################
+# Install custom commands.
+# Globals:
+#   rsync
+# Arguments:
+#   None
+# Returns:
+#   None
+#############################
+function install_custom_commands() {
+  if [ ! -d "$HOME"/.bin ]; then
+    mkdir "$HOME"/.bin
+  fi
+
+  rsync -avz --delete "$SourcePath"/bin/ "$HOME"/.bin
+
+  # Make all files executable
+  for i in "$HOME"/.bin/*; do
+    chmod +x "$i"
+  done
+}
+
+############################
+# Backup custom commands.
+# Globals:
+#   rsync
+# Arguments:
+#   None
+# Returns:
+#   None
+############################
+function backup_custom_commands() {
+  if [ ! -d "$HOME"/.bin ]; then
+    mkdir "$HOME"/.bin
+  fi
+
+  rsync -avz --delete "$HOME"/.bin/ "$SourcePath"/bin
+
+  # Make all files executable
+  for i in "$SourcePath"/bin/*; do
+    chmod +x "$i"
+  done
+}
+
 #######################################
 # Install tools and settings.
 # Globals:
@@ -955,7 +999,7 @@ function install_mac_gui_programs() {
 #   None
 #######################################
 function install() {
-  "$SourcePath"/bin/install-custom-commands "$SourcePath"
+  install_custom_commands
 
   install_homebrew
 
@@ -1089,7 +1133,7 @@ function install() {
 #   None
 #######################################
 function backup() {
-  "$SourcePath"/bin/backup-custom-commands "$SourcePath"
+  backup_custom_commands
 
   color-print 0 "Backup zsh and bash file..."
   copy-file -v "$HOME"/.zshrc "$SourcePath"/zsh/
@@ -1164,9 +1208,10 @@ function usage () {
   echo -e "usage: $(basename "$0") [options] [source_folder_path]
 
 [options]:
--i  install dot files to this machine.
--b  backup dot files.
--a  integrate backup and then install.
+-i  install dotfiles to this machine.
+-b  backup dotfiles.
+-u  update dotfiles.
+-a  backup first and update later.
 -p  print source folder's structure.
 -n  indicate this machine has a new OS.
 -h  show help information."
@@ -1176,17 +1221,19 @@ function usage () {
 
 Install_Dotfiles=0
 Backup_Dotfiles=0
-InstallAndBackup_Dotfiles=0
+BackupAndUpdate_Dotfiles=0
 Print_Structure=0
-New_system=0
+New_System=0
 
-while getopts "abipnh" option; do
+while getopts "abipuh" option; do
   case $option in
-    a)InstallAndBackup_Dotfiles=1;;
+    a)BackupAndUpdate_Dotfiles=1;;
     b)Backup_Dotfiles=1;;
-    i)Install_Dotfiles=1;;
+    i)Install_Dotfiles=1
+      New_System=1;;
+    u)Install_Dotfiles=1
+      New_System=0;;
     p)Print_Structure=1;;
-    n)New_system=1;;
     h|*)usage;;
   esac
 done
@@ -1211,7 +1258,7 @@ elif [[ $Backup_Dotfiles == 1 ]]; then
   if check_source_path; then
     backup
   fi
-elif [[ $InstallAndBackup_Dotfiles == 1 ]]; then
+elif [[ $BackupAndUpdate_Dotfiles == 1 ]]; then
   if check_source_path; then
     backup
     install
