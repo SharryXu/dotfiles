@@ -72,6 +72,11 @@ values."
              indent-tabs-mode t
              python-indent-offset 4
              python-backend 'anaconda)
+     (neotree :variables
+              neo-theme 'icons
+              neo-vc-integration 'face
+              neo-show-hidden-files t
+              neo-force-change-root t)
      helm
      emoji
      sharry
@@ -340,18 +345,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   ;; Set elpa source
   (setq configuration-layer-elpa-archives
-        '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-          ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-          ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+        '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+          ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+          ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
 
   ;; Set auto-save time
   (setq auto-save-interval 100
         auto-save-timeout 20)
-
-  ;; Set neotree
-  (setq neo-theme 'icons
-        neo-vc-integration 'face
-        neo-show-hidden-files t)
 
   (setq ycmd-server-command (list "python" (file-truename "~/.ycmd/ycmd")))
   (setq ycmd-global-config (file-truename "~/.ycmd/cpp/ycm/.ycm_extra_conf.py"))
@@ -394,21 +394,18 @@ you should place your code here."
   (global-hl-line-mode)
   (global-company-mode)
   (global-emojify-mode)
+  (global-diff-hl-mode)
   ;;(global-flycheck-mode)
   (global-set-key (kbd "<f7>")
                   'sharry/quick-format)
 
-  (add-hook 'c-mode-hook 'sharry/configure-c-c++-mode)
-  (add-hook 'c-mode-hook (lambda ()
-                           (setq flycheck-clang-language-standard "gnu99")
-                           (setq flycheck-gcc-language-standard "gnu99")))
+  (add-hook 'c-mode-hook 'sharry/configure-c-mode)
+  (add-hook 'c++-mode-hook 'sharry/configure-c++-mode)
 
   (add-hook 'sh-mode-hook (lambda ()
                             (flycheck-mode 1)))
 
-  (add-hook 'geiser-mode-hook (lambda ()
-                                (local-set-key (kbd "<f5>")
-                                               'sharry/compile-and-run-scheme)))
+  (add-hook 'geiser-mode-hook 'sharry/configure-geiser-mode)
 
   (setq compilation-finish-function
         (lambda (buf str)
