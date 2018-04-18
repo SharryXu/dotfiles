@@ -5,7 +5,7 @@ system_name=$(uname -s)
 function load-python() {
   if which pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
-    pyenv shell 2.7.14
+    eval "$(pyenv virtualenv-init -)"
   fi
 }
 
@@ -23,19 +23,8 @@ function load-fzf() {
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 }
 
-if [[ $system_name == 'Darwin' ]]; then
-  # Config homebrew
-  export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
-  export HOMEBREW_NO_AUTO_UPDATE=true
-
-  alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
-  alias emacs-term='emacs -nw'
-  alias vim='nvim'
-
-elif [[ $system_name == 'Linux' ]]; then
-
-  alias vim='nvim'
-fi
+alias mongod2='/usr/local/Cellar/mongodb@2.6/2.6.12/bin/mongod'
+alias emacs-term='emacs -nw'
 
 export ZSH=$HOME/.oh-my-zsh
 
@@ -59,7 +48,6 @@ SAVEHIST=1000
 #ZSH_THEME_GIT_PROMPT_CACHE="false"
 
 plugins=(
-#  git
   git-prompt
   tmux
   zsh-syntax-highlighting

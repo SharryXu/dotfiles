@@ -95,14 +95,29 @@ if [ $# -eq 2 ]; then
 
   if need_create_or_replace; then
     if $make_file_visible; then
+      if [[ -f "$targetFolderPath/${filename/.}" ]]; then
+        color-print 1 "File name ${filename/.} has been replaced."
+      else
+        color-print 1 "File name ${filename/.} has been created."
+      fi
+
       cp "$sourceFilePath" "$targetFolderPath/${filename/.}"
-      color-print 1 "File name ${filename/.} has been created or replaced."
     elif $make_file_invisible; then
+      if [[ -f "$targetFolderPath/.$filename" ]]; then
+        color-print 1 "File name .$filename has been replaced."
+      else
+        color-print 1 "File name .$filename has been created."
+      fi
+
       cp "$sourceFilePath" "$targetFolderPath/.$filename"
-      color-print 1 "File name .$filename has been created or replaced."
     else
+      if [[ -f "$targetFolderPath/$filename" ]]; then
+        color-print 1 "File name .$filename has been replaced."
+      else
+        color-print 1 "File name .$filename has been created."
+      fi
+
       cp "$sourceFilePath" "$targetFolderPath"
-      color-print 1 "File name $filename has been created or replaced."
     fi
   else
     color-print 2 "File name $filename don't need to replace."

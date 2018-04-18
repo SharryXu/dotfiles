@@ -3,7 +3,7 @@
 function load-python() {
   if which pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
-    pyenv shell 2.7.14
+    eval "$(pyenv virtualenv-init -)"
   fi
 }
 
@@ -31,7 +31,7 @@ export PYTHON_CONFIGURE_OPTS="--enable-framework"
 export CUSTOM_BIN="$HOME"/.bin
 export PACKAGE_BIN=/usr/local/bin
 export PACKAGE_SBIN=/usr/local/sbin
-export PATH=$CUSTOM_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$PATH:$NVM_DIR
-export true=0
-export false=1
+export PYENV_ROOT="$HOME/.pyenv"
+export PYENV_BIN="$PYENV_ROOT/bin"
+export PATH=$CUSTOM_BIN:$PYENV_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$PATH:$NVM_DIR
 export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles

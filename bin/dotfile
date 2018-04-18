@@ -52,6 +52,8 @@ declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
 declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefix-highlight'
 declare -r youcompleteme='https://github.com/Valloric/ycmd.git'
 declare -r clangcomplete='https://github.com/Rip-Rip/clang_complete.git'
+declare -r pyenv='https://github.com/pyenv/pyenv.git'
+declare -r pyenvvirtualenv='https://github.com/pyenv/pyenv-virtualenv.git'
 
 #########################################################################
 # Install homebrew tap
@@ -386,7 +388,8 @@ function choose_appropriate_python_version() {
 
       for version in $(pyenv versions --bare); do
         if [[ ($(is-number "$minorVer") && "$version" == "$majorVer.$2."*) || (! $(is-number "$minorVer") && "$version" == "$majorVer."*) ]]; then
-          pyenv shell "$version"
+          PYENV_VERSION="$version"
+          color-print 1 "Choose python version $PYENV_VERSION..."
           return 0
         fi
       done
@@ -698,9 +701,17 @@ function configure_emacs() {
   install_npm_package 'wakatime'
   install_npm_package 'ymd'
   install_homebrew_package 'cppcheck'
+  install_homebrew_package 'shellcheck'
+  install_homebrew_package 'tidy-html5'
+  install_npm_package 'stylelint'
+  install_npm_package 'eslint'
+  install_npm_package 'jshint'
+  install_npm_package 'jsonlint'
+  install_npm_package 'csslint'
   install_homebrew_package 'markdown'
-  if ! is_homebrew_package_exist 'chicken'; then
-    install_homebrew_package 'chicken'
+  install_homebrew_package 'chicken'
+
+  if $New_System; then
     chicken-install -s apropos chicken-doc
     (
       cd "$(csi -p '(chicken-home)')" || exit 1
@@ -830,12 +841,12 @@ function install_python_versions() {
 ###################################
 function configure_python() {
   color-print 0 "Check python..."
-  install_homebrew_package 'pyenv'
+  sync-git-repo -r $pyenvvirtualenv "$HOME"/.pyenv
+  sync-git-repo -r $pyenvvirtualenv "$HOME"/.pyenv/plugins/pyenv-virtualenv
+
   install_python_versions
 
-  # pip install --upgrade pip
-
-  # ln -s $(brew --cellar python) ~/.pyenv/versions
+  #pip install --upgrade pip
 }
 
 ###################################
@@ -1012,6 +1023,8 @@ function install() {
 
   configure_zsh
 
+  configure_python
+
   configure_node
 
   configure_all_homebrew_tap
@@ -1022,8 +1035,6 @@ function install() {
   else
     color-print 2 "xcode tool chain has already been installed."
   fi
-
-  configure_python
 
   configure_git
 
@@ -1045,17 +1056,14 @@ function install() {
   install_homebrew_package 'mycli'
   copy-file -V "$SourcePath"/mysql/my.cnf "$HOME"
 
-  color-print 0 "Check Microsoft SQL Server tool..."
-  install_python_package 'mssql-cli' '3'
-
   color-print 0 "Check tree tool..."
   install_homebrew_package 'tree'
 
-  color-print 0 "Check shellcheck tool..."
-  install_homebrew_package 'shellcheck'
-
   color-print 0 "Check download accelerate tool..."
   install_homebrew_package 'axel'
+
+  color-print 0 "Check Microsoft SQL Server tool..."
+  install_python_package 'mssql-cli' '3'
 
   color-print 0 "Check gdb gui tool..."
   install_python_package 'gdbgui' '3'
@@ -1118,8 +1126,7 @@ function install() {
 
   install_global_config
 
-  color-print 0 "Choose python2 as default shell python..."
-  choose_appropriate_python_version '2'
+  choose_appropriate_python_version '3'
 
   color-print 1 "Done."
 }
@@ -1219,21 +1226,20 @@ function usage () {
   exit 1
 }
 
-Install_Dotfiles=0
-Backup_Dotfiles=0
-BackupAndUpdate_Dotfiles=0
-Print_Structure=0
-New_System=0
+Install_Dotfiles=false
+Backup_Dotfiles=false
+BackupAndUpdate_Dotfiles=false
+Print_Structure=false
+New_System=false
 
 while getopts "abipuh" option; do
   case $option in
-    a)BackupAndUpdate_Dotfiles=1;;
-    b)Backup_Dotfiles=1;;
-    i)Install_Dotfiles=1
-      New_System=1;;
-    u)Install_Dotfiles=1
-      New_System=0;;
-    p)Print_Structure=1;;
+    a)BackupAndUpdate_Dotfiles=true;;
+    b)Backup_Dotfiles=true;;
+    i)Install_Dotfiles=true
+      New_System=true;;
+    u)Install_Dotfiles=true;;
+    p)Print_Structure=true;;
     h|*)usage;;
   esac
 done
@@ -1250,20 +1256,20 @@ PATH="$SourcePath"/bin:$PATH
 
 # set -e
 
-if [[ $Install_Dotfiles == 1 ]]; then
+if $Install_Dotfiles; then
   if check_source_path; then
     install
   fi
-elif [[ $Backup_Dotfiles == 1 ]]; then
+elif $Backup_Dotfiles; then
   if check_source_path; then
     backup
   fi
-elif [[ $BackupAndUpdate_Dotfiles == 1 ]]; then
+elif $BackupAndUpdate_Dotfiles; then
   if check_source_path; then
     backup
     install
   fi
-elif [[ $Print_Structure == 1 ]]; then
+elif $Print_Structure; then
   tree -C "$SourcePath"
 else
   usage
