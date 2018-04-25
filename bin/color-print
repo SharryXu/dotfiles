@@ -19,7 +19,7 @@ declare -r custom_program_folder="$HOME/.bin"
 source "$custom_program_folder/default-colors"
 
 function usage() {
-  echo -e "Usage: print <status code> <message>
+  echo -e "Usage: $(basename "$0") <status code> <message>
 
 Status Code:
 0: Normal
@@ -35,7 +35,7 @@ then
   if [ "$1" -eq 0 ]
   then
     echo -e "${BLUE_COLOR}$2${NO_COLOR}"
-	elif [ "$1" -eq 1 ]
+  elif [ "$1" -eq 1 ]
   then
     echo -e "${GREEN_COLOR}$2${NO_COLOR}"
   elif [ "$1" -eq 2 ]

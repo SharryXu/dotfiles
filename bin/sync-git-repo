@@ -37,58 +37,6 @@ Warning: For now, we assume the branch name in source and target are the same."
   exit 1
 }
 
-branch="master"
-source_name="origin"
-target_name="origin"
-local_repo_path=""
-remote_repo_path=""
-directly_push=false
-depth=30
-update_submodules=false
-
-while getopts "r:b:s:t:hfd:m" option; do
-  case $option in
-    r) remote_repo_path=${OPTARG}
-       if [[ "$remote_repo_path" != "git@"* && "$remote_repo_path" != "https"* ]]; then
-         color-print 3 "The remote repository path has invalid format."
-         exit 1
-       fi
-       ;;
-    b) if [[ -z "${OPTARG}" ]]; then
-         color-print 3 "The branch name cannot be empty or whitespaces."
-         exit 1
-       fi
-       branch=${OPTARG}
-       ;;
-    s) if [[ -z "${OPTARG}" ]]; then
-         color-print 3 "The source ref name cannot be empty or whitespaces."
-         exit 1
-       fi
-       source_name=${OPTARG}
-       ;;
-    t) if [[ -z "${OPTARG}" ]]; then
-         color-print 3 "The target ref name cannot be empty or whitespaces."
-         exit 1
-       fi
-       target_name=${OPTARG}
-       ;;
-    f) directly_push=true
-       ;;
-    d) if ! is-number "${OPTARG}"; then
-         color-print 3 "The depth parameter must be a number which is bigger than 0."
-         exit 1
-       fi
-       depth=${OPTARG}
-       ;;
-    m) update_submodules=true
-       ;;
-    h|*) usage
-         ;;
-  esac
-done
-
-shift $((OPTIND-1))
-
 function update_all_branchs() {
   for file in .git/refs/heads/*; do
     local current_head="${file##*/}"
@@ -144,10 +92,15 @@ function redirect_branch_to() {
 }
 
 
-function init_or_update_submodules() {
+function initiate_all_submodules() {
   color-print 0 "Initiate or update submodules"
 
   git submodule update --init --recursive
+}
+
+function update_all_submodules() {
+  color-print 0 "Updating all submodules..."
+  git submodule update --recursive
 }
 
 function sync_exist_repo() {
@@ -161,7 +114,7 @@ function sync_exist_repo() {
     commit_exist_changes
 
     if $update_submodules; then
-      init_or_update_submodules
+      update_all_submodules
     fi
 
     update_all_branchs
@@ -174,16 +127,69 @@ function sync_exist_repo() {
   )
 }
 
-if [[ $# == 1 && ! -z $1 ]]; then
-  # Absolute path
-  if [[ "$1" == /* ]]; then
-    local_repo_path="$1"
-  else
-    local_repo_path=$(realpath "$1")
-  fi
 
-  if is-git-repo "$local_repo_path"; then
-    sync_exist_repo
+branch="master"
+source_name="origin"
+target_name="origin"
+local_repo_path=""
+remote_repo_path=""
+directly_push=false
+depth=30
+update_submodules=false
+
+while getopts "r:b:s:t:hfd:m" option; do
+  case $option in
+    r) remote_repo_path=${OPTARG}
+       if [[ "$remote_repo_path" != "git@"* && "$remote_repo_path" != "https"* ]]; then
+         color-print 3 "The remote repository path has invalid format."
+         exit 1
+       fi
+       ;;
+    b) if [[ -z "${OPTARG}" ]]; then
+         color-print 3 "The branch name cannot be empty or whitespaces."
+         exit 1
+       fi
+       branch=${OPTARG}
+       ;;
+    s) if [[ -z "${OPTARG}" ]]; then
+         color-print 3 "The source ref name cannot be empty or whitespaces."
+         exit 1
+       fi
+       source_name=${OPTARG}
+       ;;
+    t) if [[ -z "${OPTARG}" ]]; then
+         color-print 3 "The target ref name cannot be empty or whitespaces."
+         exit 1
+       fi
+       target_name=${OPTARG}
+       ;;
+    f) directly_push=true
+       ;;
+    d) if ! is-number "${OPTARG}"; then
+         color-print 3 "The depth parameter must be a number which is bigger than 0."
+         exit 1
+       fi
+       depth=${OPTARG}
+       ;;
+    m) update_submodules=true
+       ;;
+    h|*) usage
+         ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+if [[ $# == 1 && ! -z $1 ]]; then
+  local_repo_path=$(realpath "$1")
+
+  if [[ -d $local_repo_path ]]; then
+    if is-git-repo "$local_repo_path"; then
+      sync_exist_repo
+    else
+      # TODO: Add empty execution.
+      color-print 3 "The path already existed but not a git repository."
+    fi
   elif [[ ! -z $remote_repo_path ]]; then
     git clone --depth="$depth" "$remote_repo_path" "$local_repo_path"
 
@@ -191,7 +197,7 @@ if [[ $# == 1 && ! -z $1 ]]; then
       (
         cd "$local_repo_path" || exit 1
 
-        init_or_update_submodules
+        initiate_all_submodules
       )
     fi
   else

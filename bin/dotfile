@@ -34,10 +34,12 @@ if is_author_self; then
   declare -r ohmyzsh='git@github.com:SharryXu/oh-my-zsh'
   declare -r spacemacs='git@github.com:SharryXu/spacemacs'
   declare -r iterm2configuration='git@github.com:SharryXu/iTerm2'
+  declare -r pyenv='git@github.com:SharryXu/pyenv.git'
 else
   declare -r ohmyzsh='https://github.com/SharryXu/oh-my-zsh'
   declare -r spacemacs='https://github.com/SharryXu/spacemacs'
   declare -r iterm2configuration='https://github.com/SharryXu/iTerm2'
+  declare -r pyenv='https://github.com/pyenv/pyenv.git'
 fi
 
 declare -r zshsyntaxhighlighting='https://github.com/zsh-users/zsh-syntax-highlighting'
@@ -52,7 +54,6 @@ declare -r tmuxpluginsidebar='https://github.com/tmux-plugins/tmux-sidebar'
 declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefix-highlight'
 declare -r youcompleteme='https://github.com/Valloric/ycmd.git'
 declare -r clangcomplete='https://github.com/Rip-Rip/clang_complete.git'
-declare -r pyenv='https://github.com/pyenv/pyenv.git'
 declare -r pyenvvirtualenv='https://github.com/pyenv/pyenv-virtualenv.git'
 
 #########################################################################
@@ -798,9 +799,10 @@ function configure_git() {
 ###################################
 function install_python_versions() {
   if which pyenv 1>/dev/null 2>&1; then
+    # TODO: Remember to upgrade version when gitsome can work properly under 3.6.5
     local target_python_versions=(
       '2.7.14'
-      '3.5.5'
+      '3.5.0'
     )
 
     local exist_python_versions
@@ -841,7 +843,7 @@ function install_python_versions() {
 ###################################
 function configure_python() {
   color-print 0 "Check python..."
-  sync-git-repo -r $pyenvvirtualenv "$HOME"/.pyenv
+  sync-git-repo -r $pyenv "$HOME"/.pyenv
   sync-git-repo -r $pyenvvirtualenv "$HOME"/.pyenv/plugins/pyenv-virtualenv
 
   install_python_versions
