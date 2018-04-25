@@ -800,7 +800,7 @@ function install_python_versions() {
   if which pyenv 1>/dev/null 2>&1; then
     local target_python_versions=(
       '2.7.14'
-      '3.6.5'
+      '3.5.5'
     )
 
     local exist_python_versions
