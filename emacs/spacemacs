@@ -66,7 +66,6 @@ values."
             indent-tabs-mode nil
             sh-basic-offset 2
             sh-indentation 2)
-     spell-checking
      (syntax-checking :variables
                       syntax-checking-enable-by-default t
                       syntax-checking-enable-tooltips t
@@ -393,7 +392,7 @@ you should place your code here."
   (global-hl-line-mode)
   (global-emojify-mode)
   (global-diff-hl-mode)
-  (global-auto-complete-mode)
+  (global-company-mode)
   (global-centered-cursor-mode)
 
   (global-set-key (kbd "<f7>")

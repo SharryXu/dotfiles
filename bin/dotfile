@@ -433,7 +433,7 @@ function install_python_package() {
 
       local need_install=true
 
-      for package in $("pip$2" list --format=columns | sed -n '3,$p'); do
+      for package in $(pip list | sed -n '3,$p' | awk '{print $1}'); do
         if [[ "$package" == *"$1" ]]; then
           need_install=false
           break
@@ -441,7 +441,7 @@ function install_python_package() {
       done
 
       if $need_install; then
-        "pip$2" install --user "$1"
+        pip install --user "$1"
         color-print 1 "Python package name $1 has been successfully installed."
       else
         color-print 2 "Python package name $1 has already existed."
@@ -848,7 +848,14 @@ function configure_python() {
 
   install_python_versions
 
-  #pip install --upgrade pip
+  # TODO: Refactor choose_appropriate_python_version so that its parameter can accept format like 2.3.0
+  choose_appropriate_python_version '2'
+  color-print 0 "Update pip2..."
+  pip install --upgrade pip
+
+  choose_appropriate_python_version '3'
+  color-print 0 "Update pip3..."
+  pip install --upgrade pip
 }
 
 ###################################
@@ -951,6 +958,7 @@ function install_mac_gui_programs() {
     'microsoft-azure-storage-explorer'
     'appcleaner'
     'intellij-idea-ce'
+    'google-chrome'
     # 'alfred'
   )
 
