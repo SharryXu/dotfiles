@@ -958,7 +958,8 @@ function install_mac_gui_programs() {
     'microsoft-azure-storage-explorer'
     'appcleaner'
     'intellij-idea-ce'
-    'google-chrome'
+    'firefox'
+    'brackets'
     # 'alfred'
   )
 
