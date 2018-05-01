@@ -1086,9 +1086,6 @@ function install() {
   color-print 0 "Check cppman tool..."
   install_python_package 'cppman' '3'
 
-  color-print 0 "Check icdiff tool..."
-  install_homebrew_package 'icdiff'
-
   #color-print 0 "Check github language analysis tool..."
   #install_ruby_package 'github-linguist'
 
