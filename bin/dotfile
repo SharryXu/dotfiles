@@ -731,6 +731,8 @@ function configure_emacs() {
   fi
 
   sync-git-repo -r $clangcomplete "$HOME"/.clang-complete
+
+  copy-file -V "$SourcePath"/other/jsbeautifyrc "$HOME"
 }
 
 ###################################
@@ -783,8 +785,11 @@ function configure_git() {
   color-print 0 "Check git..."
   install_homebrew_package 'git'
   install_homebrew_package 'tig'
+  install_homebrew_package 'diff-so-fancy'
+
   copy-file -V "$SourcePath"/git/gitconfig "$HOME"/
   copy-file -V "$SourcePath"/git/gitignore_global "$HOME"/
+
   install_python_package 'gitsome' '3'
 }
 
@@ -959,7 +964,6 @@ function install_mac_gui_programs() {
     'appcleaner'
     'intellij-idea-ce'
     'firefox'
-    'brackets'
     # 'alfred'
   )
 
@@ -1188,7 +1192,8 @@ function backup() {
   copy-file -v "$HOME/.wakatime.cfg" "$SourcePath"/other/
 
   color-print 0 "Backup npm config..."
-  copy-file -v "$HOME/.npmrc" "$SourcePath"/other/
+  copy-file -v "$HOME"/.npmrc "$SourcePath"/other/
+  copy-file -v "$HOME"/.jsbeautifyrc "$SourcePath"/other/
 
   color-print 0 "Backup vs code settings..."
   copy-file "$HOME/Library/Application Support/Code/User/settings.json" "$SourcePath"/vscode/

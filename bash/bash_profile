@@ -33,5 +33,6 @@ export PACKAGE_BIN=/usr/local/bin
 export PACKAGE_SBIN=/usr/local/sbin
 export PYENV_ROOT="$HOME/.pyenv"
 export PYENV_BIN="$PYENV_ROOT/bin"
-export PATH=$CUSTOM_BIN:$PYENV_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$PATH:$NVM_DIR
 export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles
+
+export PATH=$CUSTOM_BIN:$PYENV_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$PATH:$NVM_DIR

@@ -6,7 +6,6 @@ export LLVM_PATH=/usr/local/opt/llvm/bin
 export PYENV_ROOT="$HOME/.pyenv"
 export PYENV_BIN="$PYENV_ROOT/bin"
 export PYTHON_CONFIGURE_OPTS="--enable-framework"
-export PATH=$CUSTOM_BIN:$PYENV_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$PATH:$NVM_DIR
 
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export HOMEBREW_NO_AUTO_UPDATE=true
@@ -18,3 +17,5 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 export TERM='screen-256color'
 
 export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles
+
+export PATH=$CUSTOM_BIN:$PYENV_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$PATH:$NVM_DIR
