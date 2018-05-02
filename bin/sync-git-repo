@@ -41,7 +41,7 @@ function update_all_branchs() {
   for file in .git/refs/heads/*; do
     local current_head="${file##*/}"
     color-print 0 "Pulling latest code for $current_head branch..."
-    git checkout "$current_head" && git pull "$target_name" "$current_head"
+    git checkout "$current_head" && git pull --allow-unrelated-histories "$target_name" "$current_head"
   done
 }
 
@@ -191,7 +191,7 @@ if [[ $# == 1 && ! -z $1 ]]; then
       color-print 3 "The path already existed but not a git repository."
     fi
   elif [[ ! -z $remote_repo_path ]]; then
-    git clone --depth="$depth" "$remote_repo_path" "$local_repo_path"
+    git clone -b "$branch" --depth="$depth" "$remote_repo_path" "$local_repo_path"
 
     if $update_submodules; then
       (

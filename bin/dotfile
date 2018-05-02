@@ -389,8 +389,8 @@ function choose_appropriate_python_version() {
 
       for version in $(pyenv versions --bare); do
         if [[ ($(is-number "$minorVer") && "$version" == "$majorVer.$2."*) || (! $(is-number "$minorVer") && "$version" == "$majorVer."*) ]]; then
-          PYENV_VERSION="$version"
-          color-print 1 "Choose python version $PYENV_VERSION..."
+          pyenv global "$version"
+          color-print 1 "Choose python version $version..."
           return 0
         fi
       done
@@ -590,14 +590,14 @@ function configure_haskell() {
 #   None
 ###################################
 function configure_bash() {
+  color-print 0 "Check bash..."
+  install_homebrew_package 'bash'
+
   copy-file -V "$SourcePath"/bash/bash_profile "$HOME"
   copy-file -V "$SourcePath"/bash/bashrc "$HOME"
   copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
 
   /bin/bash "$HOME"/.bashrc
-
-  color-print 0 "Check bash..."
-  install_homebrew_package 'bash'
 }
 
 ###################################
@@ -1287,5 +1287,3 @@ elif $Print_Structure; then
 else
   usage
 fi
-
-exit $?

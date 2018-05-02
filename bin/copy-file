@@ -57,28 +57,28 @@ while getopts "vVh" option; do
     # Will rewrite the previous visible setting.
     V)make_file_invisible=true
       make_file_visible=false;;
-    h)usage;;
-    *)usage;;
+    h|*)usage;;
   esac
 done
 
 shift $((OPTIND-1))
 
 if [ $# -eq 2 ]; then
-  sourceFilePath=$(realpath "$1")
-  sourceFolderPath=$(dirname "$1")
-  targetFolderPath=$(realpath "$2")
-  filename=$(basename "$sourceFilePath")
-
   if [[ ! -f "$1" ]]; then
     color-print 3 "The file: $sourceFilePath is not existed."
     exit 1
   fi
 
+  sourceFilePath=$(realpath "$1")
+  sourceFolderPath=$(dirname "$1")
+  targetFolderPath=$(realpath "$2")
+
   if [[ ! -d "$targetFolderPath" ]]; then
     color-print 3 "The target folder: $targetFolderPath is illegal."
     exit 1
   fi
+
+  filename=$(basename "$sourceFilePath")
 
   # Only hidden files can be visible.
   if [[ ${filename:0:1} == "." ]] && $make_file_visible; then
@@ -122,8 +122,6 @@ if [ $# -eq 2 ]; then
   else
     color-print 2 "File name $filename don't need to replace."
   fi
-
-  exit 0
 else
   usage
 fi
