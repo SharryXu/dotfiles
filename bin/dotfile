@@ -637,7 +637,6 @@ function configure_zsh() {
   color-print 0 "Check fzf tool..."
   install_homebrew_package 'fzf'
   copy-file -V "$SourcePath"/zsh/fzf.zsh "$HOME"
-  copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
 
   install_homebrew_package 'autojump'
 }
@@ -1100,9 +1099,6 @@ function install() {
 
   color-print 0 "Check live-stream video download tool..."
   install_homebrew_package 'you-get'
-
-  color-print 0 "Check bash profile..."
-  copy-folder "$SourcePath"/bash "$HOME"
 
   install_iTerm2
 

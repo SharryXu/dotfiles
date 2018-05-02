@@ -73,7 +73,8 @@ values."
                       flycheck-check-syntax-automatically '(mode-enabled
                                                             save
                                                             new-line
-                                                            idle-change))
+                                                            idle-change)
+                      flycheck-global-modes t)
      (python :variables
              indent-tabs-mode t
              python-indent-offset 4
@@ -397,7 +398,6 @@ you should place your code here."
   (global-emojify-mode)
   (global-diff-hl-mode)
   (global-company-mode)
-  (global-flycheck-mode)
   (global-centered-cursor-mode)
 
   (global-set-key (kbd "<f7>")

@@ -84,7 +84,7 @@ if [ $# -eq 2 ]; then
   if [[ ${filename:0:1} == "." ]] && $make_file_visible; then
     make_file_visible=true
     make_file_invisible=false
-    # Only un-hidden files can be invisible.
+  # Only un-hidden files can be invisible.
   elif [[ ${filename:0:1} != "." ]] && $make_file_invisible; then
     make_file_visible=false
     make_file_invisible=true
