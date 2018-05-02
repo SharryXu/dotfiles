@@ -324,11 +324,11 @@ function is_homebrew_package_exist() {
 #   None
 ###################################################################################
 function install_homebrew_package() {
-  if [[ $# == 1 ]]; then
+  if [ $# -ge 1 ]; then
     if is_homebrew_package_exist "$1"; then
       color-print 2 "$1 has already existed."
     else
-      brew install "$1"
+      brew install "$1" "$2"
       color-print 1 "$1 has successfully been installed."
     fi
   else
@@ -710,6 +710,9 @@ function configure_emacs() {
   install_npm_package 'csslint'
   install_homebrew_package 'markdown'
   install_homebrew_package 'chicken'
+  # For pdf-tools
+  install_homebrew_package 'zlib'
+  install_homebrew_package 'poppler' "--with-qt"
 
   if $New_System; then
     chicken-install -s apropos chicken-doc
