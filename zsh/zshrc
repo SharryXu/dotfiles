@@ -60,13 +60,9 @@ plugins=(
 # When not in emacs's terminal, automatically startup tmux.
 # Only when emacs is totally startup, this variable is set.
 if [ -z "$INSIDE_EMACS" ]; then
-export TERM=dumb
-
   ZSH_TMUX_AUTOSTART=true
   ZSH_TMUX_AUTOQUIT=false
 else
-export TERM=xterm-256color
-
   ZSH_TMUX_AUTOSTART=false
   ZSH_TMUX_AUTOQUIT=false
 fi
