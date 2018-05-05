@@ -55,6 +55,7 @@ declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefi
 declare -r youcompleteme='https://github.com/Valloric/ycmd.git'
 declare -r clangcomplete='https://github.com/Rip-Rip/clang_complete.git'
 declare -r pyenvvirtualenv='https://github.com/pyenv/pyenv-virtualenv.git'
+declare -r spacevim='https://github.com/liuchengxu/space-vim'
 
 #########################################################################
 # Install homebrew tap
@@ -513,7 +514,6 @@ function install_global_config() {
   sync-folder "$SourcePath"/config/cppman "$HOME"/.config/cppman
   sync-folder "$SourcePath"/config/fontconfig "$HOME"/.config/fontconfig
   sync-folder "$SourcePath"/config/karabiner "$HOME"/.config/karabiner
-  copy-file "$SourcePath"/config/nvim/init.vim "$HOME"/.config/nvim
   sync-folder "$SourcePath"/config/tmuxinator "$HOME"/.config/tmuxinator
 }
 
@@ -531,7 +531,6 @@ function backup_global_config() {
   sync-folder "$HOME"/.config/cppman "$SourcePath"/config/cppman
   sync-folder "$HOME"/.config/fontconfig "$SourcePath"/config/fontconfig
   sync-folder "$HOME"/.config/karabiner "$SourcePath"/config/karabiner
-  copy-file "$HOME"/.config/nvim/init.vim "$SourcePath"/config/nvim
   sync-folder "$HOME"/.config/tmuxinator "$SourcePath"/config/tmuxinator
 }
 
@@ -755,6 +754,18 @@ function configure_vim() {
   color-print 0 "Check Vim..."
   install_homebrew_package 'vim'
   install_homebrew_package 'neovim'
+
+  # Setup space-vim
+  sync-git-repo -r $spacevim "$HOME"/.space-vim
+
+  if $New_System; then
+    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    ln -sf "$HOME/.space-vim/init.vim" "$HOME/.config/nvim/init.vim"
+  fi
+
+  copy-file -V "$SourcePath"/vim/spacevim "$HOME"
 }
 
 ###################################
@@ -1167,6 +1178,9 @@ function backup() {
   color-print 0 "Backup emacs..."
   copy-file -v "$HOME"/.spacemacs "$SourcePath"/emacs/
   copy-file -v "$HOME"/.diredful-conf.el "$SourcePath"/emacs/
+
+  color-print 0 "Backup vim..."
+  copy-file -v "$HOME"/.spacevim "$SourcePath"/vim/
 
   color-print 0 "Backup mongo database..."
   copy-file -v "$HOME"/.mongorc.js "$SourcePath"/mongodb/
