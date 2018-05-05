@@ -735,6 +735,9 @@ function configure_emacs() {
   sync-git-repo -r $clangcomplete "$HOME"/.clang-complete
 
   copy-file -V "$SourcePath"/other/jsbeautifyrc "$HOME"
+  copy-file -V "$SourcePath"/other/tern-config "$HOME"
+
+  copy-file -V "$SourcePath"/emacs/diredful-conf.el "$HOME"
 }
 
 ###################################
@@ -1163,6 +1166,7 @@ function backup() {
 
   color-print 0 "Backup emacs..."
   copy-file -v "$HOME"/.spacemacs "$SourcePath"/emacs/
+  copy-file -v "$HOME"/.diredful-conf.el "$SourcePath"/emacs/
 
   color-print 0 "Backup mongo database..."
   copy-file -v "$HOME"/.mongorc.js "$SourcePath"/mongodb/
@@ -1190,6 +1194,7 @@ function backup() {
   color-print 0 "Backup npm config..."
   copy-file -v "$HOME"/.npmrc "$SourcePath"/other/
   copy-file -v "$HOME"/.jsbeautifyrc "$SourcePath"/other/
+  copy-file -v "$HOME"/.tern-config "$SourcePath"/other/
 
   color-print 0 "Backup vs code settings..."
   copy-file "$HOME/Library/Application Support/Code/User/settings.json" "$SourcePath"/vscode/
