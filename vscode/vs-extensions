@@ -6,6 +6,8 @@ PeterJausovec.vscode-docker
 austin.code-gnu-global
 baurine.vscode-pangu
 christian-kohler.npm-intellisense
+dbaeumer.jshint
+dbaeumer.vscode-eslint
 deerawan.vscode-dash
 hbenl.vscode-firefox-debug
 idleberg.hopscotch

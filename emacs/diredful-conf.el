@@ -2,7 +2,7 @@
 
 (("directories" (:foreground "SteelBlue1") "d.*" 1 nil t nil)
  ("symlinks" (:foreground "LightSkyBlue1") "lrwx" 1 nil t nil)
- ("ruby" (:foreground "indian red") "rb" nil nil nil t)
+ ("c" (:foreground "indian red") "rb" nil nil nil t)
  ("python" (:foreground "spring green") "py" nil nil nil t)
  ("lisp" (:foreground "chartreuse") "el" nil nil nil t)
  ("text" (:foreground "salmon") "txt text rst markdown" nil nil nil t)

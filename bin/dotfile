@@ -914,7 +914,7 @@ function configure_node() {
 function install_node_versions() {
   if nvm --version 2>/dev/null 1>&2; then
     local target_node_versions=(
-      '8.9.4'
+      '8.9.0'
       '9.4.0'
     )
 
