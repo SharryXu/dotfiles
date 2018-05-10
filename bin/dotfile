@@ -626,9 +626,9 @@ function configure_zsh() {
   copy-file -V "$SourcePath"/zsh/zshenv "$HOME"
 
   color-print 0 "Check custom plugins for Oh-My-Zsh..."
-  sync-git-repo -r -u "$zshsyntaxhighlighting" "$HOME"/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-  sync-git-repo -r -u "$zshcompletions" "$HOME"/.oh-my-zsh/custom/plugins/zsh-completions
-  sync-git-repo -r -u "$zshautosuggestions" "$HOME"/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+  sync-git-repo -u -r "$zshsyntaxhighlighting" "$HOME"/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+  sync-git-repo -u -r "$zshcompletions" "$HOME"/.oh-my-zsh/custom/plugins/zsh-completions
+  sync-git-repo -u -r "$zshautosuggestions" "$HOME"/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
   color-print 0 "Clean exist completion dump files..."
   rm -rf "$HOME"/.zcompdump*
@@ -660,11 +660,11 @@ function configure_tmux() {
 
   color-print 0 "Check related tmux plugins..."
   install_homebrew_package 'reattach-to-user-namespace'
-  sync-git-repo -r -u "$tmuxpluginmanager" "$HOME"/.tmux/plugins/tpm
-  sync-git-repo -r -u "$tmuxpluginyank" "$HOME"/.tmux/plugins/tmux-yank
-  sync-git-repo -r -u "$tmuxpluginsensible" "$HOME"/.tmux/plugins/tmux-sensible
-  sync-git-repo -r -u "$tmuxpluginsidebar" "$HOME"/.tmux/plugins/tmux-sidebar
-  sync-git-repo -r -u "$tmuxpluginprefixhighlight" "$HOME"/.tmux/plugins/tmux-prefix-highlight
+  sync-git-repo -u -r "$tmuxpluginmanager" "$HOME"/.tmux/plugins/tpm
+  sync-git-repo -u -r "$tmuxpluginyank" "$HOME"/.tmux/plugins/tmux-yank
+  sync-git-repo -u -r "$tmuxpluginsensible" "$HOME"/.tmux/plugins/tmux-sensible
+  sync-git-repo -u -r "$tmuxpluginsidebar" "$HOME"/.tmux/plugins/tmux-sidebar
+  sync-git-repo -u -r "$tmuxpluginprefixhighlight" "$HOME"/.tmux/plugins/tmux-prefix-highlight
 }
 
 ###################################
@@ -729,13 +729,13 @@ function configure_emacs() {
   install_python_package 'epc' '3'
 
   color-print 0 "Check ycmd..."
-  sync-git-repo -m -r -u $youcompleteme "$HOME"/.ycmd
+  sync-git-repo -m -u -r $youcompleteme "$HOME"/.ycmd
   if $New_System; then
     choose_appropriate_python_version '2'
     "$HOME"/.ycmd/build.py --clang-completer --system-libclang
   fi
 
-  sync-git-repo -r -u $clangcomplete "$HOME"/.clang-complete
+  sync-git-repo -u -r $clangcomplete "$HOME"/.clang-complete
 
   copy-file -V "$SourcePath"/other/jsbeautifyrc "$HOME"
   copy-file -V "$SourcePath"/other/tern-config "$HOME"
@@ -760,7 +760,7 @@ function configure_vim() {
   install_homebrew_package 'neovim'
 
   # Setup space-vim
-  sync-git-repo -r -u $spacevim "$HOME"/.space-vim
+  sync-git-repo -u -r $spacevim "$HOME"/.space-vim
 
   if $New_System; then
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
@@ -786,7 +786,7 @@ function install_fonts() {
   #install_homebrew_cask_package 'font-hack-nerd-font'
 
   color-print 0 "Check Powerline fonts..."
-  sync-git-repo -r -u $powerlinefonts "$HOME"/.fonts-powerline
+  sync-git-repo -u -r $powerlinefonts "$HOME"/.fonts-powerline
   "$HOME"/.fonts-powerline/install.sh 1> /dev/null
 }
 
@@ -868,8 +868,8 @@ function install_python_versions() {
 ###################################
 function configure_python() {
   color-print 0 "Check python..."
-  sync-git-repo -r -u $pyenv "$HOME"/.pyenv
-  sync-git-repo -r -u $pyenvvirtualenv "$HOME"/.pyenv/plugins/pyenv-virtualenv
+  sync-git-repo -u -r $pyenv "$HOME"/.pyenv
+  sync-git-repo -u -r $pyenvvirtualenv "$HOME"/.pyenv/plugins/pyenv-virtualenv
 
   install_python_versions
 
@@ -894,7 +894,7 @@ function configure_python() {
 function configure_node() {
   color-print 0 "Check NodeJS and node package manager..."
 
-  sync-git-repo -r -u $nodemanager "$HOME"/.nvm
+  sync-git-repo -u -r $nodemanager "$HOME"/.nvm
 
   source "$HOME"/.nvm/nvm.sh
 
