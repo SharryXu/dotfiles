@@ -109,16 +109,11 @@ function update_exist_repo() {
   (
     cd "$local_repo_path" || exit 1
 
-    local current_branch
-    current_branch="$(current-git-branch)"
-
     if $update_submodules; then
       update_all_submodules
     fi
 
-    update_all_branchs
-
-    redirect_branch_to "$current_branch"
+    git pull --allow-unrelated-histories "$target_name" "$current_head"
 
     color-print 1 "Redirect to original folder"
   )
