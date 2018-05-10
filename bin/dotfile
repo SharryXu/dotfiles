@@ -498,6 +498,11 @@ function setup_macos_settings() {
     color-print 0 "Change default screenshot type to $default_screenshot_type..."
     defaults write com.apple.screencapture type jpg && killall SystemUIServer
   fi
+
+  # Fix the vim key repeating issue in visual studio code.
+  if [[ $(defaults read com.microsoft.VSCode ApplePressAndHoldEnabled) != "0" ]]; then
+    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+  fi
 }
 
 #######################################
