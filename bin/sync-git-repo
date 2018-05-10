@@ -31,6 +31,7 @@ function usage() {
 -f  directly push unstaged changes.
 -m  update/init submodules or not.
 -d  depth parameter for git clone. Default is 30.
+-u  only update repository to the latest.
 -h  help information.
 
 Warning: For now, we assume the branch name in source and target are the same."
@@ -103,6 +104,26 @@ function update_all_submodules() {
   git submodule update --recursive
 }
 
+function update_exist_repo() {
+  color-print 1 "Redirect to $local_repo_path"
+  (
+    cd "$local_repo_path" || exit 1
+
+    local current_branch
+    current_branch="$(current-git-branch)"
+
+    if $update_submodules; then
+      update_all_submodules
+    fi
+
+    update_all_branchs
+
+    redirect_branch_to "$current_branch"
+
+    color-print 1 "Redirect to original folder"
+  )
+}
+
 function sync_exist_repo() {
   color-print 1 "Redirect to $local_repo_path"
   (
@@ -135,9 +156,10 @@ local_repo_path=""
 remote_repo_path=""
 directly_push=false
 depth=30
+only_update=false
 update_submodules=false
 
-while getopts "r:b:s:t:hfd:m" option; do
+while getopts "r:b:s:t:hfd:mu" option; do
   case $option in
     r) remote_repo_path=${OPTARG}
        if [[ "$remote_repo_path" != "git@"* && "$remote_repo_path" != "https"* ]]; then
@@ -173,6 +195,8 @@ while getopts "r:b:s:t:hfd:m" option; do
        ;;
     m) update_submodules=true
        ;;
+    u) only_update=true
+       ;;
     h|*) usage
          ;;
   esac
@@ -185,7 +209,11 @@ if [[ $# == 1 && ! -z $1 ]]; then
 
   if [[ -d $local_repo_path ]]; then
     if is-git-repo "$local_repo_path"; then
-      sync_exist_repo
+      if $only_update; then
+        update_exist_repo
+      else
+        sync_exist_repo
+      fi
     else
       # TODO: Add empty execution.
       color-print 3 "The path already existed but not a git repository."
