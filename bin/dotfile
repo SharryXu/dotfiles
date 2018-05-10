@@ -682,7 +682,6 @@ function configure_tmux() {
 function configure_emacs() {
   # config emacs (substitute the default emacs installed by Mac OS)
   color-print 0 "Check emacs..."
-  install_homebrew_package 'ag'
   install_homebrew_package 'cmake'
   install_homebrew_package 'emacs-plus'
   sync-git-repo -r $spacemacs -b develop -s author -t origin "$HOME"/.emacs.d
@@ -709,6 +708,11 @@ function configure_emacs() {
   install_npm_package 'csslint'
   install_homebrew_package 'markdown'
   install_homebrew_package 'chicken'
+  install_npm_package 'typescript'
+  install_npm_package 'javascript-typescript-langserver'
+  install_npm_package 'flow-language-server'
+  install_npm_package 'typescript-language-server'
+
   # For pdf-tools
   install_homebrew_package 'zlib'
   install_homebrew_package 'poppler' "--with-qt"
