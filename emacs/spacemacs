@@ -398,7 +398,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
         `((".*" ,temporary-file-directory t)))
 
   (setq ycmd-server-command (list "python" (file-truename "~/.ycmd/ycmd")))
-  (setq ycmd-global-config (file-truename "~/.ycmd/cpp/ycm/.ycm_extra_conf.py"))
+  (setq ycmd-global-config (file-truename "~/.ycm_global_conf.py"))
   (setq ycmd-force-semantic-completion t)
 
   ;; I've already set all variables in the right place.
