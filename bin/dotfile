@@ -735,8 +735,8 @@ function configure_emacs() {
 
   color-print 0 "Check ycmd..."
   sync-git-repo -m -u -r $youcompleteme "$HOME"/.ycmd
-  if $New_System; then
-    choose_appropriate_python_version '2'
+  if is-git-repo-modified "$HOME"/.ycmd; then
+    choose_appropriate_python_version '3'
     "$HOME"/.ycmd/build.py --clang-completer --system-libclang
   fi
 
@@ -974,7 +974,6 @@ function install_mac_gui_programs() {
     'adobe-acrobat-reader'
     'dash'
     'sourcetree'
-    'p4merge'
     'karabiner'
     'karabiner-elements'
     'docker'

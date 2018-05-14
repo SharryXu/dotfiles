@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
-# Check given folder is a git repository or not.
+# Check given git repo has uncommitted changes.
 # Globals:
 #   git
 #   print
 # Arguments:
-#   Tool Name
-#   Command Line Name (Optional)
+#   Folder Path
 # Returns:
-#   IsAlive
+#   Status Code
 
 function usage() {
   echo -e "usage: $(basename "$0") [folder_path]"
@@ -24,16 +23,16 @@ else
   usage
 fi
 
-if [ ! -d "$folder" ]; then
-  exit 1
-else
+if is-git-repo $folder; then
   (
     cd "$folder" || exit 1
 
-    if git rev-parse --git-dir 2>/dev/null 1>&2; then
-      exit 0
-    else
+    if git diff-index --quiet HEAD -- 2>/dev/null 1>&2; then
       exit 1
+    else
+      exit 0
     fi
   )
+else
+  exit 1
 fi
