@@ -3,9 +3,6 @@ var welcome = "Welcome to use MongoDB!";
 
 print(welcome);
 
-// Setup default editor
-EDITOR = "/usr/bin/vim";
-
 // Setup Prompt
 prompt = function () {
 	var promptString = "";

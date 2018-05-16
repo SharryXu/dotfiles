@@ -20,11 +20,11 @@ function main() {
   else
     git clone --depth 1 https://github.com/SharryXu/dotfiles "$local_folder"
 
-    if $TRAVIS; then
-      /bin/bash -x "$local_folder"/bin/dotfile -i "$local_folder"
-    else
+#    if $TRAVIS; then
+#      /bin/bash -x "$local_folder"/bin/dotfile -i "$local_folder"
+#    else
       "$local_folder"/bin/dotfile -i "$local_folder"
-    fi
+#    fi
   fi
 }
 
