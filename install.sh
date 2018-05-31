@@ -14,7 +14,7 @@ function main() {
   echo ''
   echo 'If you have any question, feel free to email: sharry.r.xu@gmail.com.'
 
-  if ! which git 1>/dev/null 2>&1; then
+  if ! command -v git 1>/dev/null 2>&1; then
     echo "Please install git."
     exit 1
   else

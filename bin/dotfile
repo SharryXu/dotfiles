@@ -55,7 +55,6 @@ declare -r tmuxpluginprefixhighlight='https://github.com/tmux-plugins/tmux-prefi
 declare -r youcompleteme='https://github.com/Valloric/ycmd.git'
 declare -r clangcomplete='https://github.com/Rip-Rip/clang_complete.git'
 declare -r pyenvvirtualenv='https://github.com/pyenv/pyenv-virtualenv.git'
-declare -r spacevim='https://github.com/liuchengxu/space-vim'
 
 #########################################################################
 # Install homebrew tap
@@ -765,18 +764,6 @@ function configure_vim() {
   color-print 0 "Check Vim..."
   install_homebrew_package 'vim'
   install_homebrew_package 'neovim'
-
-  # Setup space-vim
-  sync-git-repo -u -r $spacevim "$HOME"/.space-vim
-
-  if $New_System; then
-    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-    ln -sf "$HOME/.space-vim/init.vim" "$HOME/.config/nvim/init.vim"
-  fi
-
-  copy-file -V "$SourcePath"/vim/spacevim "$HOME"
 }
 
 ###################################
@@ -1189,9 +1176,6 @@ function backup() {
   copy-file -v "$HOME"/.spacemacs "$SourcePath"/emacs/
   copy-file -v "$HOME"/.diredful-conf.el "$SourcePath"/emacs/
   copy-file -v "$HOME"/.ycm_global_conf.py "$SourcePath"/emacs/
-
-  color-print 0 "Backup vim..."
-  copy-file -v "$HOME"/.spacevim "$SourcePath"/vim/
 
   color-print 0 "Backup mongo database..."
   copy-file -v "$HOME"/.mongorc.js "$SourcePath"/mongodb/

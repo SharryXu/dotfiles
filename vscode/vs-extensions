@@ -9,6 +9,7 @@ christian-kohler.npm-intellisense
 dbaeumer.jshint
 dbaeumer.vscode-eslint
 deerawan.vscode-dash
+eg2.vscode-npm-script
 hbenl.vscode-firefox-debug
 idleberg.hopscotch
 jamesmaj.easy-icons
@@ -20,6 +21,7 @@ ms-vscode.csharp
 ms-vscode.mono-debug
 ms-vscode.node-debug2
 ms-vscode.PowerShell
+octref.vetur
 rogalmic.bash-debug
 sysoev.language-stylus
 techer.open-in-browser
