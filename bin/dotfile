@@ -469,7 +469,7 @@ function setup_macos_settings() {
   local default_screenshot_type
   local default_screenshot_location
   default_screenshot_type="jpg"
-  default_screenshot_location="$HOME"/Desktop/screenshots
+  default_screenshot_location="$HOME"/Desktop/ScreenShots
 
   if [[ $(defaults read com.apple.finder _FXShowPosixPathInTitle) == "0" ]]; then
     color-print 0 "Show full file path on the tile in Finder..."
@@ -490,7 +490,7 @@ function setup_macos_settings() {
   # Adjust the screenshots
   if [[ $(defaults read com.apple.screencapture location) != "$default_screenshot_location" ]]; then
     color-print 0 "Change default screenshot location to $default_screenshot_location..."
-    defaults write com.apple.screencapture location ~/Desktop/screenshots && killall SystemUIServer
+    defaults write com.apple.screencapture location "$default_screenshot_location" && killall SystemUIServer
   fi
 
   if [[ $(defaults read com.apple.screencapture type) != "$default_screenshot_type" ]]; then
