@@ -1091,6 +1091,7 @@ function install() {
   install_homebrew_package 'axel'
 
   color-print 0 "Check Microsoft SQL Server tool..."
+  install_python_package 'wheel' '3'
   install_python_package 'mssql-cli' '3'
 
   color-print 0 "Check gdb gui tool..."

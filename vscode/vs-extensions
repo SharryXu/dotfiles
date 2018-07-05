@@ -9,6 +9,8 @@ dbaeumer.vscode-eslint
 deerawan.vscode-dash
 DotJoshJohnson.xml
 eg2.vscode-npm-script
+fernandoescolar.vscode-solution-explorer
+formulahendry.dotnet-test-explorer
 hbenl.vscode-firefox-debug
 HookyQR.beautify
 idleberg.hopscotch
@@ -21,6 +23,7 @@ ms-vscode.csharp
 ms-vscode.mono-debug
 ms-vscode.node-debug2
 ms-vscode.PowerShell
+ms-vsts.team
 octref.vetur
 rogalmic.bash-debug
 sysoev.language-stylus
