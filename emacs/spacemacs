@@ -112,8 +112,7 @@ values."
      ;;          treemacs-silent-refresh t)
      helm
      emoji
-     (wakatime :variables
-               wakatime-cli-path "/usr/local/bin/wakatime")
+     wakatime
      (git :variables
 					magit-repository-directories '(("~/" . 1)
 																				 ("~/Desktop/Projects/" . 2)))
