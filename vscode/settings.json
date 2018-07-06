@@ -13,5 +13,8 @@
     "git.autofetch": true,
     "git.confirmSync": false,
     "explorer.confirmDelete": false,
-    "explorer.confirmDragAndDrop": false
+    "explorer.confirmDragAndDrop": false,
+
+    "tfvc.location": "/Users/sxu204/Desktop/Projects/tfs/tf",
+    "team.showWelcomeMessage": false
 }
