@@ -184,7 +184,7 @@ function install_go_language() {
   global_go_folder="$HOME"/go
 
   if [ ! -d "$global_go_folder" ]; then
-    mkdir "$HOME"/go
+    mkdir "$global_go_folder"
   fi
 
   color-print 0 "Install packages for spacemacs go layer..."
@@ -608,7 +608,7 @@ function install_homebrew() {
 function configure_haskell() {
   color-print 0 "Check Haskell environment..."
 
-  if ! which stack 1>/dev/null 2>&1; then
+  if ! command -v stack 1>/dev/null 2>&1; then
     curl -sSL https://get.haskellstack.org/ | sh
   fi
 }
@@ -628,6 +628,7 @@ function configure_bash() {
   install_homebrew_package 'bash'
 
   copy-file -V "$SourcePath"/bash/bash_profile "$HOME"
+  copy-file -V "$SourcePath"/bash/profile "$HOME"
   copy-file -V "$SourcePath"/bash/bashrc "$HOME"
   copy-file -V "$SourcePath"/bash/fzf.bash "$HOME"
 
@@ -835,7 +836,7 @@ function configure_git() {
   copy-file -V "$SourcePath"/git/gitconfig "$HOME"/
   copy-file -V "$SourcePath"/git/gitignore_global "$HOME"/
 
-  install_python_package 'gitsome' '3'
+  # install_python_package 'gitsome' '3'
 }
 
 ###################################
@@ -1202,6 +1203,7 @@ function backup() {
   copy-file -v "$HOME"/.zshrc "$SourcePath"/zsh/
   copy-file -v "$HOME"/.zshenv "$SourcePath"/zsh/
   copy-file -v "$HOME"/.bash_profile "$SourcePath"/bash/
+  copy-file -v "$HOME"/.profile "$SourcePath"/bash/
   copy-file -v "$HOME"/.bashrc "$SourcePath"/bash/
   copy-file -v "$HOME"/.fzf.bash "$SourcePath"/bash/
   copy-file -v "$HOME"/.fzf.zsh "$SourcePath"/zsh/
