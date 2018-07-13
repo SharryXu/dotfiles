@@ -169,6 +169,37 @@ function install_iTerm2() {
   color-print 1 "Please link those sync folder manually in the GUI."
 }
 
+######################################
+# Install Go language
+# Arguments:
+#   Command Line Name (Optional)
+# Returns:
+#   None
+#######################################
+function install_go_language() {
+  color-print 0 "Check go..."
+  install_homebrew_package 'go'
+
+  local global_go_folder
+  global_go_folder="$HOME"/go
+
+  if [ ! -d "$global_go_folder" ]; then
+    mkdir "$HOME"/go
+  fi
+
+  color-print 0 "Install packages for spacemacs go layer..."
+  go get -u -v github.com/nsf/gocode
+  go get -u -v github.com/rogpeppe/godef
+  go get -u -v golang.org/x/tools/cmd/guru
+  go get -u -v golang.org/x/tools/cmd/gorename
+  go get -u -v golang.org/x/tools/cmd/goimports
+  go get -u -v github.com/zmb3/gogetdoc
+  go get -u -v github.com/cweill/gotests/...
+  go get -u github.com/haya14busa/gopkgs/cmd/gopkgs
+  go get -u -v github.com/davidrjenni/reftools/cmd/fillstruct
+  go get -u github.com/josharian/impl
+}
+
 #########################################
 # Install visual studio code extension.
 # Arguments:
@@ -735,7 +766,7 @@ function configure_emacs() {
   color-print 0 "Check ycmd..."
   sync-git-repo -m -u -r $youcompleteme "$HOME"/.ycmd
   if is-git-repo-modified "$HOME"/.ycmd; then
-		# Can only use brew python to build this project.
+    # Can only use brew python to build this project.
     /usr/local/bin/python3 "$HOME"/.ycmd/build.py --clang-completer --system-libclang
   fi
 
@@ -1099,6 +1130,8 @@ function install() {
 
   color-print 0 "Check cppman tool..."
   install_python_package 'cppman' '3'
+
+  install_go_language
 
   #color-print 0 "Check github language analysis tool..."
   #install_ruby_package 'github-linguist'

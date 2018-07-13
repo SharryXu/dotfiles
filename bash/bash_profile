@@ -22,9 +22,13 @@ function load-fzf() {
 }
 
 load-python
+load-nvm
 
-alias vim='nvim'
+alias emacs-term='emacs -nw'
+alias vim='emacsclient'
 
+export GOPATH=$HOME/Go
+export GOROOT=/usr/local/opt/go/libexec
 export NVM_DIR="$HOME"/.nvm
 export LLVM_PATH=/usr/local/opt/llvm/bin
 export PYTHON_CONFIGURE_OPTS="--enable-framework"
@@ -33,6 +37,7 @@ export PACKAGE_BIN=/usr/local/bin
 export PACKAGE_SBIN=/usr/local/sbin
 export PYENV_ROOT="$HOME/.pyenv"
 export PYENV_BIN="$PYENV_ROOT/bin"
+
 export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles
 
-export PATH=$CUSTOM_BIN:$PYENV_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$PATH:$NVM_DIR
+export PATH=$CUSTOM_BIN:$PYENV_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$NVM_DIR:$GOPATH/bin:$GOROOT/bin:$PATH
