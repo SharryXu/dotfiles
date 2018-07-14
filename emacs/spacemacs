@@ -54,8 +54,7 @@ values."
                markdown-live-preview-engine 'vmd)
      (ycmd :variables
            url-show-status nil
-					 python-shell-interpreter "python3"
-					 ycmd-server-command (list "python3" (file-truename "~/.ycmd/ycmd/"))
+					 ycmd-server-command (list "python" (file-truename "~/.ycmd/ycmd/"))
 					 ycmd-global-config (file-truename "~/.ycm_global_conf.py")
 					 ycmd-force-semantic-completion t
            request-message-level -1)
@@ -436,9 +435,9 @@ you should place your code here."
   (when (window-system)
     (sharry/set-window-size-and-position))
 
-	(when (spacemacs/system-is-mac)
-		(set-variable 'exec-path-from-shell-arguments '("-l"))
-		(exec-path-from-shell-initialize))
+;;	(when (spacemacs/system-is-mac)
+;;		(set-variable 'exec-path-from-shell-arguments '("-l"))
+;;		(exec-path-from-shell-initialize))
 
   (global-diff-hl-mode)
   (global-company-mode)

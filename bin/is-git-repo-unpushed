@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# TODO: Add branch support.
+
+# Check given git repo has unpushed commits.
+# Globals:
+#   git
+#   print
+# Arguments:
+#   Folder Path
+# Returns:
+#   Status Code
+
+function usage() {
+  echo -e "usage: $(basename "$0") [folder_path]"
+
+  exit 1
+}
+
+if [ $# -eq 1 ]; then
+  folder=$(realpath "$1")
+elif [ $# -eq 0 ]; then
+  folder=$(pwd)
+else
+  usage
+fi
+
+if is-git-repo $folder; then
+  (
+    cd "$folder" || exit 1
+
+    if [[ $(git log master ^origin/master 2>/dev/null) ]]; then
+      exit 0
+    else
+      exit 1
+    fi
+  )
+else
+  exit 1
+fi
