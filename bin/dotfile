@@ -1007,6 +1007,7 @@ function install_mac_gui_programs() {
     'microsoft-azure-storage-explorer'
     'appcleaner'
     'intellij-idea-ce'
+		'shadowsocksx-ng'
     # 'firefox'
     # 'alfred'
   )
