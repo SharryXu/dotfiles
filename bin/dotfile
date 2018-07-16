@@ -1188,7 +1188,7 @@ function install() {
 
   choose_appropriate_python_version '3'
 
-  color-print 1 "Done."
+  color-print 1 "Done." && say --quality=127 "Install done."
 }
 
 #######################################
@@ -1247,7 +1247,7 @@ function backup() {
 
   color-print 0 "Backup vs code settings..."
   copy-file "$HOME/Library/Application Support/Code/User/settings.json" "$SourcePath"/vscode/
-  if which code 1>/dev/null 2>&1; then
+  if command -v code 1>/dev/null 2>&1; then
     code --list-extensions > "$SourcePath"/vscode/vs-extensions
   fi
 
@@ -1256,7 +1256,7 @@ function backup() {
 
   sync-git-repo "$SourcePath"
 
-  color-print 1 "Done."
+  color-print 1 "Done." && say --quality=127 "Backup done."
 }
 
 #######################################
