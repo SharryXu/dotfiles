@@ -732,7 +732,6 @@ function configure_emacs() {
     rm "$HOME"/.iterm2_shell_integration.zsh
   fi
 
-  install_npm_package 'wakatime'
   install_npm_package 'ymd'
   install_homebrew_package 'cppcheck'
   install_homebrew_package 'shellcheck'
@@ -748,6 +747,7 @@ function configure_emacs() {
   install_npm_package 'javascript-typescript-langserver'
   install_npm_package 'flow-language-server'
   install_npm_package 'typescript-language-server'
+	install_python_package 'wakatime' '3'
 
   # For pdf-tools
   install_homebrew_package 'zlib'

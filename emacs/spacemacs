@@ -112,7 +112,8 @@ values."
      ;;          treemacs-silent-refresh t)
      helm
      emoji
-     wakatime
+     (wakatime :variables
+							 python-shell-interpreter "python3")
      (git :variables
 					magit-repository-directories '(("~/" . 1)
 																				 ("~/Desktop/Projects/" . 2)))
