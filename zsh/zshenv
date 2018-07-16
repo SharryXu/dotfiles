@@ -1,5 +1,5 @@
 # Setup path
-export GOPATH=$HOME/Go:$HOME/Desktop/Projects/example.v2/
+export GOPATH=$HOME/Go
 export GOROOT=/usr/local/opt/go/libexec
 export NVM_DIR="$HOME/.nvm"
 export CUSTOM_BIN="$HOME"/.bin

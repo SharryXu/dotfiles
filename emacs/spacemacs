@@ -112,7 +112,7 @@ values."
      ;;          treemacs-silent-refresh t)
      helm
      emoji
-     (wakatime :variables
+		 (wakatime :variables
 							 python-shell-interpreter "python3")
      (git :variables
 					magit-repository-directories '(("~/" . 1)
