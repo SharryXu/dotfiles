@@ -778,6 +778,9 @@ function configure_emacs() {
 
   copy-file -V "$SourcePath"/emacs/ycm_global_conf.py "$HOME"
   copy-file -V "$SourcePath"/emacs/diredful-conf.el "$HOME"
+
+	color-print 0 "Restart emacs client..."
+	start-or-restart-emacs-client
 }
 
 ###################################

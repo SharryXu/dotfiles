@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Start emacs daemon program.
+# So that you can use 'vim ...' to open a emacsclient in the shell.
+# Globals:
+#   grep
+# Arguments:
+# Returns:
+
+existed_pid=$(ps -A | grep "emacs-plus.*--bg-daemon" | head -n 1 | awk '{print $1}')
+
+if is-number $existed_pid; then
+	color-print 1 'Emacs is running...'
+else
+	emacs --daemon
+fi
+
+exit $?

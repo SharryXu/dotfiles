@@ -26,7 +26,7 @@ load-nvm
 
 alias emacs-term='emacs -nw'
 alias vim='emacsclient'
-start-or-restart-emacs
+start-emacs-client
 
 export GOPATH=$HOME/Go
 export GOROOT=/usr/local/opt/go/libexec
