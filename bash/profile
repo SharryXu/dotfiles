@@ -1,5 +1,6 @@
 # Go only recognize the GOPATH variable in the bash profile.
 export GOPATH=$HOME/Go:$HOME/Desktop/Projects/example.v2/
+
 export GOROOT=/usr/local/opt/go/libexec
 export NVM_DIR="$HOME"/.nvm
 export LLVM_PATH=/usr/local/opt/llvm/bin
@@ -12,4 +13,4 @@ export PYENV_BIN="$PYENV_ROOT/bin"
 
 export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles
 
-export PATH=$CUSTOM_BIN:$PYENV_BIN:$PACKAGE_BIN:$PACKAGE_SBIN:$LLVM_PATH:$NVM_DIR:$GOPATH/bin:$GOROOT/bin:$PATH
+export PATH=$CUSTOM_BIN:$PYENV_BIN:$LLVM_PATH:$NVM_DIR:$GOPATH/bin:$PATH:$PACKAGE_BIN:$PACKAGE_SBIN

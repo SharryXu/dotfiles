@@ -387,9 +387,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (setq gc-cons-threshold (* 2 GB))
     (setq gc-cons-percentage 0.6))
 
-  ;; Set local bin folder as expected.
-	(add-to-list 'exec-path "~/.local/bin/")
-
   ;; Set elpa source.
   (set-variable 'configuration-layer-elpa-archives
         '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
@@ -436,9 +433,9 @@ you should place your code here."
   (when (window-system)
     (sharry/set-window-size-and-position))
 
-;;	(when (spacemacs/system-is-mac)
-;;		(set-variable 'exec-path-from-shell-arguments '("-l"))
-;;		(exec-path-from-shell-initialize))
+	(when (spacemacs/system-is-mac)
+		(set-variable 'exec-path-from-shell-arguments '("-l"))
+		(exec-path-from-shell-initialize))
 
   (global-diff-hl-mode)
   (global-company-mode)
