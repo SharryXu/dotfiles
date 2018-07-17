@@ -45,7 +45,7 @@ values."
      (javascript :variables
                  javascript-disable-tern-port-files nil
                  javascript-backend 'tern
-								 node-add-modules-path t
+								 ;;node-add-modules-path t
                  tern-command '("tern"))
      org
      html
@@ -433,10 +433,11 @@ you should place your code here."
     (sharry/set-window-size-and-position))
 
 	(when (spacemacs/system-is-mac)
-		(set-variable 'exec-path-from-shell-check-startup-files nil)
 		;; It may very slow when add -i argument.
 		;;(set-variable 'exec-path-from-shell-arguments '("-l"))
-		(exec-path-from-shell-initialize))
+		(set-variable 'exec-path-from-shell-check-startup-files nil)
+		(async-start (lambda ()
+									 (exec-path-from-shell-initialize))))
 
   (global-diff-hl-mode)
   (global-company-mode)
