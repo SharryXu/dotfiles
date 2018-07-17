@@ -1,6 +1,7 @@
-# Go only recognize the GOPATH variable in the bash profile.
-export GOPATH=$HOME/Go:$HOME/Desktop/Projects/example.v2/
+#!/bin/bash
 
+# Go only recognize the GOPATH variable in the bash profile.
+export GOPATH=$HOME/go:$HOME/Desktop/Projects/example.v2
 export GOROOT=/usr/local/opt/go/libexec
 export NVM_DIR="$HOME"/.nvm
 export LLVM_PATH=/usr/local/opt/llvm/bin
@@ -11,6 +12,27 @@ export PACKAGE_SBIN=/usr/local/sbin
 export PYENV_ROOT="$HOME/.pyenv"
 export PYENV_BIN="$PYENV_ROOT/bin"
 
+# Setup homebrew
+export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
+export HOMEBREW_NO_AUTO_UPDATE=true
+
+# Setup language
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+export EDITOR='emacsclient'
+export SSH_KEY_PATH="~/.ssh/rsa_id"
+export TERM='screen-256color'
+
+# Setup man page.
+export LESS_TERMCAP_mb='\e[1;32m'
+export LESS_TERMCAP_md='\e[1;32m'
+export LESS_TERMCAP_me='\e[0m'
+export LESS_TERMCAP_se='\e[0m'
+export LESS_TERMCAP_so='\e[01;33m'
+export LESS_TERMCAP_ue='\e[0m'
+export LESS_TERMCAP_us='\e[1;4;31m'
+
 export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles
 
-export PATH=$CUSTOM_BIN:$PYENV_BIN:$LLVM_PATH:$NVM_DIR:$GOPATH/bin:$PATH:$PACKAGE_BIN:$PACKAGE_SBIN
+export PATH=$PYENV_BIN:$CUSTOM_BIN:$NVM_DIR:$LLVM_PATH:$HOME/go/bin:$PATH
