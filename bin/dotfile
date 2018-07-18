@@ -106,7 +106,6 @@ function configure_all_homebrew_tap() {
   local target_homebrew_tap_list=(
     'caskroom/cask'
     'caskroom/fonts'
-    'd12frosted/emacs-plus'
     'homebrew/core'
     'homebrew/php'
     'homebrew/services'
@@ -719,7 +718,7 @@ function configure_emacs() {
   # config emacs (substitute the default emacs installed by Mac OS)
   color-print 0 "Check emacs..."
   install_homebrew_package 'cmake'
-  install_homebrew_package 'emacs-plus'
+  install_homebrew_package 'emacs' '--with-cocoa --with-modules' # --HEAD
   sync-git-repo -r $spacemacs -b develop -s author -t origin "$HOME"/.emacs.d
 
   # In other case, user might wanna a clean emacs environment.
@@ -734,6 +733,7 @@ function configure_emacs() {
 
   install_npm_package 'ymd'
   install_homebrew_package 'cppcheck'
+  install_homebrew_package 'rtags'
   install_homebrew_package 'shellcheck'
   install_homebrew_package 'tidy-html5'
   install_npm_package 'stylelint'
