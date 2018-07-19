@@ -718,6 +718,7 @@ function configure_emacs() {
   # config emacs (substitute the default emacs installed by Mac OS)
   color-print 0 "Check emacs..."
   install_homebrew_package 'cmake'
+	install_homebrew_package 'llvm' '--with-libcxx --with-clang --with-toolchain --with-lldb --without-assertions --with-rtti'
   install_homebrew_package 'emacs' '--with-cocoa --with-modules' # --HEAD
   sync-git-repo -r $spacemacs -b develop -s author -t origin "$HOME"/.emacs.d
 

@@ -39,25 +39,19 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     go
+     (go :variables
+         indent-tabs-mode t)
      sql
      yaml
      (javascript :variables
                  javascript-disable-tern-port-files nil
                  javascript-backend 'tern
-                 ;;node-add-modules-path t
                  tern-command '("tern"))
      org
      html
      (markdown :variables
                markdown-command "/usr/local/bin/markdown"
                markdown-live-preview-engine 'vmd)
-     (ycmd :variables
-           url-show-status nil
-           ycmd-server-command (list (file-truename "~/.pyenv/shims/python") (file-truename "~/.ycmd/ycmd/"))
-           ycmd-global-config (file-truename "~/.ycm_global_conf.py")
-           ycmd-force-semantic-completion t
-           request-message-level -1)
      (auto-completion :variables
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-snippets-in-popup t
@@ -68,8 +62,18 @@ values."
                       indent-tabs-mode nil)
      (c-c++ :variables
             c-c++-enable-clang-format-on-save t
+            c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-c++11 nil
+						c-c++-enable-rtags-support nil
+            c-c++-enable-rtags-support 'no-completion
             c-c++-enable-clang-support t)
+     ;; Try to use cquery someday.
+     (ycmd :variables
+           url-show-status nil
+           ycmd-server-command (list (file-truename "~/.pyenv/shims/python") (file-truename "~/.ycmd/ycmd/"))
+           ycmd-global-config (file-truename "~/.ycm_global_conf.py")
+           ycmd-force-semantic-completion t
+           request-message-level -1)
      emacs-lisp
      (scheme :variables
              scheme-program-name "csi -:c"
@@ -435,12 +439,7 @@ you should place your code here."
   (when (spacemacs/system-is-mac)
     (make-thread
      (lambda ()
-			 (message "Add exec path...")
-			 ;; It may very slow when add -i argument.
-			 ;;(set-variable 'exec-path-from-shell-arguments '("-l"))
-			 (set-variable 'exec-path-from-shell-check-startup-files nil)
-			 (exec-path-from-shell-initialize)
-			 (message "Add exec path finished."))))
+       (sharry/exec-path-initialize))))
 
   (global-diff-hl-mode)
   (global-company-mode)
@@ -455,7 +454,6 @@ you should place your code here."
                   'sharry/clear-semantic-db)
 
   (add-hook 'markdown-mode-hook 'emojify-mode)
-
   (add-hook 'c-mode-hook 'sharry/configure-c-mode)
   (add-hook 'c++-mode-hook 'sharry/configure-c++-mode)
   (add-hook 'geiser-mode-hook 'sharry/configure-geiser-mode)
@@ -463,6 +461,8 @@ you should place your code here."
   (add-hook 'hexo-mode-hook 'sharry/configure-hexo-mode)
   (add-hook 'pdf-view-mode-hook 'sharry/configure-pdf-view-mode)
   (add-hook 'dired-mode-hook 'sharry/configure-dired-mode)
+  (add-hook 'go-mode-hook 'sharry/configure-go-mode)
+  (add-hook 'emacs-lisp-mode-hook 'sharry/configure-emacs-lisp-mode)
 
   ;;(evil-magit-init)
 
@@ -493,21 +493,21 @@ you should place your code here."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-	 (quote
-		(string-inflection yapfify pyvenv pytest pyenv-mode py-isort pip-requirements osx-clipboard live-py-mode hy-mode evil-terminal-cursor-changer cython-mode company-quickhelp company-anaconda apib-mode anaconda-mode pythonic org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ac-geiser geiser wakatime-mode orgit magit-popup yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     (quote
+      (cmake-ide string-inflection yapfify pyvenv pytest pyenv-mode py-isort pip-requirements osx-clipboard live-py-mode hy-mode evil-terminal-cursor-changer cython-mode company-quickhelp company-anaconda apib-mode anaconda-mode pythonic org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ac-geiser geiser wakatime-mode orgit magit-popup yaml-mode tree-mode flycheck-pos-tip rainbow-mode rainbow-identifiers color-identifiers-mode diredful format-sql dired-icon chinese-pyim pyim pyim-basedict pos-tip all-the-icons memoize font-lock+ helm-w3m w3m avy xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help omnisharp shut-up flycheck csharp-mode disaster company-c-headers cmake-mode clang-format better-shell markdown-preview-eww uimage cl-lib cl-lib-highlight vmd-mode aggressive-indent adaptive-wrap ace-window ace-link gist helm-swoop sql-indent fuzzy c-mode company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet ac-ispell auto-complete js2-refactor markdown-toc web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat yasnippet multiple-cursors js2-mode js-doc coffee-mode mmm-mode gh-md sass-mode web-mode tagedit slim-mode scss-mode pug-mode less-css-mode haml-mode emmet-mode ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async evil-unimpaired f dash org-plus-contrib s))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
 
 (provide '.spacemacs)
 ;;; .spacemacs ends here

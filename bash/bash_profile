@@ -26,6 +26,5 @@ load-nvm
 
 alias emacs-term='emacs -nw'
 alias vim='emacsclient'
-start-emacs-client
 
 source "$HOME"/.profile
