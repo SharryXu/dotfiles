@@ -9,14 +9,39 @@
 ###################################
 declare -r error_message_check_parameters="Please check parameters."
 declare -r default_shell=/usr/local/bin/zsh
+declare -r author_name="sxu204"
+
+#########################################################################
+# Decide whether this computer is belong to the author or not.
+# Globals:
+#   whoami
+# Arguments:
+# Returns:
+#   Status Code. (0=Yes, 1=No)
+#########################################################################
+function is_author_self() {
+  if [[ $(whoami) == "$author_name" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
 
 ######################################
 # Declare all used git repositories.
 ######################################
-declare -r ohmyzsh='git@github.com:SharryXu/oh-my-zsh'
-declare -r spacemacs='git@github.com:SharryXu/spacemacs'
-declare -r iterm2configuration='git@github.com:SharryXu/iTerm2'
-declare -r pyenv='git@github.com:SharryXu/pyenv.git'
+if is_author_self; then
+  declare -r ohmyzsh='git@github.com:SharryXu/oh-my-zsh'
+  declare -r spacemacs='git@github.com:SharryXu/spacemacs'
+  declare -r iterm2configuration='git@github.com:SharryXu/iTerm2'
+  declare -r pyenv='git@github.com:SharryXu/pyenv.git'
+else
+  declare -r ohmyzsh='https://github.com/SharryXu/oh-my-zsh'
+  declare -r spacemacs='https://github.com/SharryXu/spacemacs'
+  declare -r iterm2configuration='https://github.com/SharryXu/iTerm2'
+  declare -r pyenv='https://github.com/pyenv/pyenv.git'
+fi
+
 declare -r zshsyntaxhighlighting='https://github.com/zsh-users/zsh-syntax-highlighting'
 declare -r zshcompletions='https://github.com/zsh-users/zsh-completions'
 declare -r zshautosuggestions='https://github.com/zsh-users/zsh-autosuggestions'
@@ -693,7 +718,7 @@ function configure_emacs() {
   # config emacs (substitute the default emacs installed by Mac OS)
   color-print 0 "Check emacs..."
   install_homebrew_package 'cmake'
-  install_homebrew_package 'llvm' '--with-libcxx --with-clang --with-toolchain --with-lldb --without-assertions --with-rtti'
+	install_homebrew_package 'llvm' '--with-libcxx --with-clang --with-toolchain --with-lldb --without-assertions --with-rtti'
   install_homebrew_package 'emacs' '--with-cocoa --with-modules' # --HEAD
   sync-git-repo -r $spacemacs -b develop -s author -t origin "$HOME"/.emacs.d
 
@@ -720,7 +745,7 @@ function configure_emacs() {
   install_npm_package 'javascript-typescript-langserver'
   install_npm_package 'flow-language-server'
   install_npm_package 'typescript-language-server'
-  install_python_package 'wakatime' '3'
+	install_python_package 'wakatime' '3'
 
   # For pdf-tools
   install_homebrew_package 'zlib'
@@ -980,7 +1005,7 @@ function install_mac_gui_programs() {
     'microsoft-azure-storage-explorer'
     'appcleaner'
     'intellij-idea-ce'
-    'shadowsocksx-ng'
+		'shadowsocksx-ng'
     # 'firefox'
     # 'alfred'
   )
