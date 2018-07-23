@@ -5,7 +5,7 @@
     // Color Theme
     "workbench.colorTheme": "Solarized Light",
     // File Icon Theme
-    "workbench.iconTheme": "easy-icons",
+    "workbench.iconTheme": "vscode-great-icons",
     // Clang-Format
     "editor.formatOnSave": true,
     // Editor

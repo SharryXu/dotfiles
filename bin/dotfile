@@ -748,8 +748,13 @@ function configure_emacs() {
 	install_python_package 'wakatime' '3'
 
   # For pdf-tools
+	install_homebrew_package 'automake'
+	install_homebrew_package 'autoconf'
   install_homebrew_package 'zlib'
   install_homebrew_package 'poppler' "--with-qt"
+
+	# For dash layer.
+	install_homebrew_package 'sqlite' '--with-functions'
 
   if $New_System; then
     chicken-install -s apropos chicken-doc
