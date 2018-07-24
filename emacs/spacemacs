@@ -40,12 +40,12 @@ values."
    dotspacemacs-configuration-layers
    '(
      (dash :variables
+					 helm-dash-browser-func 'eww
            helm-dash-docset-newpath "~/docsets")
      pdf
      (go :variables
 				 godoc-at-point-function 'godoc-gogetdoc
 				 go-use-gometalinter t
-
          go-tab-width 4)
      yaml
      (tern :variables
@@ -86,8 +86,8 @@ values."
              geiser-repl-query-on-kill-p nil
              geiser-debug--display-after nil)
      (shell :variables
-            ;;shell-apply-ansi-color 't
-            ;;shell-default-term-shell (getenv "SHELL")
+            shell-default-term-shell (getenv "SHELL")
+						shell-default-shell 'eshell
             shell-default-position 'bottom
             shell-default-height 30
             indent-tabs-mode nil
@@ -466,6 +466,7 @@ you should place your code here."
   (add-hook 'hexo-mode-hook 'sharry/configure-hexo-mode)
   (add-hook 'dired-mode-hook 'sharry/configure-dired-mode)
   (add-hook 'emacs-lisp-mode-hook 'sharry/configure-emacs-lisp-mode)
+	(add-hook 'go-mode-hook 'sharry/configure-go-mode)
 
   (setq compilation-finish-function
         (lambda (buf str)
