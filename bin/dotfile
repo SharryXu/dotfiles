@@ -736,7 +736,6 @@ function configure_emacs() {
 
   install_npm_package 'ymd'
   install_homebrew_package 'cppcheck'
-  install_homebrew_package 'rtags'
   install_homebrew_package 'shellcheck'
   install_homebrew_package 'tidy-html5'
   install_npm_package 'stylelint'
@@ -760,6 +759,11 @@ function configure_emacs() {
 
 	# For dash layer.
 	install_homebrew_package 'sqlite' '--with-functions'
+
+	# For python layer.
+	install_python_package 'jedi' '3'
+	install_python_package 'json-rpc' '3'
+	install_python_package 'service_factory' '3'
 
   if $New_System; then
     chicken-install -s apropos chicken-doc
