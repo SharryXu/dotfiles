@@ -1,4 +1,4 @@
-# Dotfiles ![Build Status](https://travis-ci.org/SharryXu/dotfiles.svg?branch=master)
+# Dotfiles
 
 This repository contains some user settings and dotfiles.
 
