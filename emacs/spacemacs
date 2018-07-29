@@ -41,7 +41,8 @@ values."
    '(
      (dash :variables
 					 helm-dash-browser-func 'eww
-           helm-dash-docset-newpath "~/docsets")
+					 helm-dash-min-length 2
+					 helm-dash-docset-newpath "~/docsets")
      pdf
      (go :variables
 				 godoc-at-point-function 'godoc-gogetdoc

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# Sync folder
+# Globals:
+#   rsync
+#   print
+# Arguments:
+#   Target Folder Path
+# Returns:
+#   None
+
+function usage() {
+  echo -e "usage: $(basename "$0") [options] target_folder_path
+
+[options]:
+-h  Show help information"
+
+  exit 1
+}
+
+while getopts "s:h" option; do
+  case $option in
+    h|*)usage;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+if [[ $# == 1 ]]; then
+  targetFolderPath=$(realpath "$1")
+
+  if [[ ! -d $targetFolderPath ]]; then
+    color-print 3 "The target folder: $targetFolderPath is illegal."
+    exit 1
+  fi
+
+	OLD_IFS=IFS
+	IFS=$'\n'
+	docsets=$(find ~/Library/Application\ Support/Dash -name "*.docset")
+
+	color-print 0 "Copying all docsets to $targetFolderPath..."
+	for docset in $docsets; do
+		color-print 1 "${docset##*/}..."
+		cp -r "$docset" "$targetFolderPath"
+	done
+
+	IFS=$OLD_IFS
+
+  exit $?
+else
+  usage
+fi
