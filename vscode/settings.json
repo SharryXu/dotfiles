@@ -16,5 +16,6 @@
     "explorer.confirmDragAndDrop": false,
 
     "tfvc.location": "/Users/sxu204/Desktop/Projects/tfs/tf",
-    "team.showWelcomeMessage": false
+    "team.showWelcomeMessage": false,
+    "window.zoomLevel": 1
 }

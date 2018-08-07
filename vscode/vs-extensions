@@ -1,8 +1,7 @@
 AlanWalk.markdown-toc
-DavidAnson.vscode-markdownlint
-PeterJausovec.vscode-docker
 austin.code-gnu-global
 christian-kohler.npm-intellisense
+DavidAnson.vscode-markdownlint
 dbaeumer.jshint
 dbaeumer.vscode-eslint
 deerawan.vscode-dash
@@ -19,13 +18,17 @@ ms-mssql.mssql
 ms-python.python
 ms-vscode.cpptools
 ms-vscode.csharp
+ms-vscode.Go
 ms-vscode.mono-debug
 ms-vscode.node-debug2
 ms-vscode.PowerShell
 ms-vsts.team
 octref.vetur
+PeterJausovec.vscode-docker
 rogalmic.bash-debug
+RomanPeshkov.go-test-outline
 sysoev.language-stylus
 techer.open-in-browser
+tootone.org-mode
 vscodevim.vim
 xaver.clang-format
