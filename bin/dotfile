@@ -1020,8 +1020,7 @@ function install_mac_gui_programs() {
     'appcleaner'
     'intellij-idea-ce'
 		'shadowsocksx-ng'
-    # 'firefox'
-    # 'alfred'
+		'typora'
   )
 
   for ((i = 0; i < ${#gui_programs[@]}; i++)); do
