@@ -252,7 +252,7 @@ function install_vscode() {
   copy-file "$SourcePath"/vscode/settings.json "$HOME"/Library/Application\ Support/Code/User/
 
   if [ -f "$SourcePath"/vscode/vs-extensions ]; then
-    if which code 1>/dev/null 2>&1; then
+    if command -v code 1>/dev/null 2>&1; then
       local extension_list
       extension_list=$(awk '{print $1}' "$SourcePath"/vscode/vs-extensions)
 
@@ -277,7 +277,7 @@ function install_vscode() {
 #   None
 ###################################################################################
 function install_npm_package() {
-  if ! which npm 1>/dev/null 2>&1; then
+  if ! command -v npm 1>/dev/null 2>&1; then
     load-nvm
   fi
 
@@ -417,7 +417,7 @@ function install_ruby_package() {
 #   StatusCode. (0=exist, 1=no)
 #######################################
 function choose_appropriate_python_version() {
-  if which pyenv 1>/dev/null 2>&1; then
+  if command -v pyenv 1>/dev/null 2>&1; then
     if is-number "$1"; then
       local majorVer=$1
       local minorVer=$2
@@ -454,7 +454,7 @@ function choose_appropriate_python_version() {
 #   None
 #######################################
 function install_python_package() {
-  if which pyenv 1>/dev/null 2>&1; then
+  if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
   else
     color-print 3 "The program name pyenv is not existed."
@@ -583,14 +583,14 @@ function backup_global_config() {
 ##################################
 function install_homebrew() {
   color-print 0 "Check brew..."
-  if which brew 1>/dev/null 2>&1; then
+  if command -v brew 1>/dev/null 2>&1; then
     brew update
     color-print 1 "brew has been successfully updated."
     color-print 0 "Update all brew packages..."
     brew upgrade
     color-print 1 "All brew packages have been updated."
   else
-    if which ruby 1>/dev/null 2>&1; then
+    if command -v ruby 1>/dev/null 2>&1; then
       color-print 3 "Please install Ruby first."
       exit 1
     else
@@ -779,6 +779,7 @@ function configure_emacs() {
   color-print 0 "Check ycmd..."
   sync-git-repo -m -u -r $youcompleteme "$HOME"/.ycmd
   if is-git-repo-unpushed "$HOME"/.ycmd; then
+		choose_appropriate_python_version '3'
     python "$HOME"/.ycmd/build.py --clang-completer --system-libclang
   fi
 
@@ -860,7 +861,7 @@ function configure_git() {
 #   None
 ###################################
 function install_python_versions() {
-  if which pyenv 1>/dev/null 2>&1; then
+  if command -v pyenv 1>/dev/null 2>&1; then
     # TODO: Remember to upgrade version when gitsome can work properly under 3.6.5
     local target_python_versions=(
       '2.7.14'
@@ -1123,7 +1124,7 @@ function install() {
   copy-file -V "$SourcePath/mongodb/mongorc.js" "$HOME"
 
   color-print 0 "Check MySQL database..."
-  install_homebrew_package 'mariadb'
+  install_homebrew_package 'mysql'
   install_homebrew_package 'mycli'
   copy-file -V "$SourcePath"/mysql/my.cnf "$HOME"
 
