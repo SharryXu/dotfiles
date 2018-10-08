@@ -37,4 +37,4 @@ export HISTTIMEFORMAT='%F %T '
 
 export DOTFILES_PATH="$HOME"/Desktop/Projects/dotfiles
 
-export PATH=$PYENV_BIN:$CUSTOM_BIN:$NVM_DIR:$LLVM_PATH:$HOME/go/bin:$PATH
+export PATH=$PYENV_BIN:$CUSTOM_BIN:$NVM_DIR:$LLVM_PATH:$HOME/go/bin:$PACKAGE_BIN:$PATH
