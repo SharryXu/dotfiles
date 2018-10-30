@@ -1015,13 +1015,17 @@ function install_mac_gui_programs() {
     'neteasemusic'
     'wireshark'
     'xmind'
-    'veeer'
     'cheatsheet'
     'microsoft-azure-storage-explorer'
     'appcleaner'
     'intellij-idea-ce'
+		'pycharm-ce'
+		'sequel-pro'
 		'shadowsocksx-ng'
 		'typora'
+		'wechat'
+		'iterm2'
+		'postman'
   )
 
   for ((i = 0; i < ${#gui_programs[@]}; i++)); do
