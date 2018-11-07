@@ -661,7 +661,8 @@ function configure_zsh() {
   fi
 
   color-print 0 "Check oh-My-Zsh..."
-  sync-git-repo -r "$ohmyzsh" "$HOME"/.oh-my-zsh/
+  sync-git-repo -r $ohmyzsh -b master -s author -t origin "$HOME"/.oh-my-zsh
+
   copy-file -V "$SourcePath"/zsh/zshrc "$HOME"
   copy-file -V "$SourcePath"/zsh/zshenv "$HOME"
 
