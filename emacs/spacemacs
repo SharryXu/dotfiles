@@ -454,7 +454,6 @@ you should place your code here."
   (global-company-mode)
   (global-centered-cursor-mode)
   (global-evil-surround-mode)
-  (global-evil-mc-mode)
 
   (global-set-key (kbd "<f7>")
                   'sharry/quick-format)
