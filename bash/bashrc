@@ -1,1 +1,3 @@
 #!/bin/bash
+export HISTTIMEFORMAT='%F %T '
+export HISTTIMEFORMAT='%F %T '

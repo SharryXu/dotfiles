@@ -28,3 +28,4 @@ alias emacs-term='emacs -nw'
 alias vim='emacsclient'
 
 source "$HOME"/.profile
+source "$HOME/.bashrc"

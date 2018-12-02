@@ -202,6 +202,7 @@ function install_go_language() {
 	go get -u -v github.com/godoctor/godoctor
 	go install github.com/godoctor/godoctor
 	go get -u -v github.com/fatih/gomodifytags
+	go get -u github.com/sourcegraph/go-langserver
 }
 
 #########################################
