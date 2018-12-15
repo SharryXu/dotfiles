@@ -779,6 +779,7 @@ function configure_emacs() {
   install_python_package 'epc' '3'
 
   color-print 0 "Check ycmd..."
+	install_python_package 'requests' '3'
   sync-git-repo -m -u -r $youcompleteme "$HOME"/.ycmd
   if is-git-repo-unpushed "$HOME"/.ycmd; then
 		choose_appropriate_python_version '3'
