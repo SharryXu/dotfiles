@@ -1029,6 +1029,7 @@ function install_mac_gui_programs() {
 		'wechat'
 		'iterm2'
 		'postman'
+		'youdaodict'
   )
 
   for ((i = 0; i < ${#gui_programs[@]}; i++)); do
