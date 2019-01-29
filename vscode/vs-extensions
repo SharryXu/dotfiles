@@ -12,9 +12,11 @@ emmanuelbeziat.vscode-great-icons
 fernandoescolar.vscode-solution-explorer
 formulahendry.dotnet-test-explorer
 hbenl.vscode-firefox-debug
+hollowtree.vue-snippets
 HookyQR.beautify
 hu2ren.vetur-wepy
 idleberg.hopscotch
+mariorodeghiero.vue-theme
 mitaki28.vscode-clang
 ms-mssql.mssql
 ms-python.python
@@ -23,14 +25,13 @@ ms-vscode.csharp
 ms-vscode.Go
 ms-vscode.mono-debug
 ms-vscode.node-debug2
-ms-vscode.PowerShell
 ms-vsts.team
 octref.vetur
 PeterJausovec.vscode-docker
+qiu8310.minapp-vscode
 rogalmic.bash-debug
 RomanPeshkov.go-test-outline
 sysoev.language-stylus
 techer.open-in-browser
-tootone.org-mode
 vscodevim.vim
 xaver.clang-format

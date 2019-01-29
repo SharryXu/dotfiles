@@ -3,7 +3,7 @@
     "vim.leader": "SPC",
     "vim.enableNeovim": false,
     // Color Theme
-    "workbench.colorTheme": "Solarized Light",
+    "workbench.colorTheme": "Vue Theme",
     // File Icon Theme
     "workbench.iconTheme": "vscode-great-icons",
     // Clang-Format
@@ -17,5 +17,14 @@
 
     "tfvc.location": "/Users/sxu204/Desktop/Projects/tfs/tf",
     "team.showWelcomeMessage": false,
-    "window.zoomLevel": 1
+    "window.zoomLevel": 1,
+    "files.associations": {
+        "*.cjson": "jsonc",
+        "*.wxss": "css",
+        "*.wxs": "javascript"
+    },
+    "emmet.includeLanguages": {
+        "wxml": "html"
+    },
+    "minapp-vscode.disableAutoConfig": true
 }
