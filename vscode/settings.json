@@ -3,9 +3,9 @@
     "vim.leader": "SPC",
     "vim.enableNeovim": false,
     // Color Theme
-    "workbench.colorTheme": "Vue Theme",
+    "workbench.colorTheme": "Atom One Light",
     // File Icon Theme
-    "workbench.iconTheme": "vscode-great-icons",
+    "workbench.iconTheme": "material-icon-theme",
     // Clang-Format
     "editor.formatOnSave": true,
     // Editor
@@ -14,7 +14,6 @@
     "git.confirmSync": false,
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
-
     "tfvc.location": "/Users/sxu204/Desktop/Projects/tfs/tf",
     "team.showWelcomeMessage": false,
     "window.zoomLevel": 1,
@@ -26,5 +25,23 @@
     "emmet.includeLanguages": {
         "wxml": "html"
     },
-    "minapp-vscode.disableAutoConfig": true
+    "minapp-vscode.disableAutoConfig": true,
+    "jshint.enable": true,
+    "html.autoClosingTags": false,
+    "html.format.enable": true,
+    "vetur.format.defaultFormatterOptions": {
+        "js-beautify-html": {
+            "wrap_attributes": "force-expand-multiline"
+        },
+        "prettyhtml": {
+            "printWidth": 100,
+            "singleQuote": false,
+            "wrapAttributes": false,
+            "sortAttributes": false
+        }
+    },
+    "vetur.format.defaultFormatter.html": "none",
+    "vetur.format.defaultFormatter.js": "none",
+    "editor.detectIndentation": false,
+    "javascript.updateImportsOnFileMove.enabled": "always"
 }
