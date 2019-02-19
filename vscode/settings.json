@@ -27,21 +27,10 @@
     },
     "minapp-vscode.disableAutoConfig": true,
     "jshint.enable": true,
-    "html.autoClosingTags": false,
-    "html.format.enable": true,
-    "vetur.format.defaultFormatterOptions": {
-        "js-beautify-html": {
-            "wrap_attributes": "force-expand-multiline"
-        },
-        "prettyhtml": {
-            "printWidth": 100,
-            "singleQuote": false,
-            "wrapAttributes": false,
-            "sortAttributes": false
-        }
-    },
-    "vetur.format.defaultFormatter.html": "none",
-    "vetur.format.defaultFormatter.js": "none",
-    "editor.detectIndentation": false,
-    "javascript.updateImportsOnFileMove.enabled": "always"
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "vue"
+    ]
 }
