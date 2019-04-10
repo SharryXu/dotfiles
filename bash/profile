@@ -12,6 +12,9 @@ export PACKAGE_SBIN=/usr/local/sbin
 export PYENV_ROOT="$HOME/.pyenv"
 export PYENV_BIN="$PYENV_ROOT/bin"
 
+# Set node environment.
+export NODE_ENV=dev
+
 # Setup homebrew
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export HOMEBREW_NO_AUTO_UPDATE=true

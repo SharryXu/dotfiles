@@ -477,7 +477,8 @@ function install_python_package() {
       done
 
       if $need_install; then
-        pip install --user "$1"
+        #pip install --user "$1"
+        pip install --upgrade "$1"
         color-print 1 "Python package name $1 has been successfully installed."
       else
         color-print 2 "Python package name $1 has already existed."
@@ -766,6 +767,8 @@ function configure_emacs() {
 	install_python_package 'jedi' '3'
 	install_python_package 'json-rpc' '3'
 	install_python_package 'service_factory' '3'
+	install_python_package 'flake8' '3'
+	install_python_package 'autoflake' '3'
 
   if $New_System; then
     chicken-install -s apropos chicken-doc

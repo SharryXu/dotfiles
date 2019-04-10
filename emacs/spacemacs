@@ -103,7 +103,7 @@ values."
                       flycheck-global-modes t)
      (python :variables
              indent-tabs-mode t
-		 				 python-tab-width 4
+						 python-tab-width 4
              python-indent-offset 4
 		 				 python-enable-yapf-format-on-save t
              python-backend 'anaconda)
@@ -117,6 +117,7 @@ values."
                treemacs-indentation 2
                treemacs-no-png-images nil
                treemacs-show-hidden-files t
+							 treemacs-git-mode 'deferred
                treemacs-silent-filewatch t
                treemacs-silent-refresh t)
      ;;helm

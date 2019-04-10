@@ -32,5 +32,7 @@
         "javascript",
         "javascriptreact",
         "vue"
-    ]
+    ],
+    "http.proxySupport": "off",
+    "http.proxyStrictSSL": false
 }
