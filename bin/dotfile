@@ -56,118 +56,6 @@ declare -r youcompleteme='https://github.com/Valloric/ycmd.git'
 declare -r clangcomplete='https://github.com/Rip-Rip/clang_complete.git'
 declare -r pyenvvirtualenv='https://github.com/pyenv/pyenv-virtualenv.git'
 
-#########################################################################
-# Install homebrew tap
-# Globals:
-#   Homebrew
-#   Color-Print
-# Arguments:
-# Returns:
-#   None
-#########################################################################
-function install_homebrew_tap() {
-  if [[ $# == 1 ]]; then
-    local exist_homebrew_tap_list
-    local target_tap
-    local need_install=true
-    exist_homebrew_tap_list=$(brew tap)
-    target_tap="$1"
-
-    color-print 0 "Check homebrew tap $target_tap..."
-    for exist_tap in $exist_homebrew_tap_list; do
-      if [[ "$exist_tap" == "$target_tap" ]]; then
-        need_install=false
-        break
-      fi
-    done
-
-    if $need_install; then
-      brew tap "$target_tap"
-      color-print 1 "$target_tap has been successfully added."
-    else
-      color-print 2 "$target_tap has already existed."
-    fi
-  else
-    color-print 3 "$error_message_check_parameters"
-    exit 1
-  fi
-}
-
-#########################################################################
-# Install all homebrew tap
-# Globals:
-#   Homebrew
-#   Color-Print
-# Arguments:
-# Returns:
-#   None
-#########################################################################
-function configure_all_homebrew_tap() {
-  local target_homebrew_tap_list=(
-    'caskroom/cask'
-    'caskroom/fonts'
-    'homebrew/core'
-    'homebrew/php'
-    'homebrew/services'
-    'omnisharp/omnisharp-roslyn'
-  )
-
-  for ((i = 0; i < ${#target_homebrew_tap_list[@]}; i++)); do
-    install_homebrew_tap "${target_homebrew_tap_list[i]}"
-  done
-}
-
-###################################################################################
-# Using homebrew tool to install gui packages.
-# Globals:
-#   homebrew
-#   color-print
-# Arguments:
-#   Cask Package name
-# Returns:
-#   None
-###################################################################################
-function install_homebrew_cask_package() {
-  if [[ $# == 1 ]]; then
-    color-print 0 "Check mac GUI application name $1..."
-    local need_install=true
-
-    for exist_cask in $(brew cask list); do
-      if [[ $exist_cask == "$1" ]]; then
-        need_install=false
-        break
-      fi
-    done
-
-    if $need_install; then
-      brew cask install "$1"
-      color-print 1 "$1 has been successfully installed."
-    else
-      color-print 2 "$1 has already existed."
-    fi
-  else
-    color-print 3 "$error_message_check_parameters"
-    exit 1
-  fi
-}
-
-######################################
-# Configure iTerm2
-# Arguments:
-#   Command Line Name (Optional)
-# Returns:
-#   None
-#######################################
-function install_iTerm2() {
-  color-print 0 "Install iterm2..."
-
-  install_homebrew_cask_package 'iterm2'
-
-  sync-git-repo -r $iterm2configuration "$HOME"/.iterm2
-
-  color-print 1 "Please link those sync folder manually in the GUI."
-}
-
 ######################################
 # Install Go language
 # Arguments:
@@ -203,67 +91,6 @@ function install_go_language() {
 	go install github.com/godoctor/godoctor
 	go get -u -v github.com/fatih/gomodifytags
 	go get -u github.com/sourcegraph/go-langserver
-}
-
-#########################################
-# Install visual studio code extension.
-# Arguments:
-#   Command Line Name (Optional)
-# Returns:
-#   None
-#########################################
-function install_vscode_extension() {
-  if [[ $# == 1 ]]; then
-    local exist_extension_list
-    local target_extension
-    local need_install=true
-    exist_extension_list=$(code --list-extensions)
-    target_extension="$1"
-
-    color-print 0 "Check visual studio code extension name $target_extension..."
-    for exist_extension in $exist_extension_list; do
-      if [[ "$exist_extension" == "$target_extension" ]]; then
-        need_install=false
-        break
-      fi
-    done
-
-    if $need_install; then
-      code --install-extension "$target_extension"
-      color-print 1 "$target_extension has been successfully installed."
-    else
-      color-print 2 "$target_extension has already existed."
-    fi
-  else
-    color-print 3 "$error_message_check_parameters"
-    exit 1
-  fi
-}
-
-######################################
-# Configure visual studio code
-# Returns:
-#   None
-#######################################
-function install_vscode() {
-  color-print 0 "Install visual studio code..."
-
-  install_homebrew_cask_package 'visual-studio-code'
-
-  copy-file "$SourcePath"/vscode/settings.json "$HOME"/Library/Application\ Support/Code/User/
-
-  if [ -f "$SourcePath"/vscode/vs-extensions ]; then
-    if command -v code 1>/dev/null 2>&1; then
-      local extension_list
-      extension_list=$(awk '{print $1}' "$SourcePath"/vscode/vs-extensions)
-
-      for extension in $extension_list; do
-        install_vscode_extension "$extension"
-      done
-    else
-      color-print 3 "Visual studio code is not installed."
-    fi
-  fi
 }
 
 ##################################################################################
@@ -306,66 +133,6 @@ function install_npm_package() {
     else
       color-print 3 "Python$2 has not installed."
       exit 1
-    fi
-  else
-    color-print 3 "$error_message_check_parameters"
-    exit 1
-  fi
-}
-
-##################################################
-# Specific homebrew existed or not.
-# Globals:
-#   brew
-#   color-print
-# Arguments:
-#   Tool Name
-#   Command Line Name (Optional)
-# Returns:
-#   Code indicate exist or not. (0=exist, 1=no)
-##################################################
-function is_homebrew_package_exist() {
-  if [[ $# == 1 ]]; then
-    shopt -s nocasematch
-
-    local existed=false
-    for package in $(brew list); do
-      if [[ $package == "$1" ]]; then
-        existed=true
-        break
-      fi
-    done
-
-    if $existed; then
-      return 0;
-    else
-      return 1;
-    fi
-  else
-    color-print 3 "$error_message_check_parameters"
-    exit 1
-  fi
-}
-
-
-###################################################################################
-# Using homebrew to install tool.
-# Globals:
-#   brew
-#   color-print
-# Arguments:
-#   Tool Name
-#   Command Line Name (Optional)
-# Returns:
-#   None
-###################################################################################
-function install_homebrew_package() {
-  if [ $# -ge 1 ]; then
-    if is_homebrew_package_exist "$1"; then
-      color-print 2 "$1 has already existed."
-    else
-      brew install "$1" "$2"
-      color-print 1 "$1 has successfully been installed."
     fi
   else
     color-print 3 "$error_message_check_parameters"
@@ -494,54 +261,6 @@ function install_python_package() {
 }
 
 #######################################
-# Setup Mac OS Inside parameters.
-# Globals:
-#   color-print
-# Arguments:
-#   None
-# Returns:
-#   None
-#######################################
-function setup_macos_settings() {
-  local default_screenshot_type
-  local default_screenshot_location
-  default_screenshot_type="jpg"
-  default_screenshot_location="$HOME"/Desktop/ScreenShots
-
-  if [[ $(defaults read com.apple.finder _FXShowPosixPathInTitle) == "0" ]]; then
-    color-print 0 "Show full file path on the tile in Finder..."
-    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true && killall Finder
-  fi
-
-  # Adjust the delay time for Dock displaying
-  if [[ $(defaults read com.apple.dock autohide-delay) != "0" ]]; then
-    defaults write com.apple.Dock autohide-delay -float 0 && killall Dock
-  fi
-
-  # Adjust the LaunchPad layout
-  # defaults write com.apple.dock springboard-columns -int 8
-  # defaults write com.apple.dock springboard-rows -int 7
-  # Adjust the transpalent value for LaunchPad
-  # defaults write com.apple.dock springboard-blur-radius -int 100
-  # defaults write com.apple.dock ResetLaunchPad -bool true
-  # Adjust the screenshots
-  if [[ $(defaults read com.apple.screencapture location) != "$default_screenshot_location" ]]; then
-    color-print 0 "Change default screenshot location to $default_screenshot_location..."
-    defaults write com.apple.screencapture location "$default_screenshot_location" && killall SystemUIServer
-  fi
-
-  if [[ $(defaults read com.apple.screencapture type) != "$default_screenshot_type" ]]; then
-    color-print 0 "Change default screenshot type to $default_screenshot_type..."
-    defaults write com.apple.screencapture type jpg && killall SystemUIServer
-  fi
-
-  # Fix the vim key repeating issue in visual studio code.
-  if [[ $(defaults read com.microsoft.VSCode ApplePressAndHoldEnabled) != "0" ]]; then
-    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
-  fi
-}
-
-#######################################
 # Install global configs.
 # Globals:
 #   sync-folder
@@ -554,7 +273,6 @@ function install_global_config() {
   color-print 0 "Install global Config..."
   sync-folder "$SourcePath"/config/cppman "$HOME"/.config/cppman
   sync-folder "$SourcePath"/config/fontconfig "$HOME"/.config/fontconfig
-  sync-folder "$SourcePath"/config/karabiner "$HOME"/.config/karabiner
   sync-folder "$SourcePath"/config/tmuxinator "$HOME"/.config/tmuxinator
 }
 
@@ -571,35 +289,7 @@ function backup_global_config() {
   color-print 0 "Backup global Config..."
   sync-folder "$HOME"/.config/cppman "$SourcePath"/config/cppman
   sync-folder "$HOME"/.config/fontconfig "$SourcePath"/config/fontconfig
-  sync-folder "$HOME"/.config/karabiner "$SourcePath"/config/karabiner
   sync-folder "$HOME"/.config/tmuxinator "$SourcePath"/config/tmuxinator
-}
-
-##################################
-# Install homebrew
-# Globals:
-# Arguments:
-#   color-print
-# Returns:
-#   None
-##################################
-function install_homebrew() {
-  color-print 0 "Check brew..."
-  if command -v brew 1>/dev/null 2>&1; then
-    brew update
-    color-print 1 "brew has been successfully updated."
-    color-print 0 "Update all brew packages..."
-    brew upgrade
-    color-print 1 "All brew packages have been updated."
-  else
-    if command -v ruby 1>/dev/null 2>&1; then
-      color-print 3 "Please install Ruby first."
-      exit 1
-    else
-      ruby "$SourcePath/brew/brew_install"
-      color-print 1 "brew has been successfully installed."
-    fi
-  fi
 }
 
 ###################################
@@ -994,51 +684,6 @@ function install_node_versions() {
   fi
 }
 
-###################################
-# Install mac GUI applications.
-# Globals:
-# Arguments:
-#   color-print
-# Returns:
-#   None
-###################################
-function install_mac_gui_programs() {
-  color-print 0 "Upgrade all existed GUI programs..."
-  brew cask upgrade
-
-  local gui_programs=(
-    'adobe-acrobat-reader'
-    'dash'
-    'sourcetree'
-    'karabiner'
-    'karabiner-elements'
-    'docker'
-    'kindle'
-    'mysqlworkbench'
-    'gitter'
-    'postman'
-    'neteasemusic'
-    'wireshark'
-    'xmind'
-    'cheatsheet'
-    'microsoft-azure-storage-explorer'
-    'appcleaner'
-    'intellij-idea-ce'
-		'pycharm-ce'
-		'sequel-pro'
-		'shadowsocksx-ng'
-		'typora'
-		'wechat'
-		'iterm2'
-		'postman'
-		'youdaodict'
-  )
-
-  for ((i = 0; i < ${#gui_programs[@]}; i++)); do
-    install_homebrew_cask_package "${gui_programs[i]}"
-  done
-}
-
 #############################
 # Install custom commands.
 # Globals:
@@ -1094,8 +739,6 @@ function backup_custom_commands() {
 function install() {
   install_custom_commands
 
-  install_homebrew
-
   configure_bash
 
   color-print 0 "Check Ruby..."
@@ -1109,15 +752,6 @@ function install() {
 
   configure_node
 
-  configure_all_homebrew_tap
-
-  color-print 0 "Check xcode tool chain..."
-  if ! xcode-select -p 1>/dev/null 2>&1; then
-    xcode-select --install
-  else
-    color-print 2 "xcode tool chain has already been installed."
-  fi
-
   configure_git
 
   configure_haskell
@@ -1126,56 +760,47 @@ function install() {
 
   configure_vim
 
-  color-print 0 "Setup Mac OS..."
-  setup_macos_settings
-
-  color-print 0 "Check mongo database..."
-  install_homebrew_package 'mongodb'
-  copy-file -V "$SourcePath/mongodb/mongorc.js" "$HOME"
-
-  color-print 0 "Check MySQL database..."
-  install_homebrew_package 'mysql'
-  install_homebrew_package 'mycli'
-  copy-file -V "$SourcePath"/mysql/my.cnf "$HOME"
-
-  color-print 0 "Check tree tool..."
-  install_homebrew_package 'tree'
-
-  color-print 0 "Check download accelerate tool..."
-  install_homebrew_package 'axel'
-
-  color-print 0 "Check Microsoft SQL Server tool..."
-  install_python_package 'wheel' '3'
-  install_python_package 'mssql-cli' '3'
-
-  color-print 0 "Check gdb gui tool..."
-  install_python_package 'gdbgui' '3'
-
-  color-print 0 "Check cppman tool..."
-  install_python_package 'cppman' '3'
-
-  install_go_language
-
+#  color-print 0 "Check mongo database..."
+#  install_homebrew_package 'mongodb'
+#  copy-file -V "$SourcePath/mongodb/mongorc.js" "$HOME"
+#
+#  color-print 0 "Check MySQL database..."
+#  install_homebrew_package 'mysql'
+#  install_homebrew_package 'mycli'
+#  copy-file -V "$SourcePath"/mysql/my.cnf "$HOME"
+#
+#  color-print 0 "Check tree tool..."
+#  install_homebrew_package 'tree'
+#
+#  color-print 0 "Check download accelerate tool..."
+#  install_homebrew_package 'axel'
+#
+#  color-print 0 "Check Microsoft SQL Server tool..."
+#  install_python_package 'wheel' '3'
+#  install_python_package 'mssql-cli' '3'
+#
+#  color-print 0 "Check gdb gui tool..."
+#  install_python_package 'gdbgui' '3'
+#
+#  color-print 0 "Check cppman tool..."
+#  install_python_package 'cppman' '3'
+#
+#  install_go_language
+#
   #color-print 0 "Check github language analysis tool..."
   #install_ruby_package 'github-linguist'
 
-  color-print 0 "Check python format tool..."
-  install_python_package 'yapf' '3'
-
-  color-print 0 "Check disk usage tool..."
-  install_homebrew_package 'ncdu'
-
-  color-print 0 "Check static code analysis tool..."
-  install_homebrew_package 'cloc'
-
-  color-print 0 "Check live-stream video download tool..."
-  install_homebrew_package 'you-get'
-
-  install_iTerm2
-
-  install_mac_gui_programs
-
-  install_vscode
+#  color-print 0 "Check python format tool..."
+#  install_python_package 'yapf' '3'
+#
+#  color-print 0 "Check disk usage tool..."
+#  install_homebrew_package 'ncdu'
+#
+#  color-print 0 "Check static code analysis tool..."
+#  install_homebrew_package 'cloc'
+#
+#  color-print 0 "Check live-stream video download tool..."
+#  install_homebrew_package 'you-get'
 
   install_fonts
 
@@ -1188,8 +813,8 @@ function install() {
   # install_homebrew_package 'htop'
   install_python_package 'glances' '3'
 
-  color-print 0 "Check chez-scheme..."
-  install_homebrew_package 'chezscheme'
+#  color-print 0 "Check chez-scheme..."
+#  install_homebrew_package 'chezscheme'
 
   color-print 0 "Check hexo..."
   install_npm_package 'hexo-cli'

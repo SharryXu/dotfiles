@@ -1,6 +1,5 @@
-os: osx
 language: c
-dist: trusty,
+dist: bionic,
 git:
   submodules: false
 branches:
