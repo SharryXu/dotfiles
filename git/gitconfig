@@ -1,5 +1,5 @@
 [core]
-	excludesfile = /Users/sxu204/.gitignore_global
+	excludesfile = /home/pi/.gitignore_global
 	ignorecase = false
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [diff]
@@ -11,8 +11,6 @@
 [user]
 	name = Sharry Xu
 	email = sharry.r.xu@gmail.com
-[commit]
-	template = ~/.stCommitMsg
 [rerere]
 	enabled = 1
 [sendemail]
@@ -42,9 +40,3 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
-[difftool "sourcetree"]
-	cmd = " "
-	path = 
-[mergetool "sourcetree"]
-	cmd = " "
-	trustExitCode = true
